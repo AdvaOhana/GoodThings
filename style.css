@@ -1,0 +1,57 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    direction: rtl;
+    height: 100dvh;
+    display: grid;
+}
+header{
+    background-color: palevioletred;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    align-items: center;
+}
+#logo{
+    height: 100px;
+    width: 150px;
+}
+#user-logo{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid black;
+    padding: .15rem;
+}   
+#continer{
+    gap: .4rem;
+    display: flex;
+    flex-direction: row-reverse;
+    height: fit-content;
+    align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+    #logo{
+        height: 80px;
+        width: 100px;
+    }
+}
+main{
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    width: auto;
+}   
+#data-continer{
+    width: 100%;
+    display: grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:2rem;
+    padding: 2rem;
+}
+.thing-info{
+    background-color: tomato;
+}
