@@ -1,0 +1,167 @@
+const toasts = []
+let toastContainer;
+
+function createToastContainer() {
+    toastContainer = document.createElement('div')
+    toastContainer.classList.add('toast-container')
+    document.body.appendChild(toastContainer)
+}
+
+function delay(timeInMs) {
+    return new Promise(res => setTimeout(res, timeInMs))
+}
+
+async function toaster(text, success, duration = 2000) {
+
+    if (!toastContainer) {
+        createToastContainer()
+    }
+    const toastElement = document.createElement('div')
+    toastElement.classList.add('toast')
+
+    const toast = `
+                    <img src=${success ? "check-solid.svg" : "circle-xmark-regular.svg"} />
+                    <span>${text}</span>
+                 
+                    `
+    toastElement.insertAdjacentHTML('beforeend', toast)
+    toastContainer.appendChild(toastElement)
+
+    toasts.unshift(toastElement)
+
+
+    await delay(50)
+    toastElement.classList.add('toast-active')
+    updateToastPositions()
+
+    await delay(duration)
+    toastElement.classList.remove('toast-active');
+
+    await delay(duration / 3)
+    toastElement.remove();
+    toasts.pop();
+    updateToastPositions();
+    if (toasts.length === 0) {
+        toastContainer.remove()
+        toastContainer = undefined
+    }
+
+    function updateToastPositions() {
+        toasts.forEach((toast, i) => {
+            toast.style.transform = `translateY(${i * 20}px) scale(${1 - i * 0.05})`;
+            toast.style.opacity = `${1 - i * 0.1}`;
+            toast.style.zIndex = `${toasts.length - i}`;
+        });
+    }
+}
+
+function setStorage(key, data) {
+    localStorage.setItem(key, JSON.stringify(data))
+}
+function getStorage(key) {
+    return JSON.parse(localStorage.getItem(key))
+}
+
+const formBtn = document.querySelector('#show-form')
+formBtn.addEventListener('click', loadForm)
+
+
+function loadForm() {
+    let addBtn;
+    let allData;
+    let formInput;
+    let form;
+    let inputsData;
+    let formBg
+    const formElement = `
+ <div class="form-bg">
+        <form id="things-form">
+            <div id="input-container">
+
+            <div id="add-thing-form" class="b-and-i">
+                <div class="floating-label-group">
+                    <input type="text" class="form-input" placeholder="" />
+                    <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
+                </div>
+                <button type="button" id="add-btn">
+                    <img id="add-icon" src="plus-solid.svg" alt="">
+                    <span>הוסף</span>
+                </button>
+            </div>
+            <div id="data-list">
+            </div>
+            <div id="form-btns">
+                <button class="btn primary" type="reset" onclick="">נקה הכל</button>
+                <button class="btn confirm" type="submit">שלח</button>
+            </div>
+        </div>
+
+
+        </form>
+    </div>
+    `
+    document.body.insertAdjacentHTML('beforeend', formElement)
+    formBg = document.querySelector('.form-bg')
+    addBtn = document.querySelector("#add-btn");
+    allData = document.querySelector("#data-list");
+    formInput = document.querySelector(".form-input");
+    form = document.querySelector('#things-form')
+    inputsData = getStorage('inputs-data') || []
+
+    if (inputsData.length > 0) fillList()
+
+
+    addBtn.addEventListener('click', handleAdd)
+    form.addEventListener('submit', handleSubmit)
+
+    formBg.addEventListener('click', e => {
+        if (e.target === e.currentTarget)
+            e.target.remove()
+    }
+    )
+
+
+
+    function fillList() {
+        let data = ""
+        inputsData.forEach((el, i) => {
+            data += `
+        
+        <div class="form-data-list">
+            <p class="text">${el.thing}</p>
+            <img class="${i} del-icon" src="./trash-can-regular.svg" />
+        </div>
+        `;
+            formInput.value = "";
+        })
+        allData.innerHTML = data
+        document.querySelectorAll('.del-icon').forEach(icon =>
+            icon.addEventListener('click', handleDelete)
+        )
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (inputsData.length === 0) return
+        setStorage(`inputs-data`, inputsData)
+        e.target.parentElement.remove()
+        toaster('נתונים נשלחו בהצלחה', true)
+    }
+
+    function handleAdd() {
+        if (formInput.value.length < 3) return
+        inputsData.unshift({ date: new Date().toLocaleDateString(), thing: formInput.value })
+        setStorage('inputs-data', inputsData)
+        toaster('טובית נוספה בהצלחה', true)
+        fillList();
+    }
+
+    function handleDelete(e) {
+        elNum = +e.target.className.split(' ')[0]
+        inputsData = inputsData.filter((el, i) => i !== elNum)
+        setStorage('inputs-data', inputsData)
+        toaster('טובית נמחקה בהצלחה', true)
+        fillList()
+    }
+
+}

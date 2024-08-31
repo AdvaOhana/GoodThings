@@ -1,57 +1,252 @@
-*{
+*:focus {
+outline: none;
+padding: 0;
+margin: 0;
+}
+button{
+    background: none;
+    color: inherit;
+    border: none;
     padding: 0;
-    margin: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+#add-btn{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .2rem;
+}
+#add-icon{
+    width: 1.8rem;
+    position: relative;
+}
+.b-and-i{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.form-bg{
+    top:0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+form{
+    justify-content: center;
+    box-shadow: 0.1rem 0.1rem 1rem .2rem rgba(255, 255, 255, 0.144);
+    border-radius: 1rem;
+    width: 600px;
+    padding: 2rem;
+    color: #e7e7e7;
+    background-color: #272727;
+
 }
 body{
     direction: rtl;
     height: 100dvh;
-    display: grid;
+    overflow: hidden;
+    background-color: #272727;
 }
-header{
-    background-color: palevioletred;
+#form-btns{
+        display: flex;
+        gap: .5rem;
+        justify-content: end;
+        padding: 0 0 0 1rem
+}
+.form-input{
+    height: 2rem;
+    width: 90%;
+    padding: 0 1rem;
+    border: none;
+    border-bottom: 1px solid rgb(200, 200, 200);
+    background: inherit;
+}
+.floating-label-group {
+position: relative;
+margin-top: 15px;
+margin-bottom: 25px;
+width: 90%;
+}
+.floating-label {
+    font-size: 1rem;
+    color: #cccccc;
+    position: absolute;
+    pointer-events: none;
+    top: 8px;
+    right: 12px;
+    transition: all 0.1s ease;
+}
+input{
+    color: #e7e7e7;
+    font-size: 1rem;
+}
+#data-list{
+    margin: 1.5rem 0 3rem 0;
+    padding-bottom: 15px;
+    width: 85%;
+    height: 45px;
+    overflow-y: auto;
+
+
+}
+.form-data-list{
     display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 .2rem;
+    height: 2rem;
     justify-content: space-between;
-    padding: 1rem 2rem;
-    align-items: center;
+    width: 90%;
+    font-size: 1.2rem;
+    margin-bottom: .5rem;
+    border-bottom: 1px solid #e7e7e7;
+    overflow-x:scroll;
+    overflow-y: hidden;
+    
 }
-#logo{
-    height: 100px;
-    width: 150px;
+.del-icon{
+    width: 12px;
+    padding: .5rem;
+    cursor: pointer;
 }
-#user-logo{
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid black;
-    padding: .15rem;
-}   
-#continer{
-    gap: .4rem;
-    display: flex;
-    flex-direction: row-reverse;
-    height: fit-content;
-    align-items: center;
+.btn{
+    position: relative;
+    display: inline-block;
+    margin: .2rem;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    text-decoration: none;
+    color: #725AC1;
+    background: transparent;
+    cursor: pointer;
+    transition: ease-out 0.5s;
+    border: 2px solid #725AC1;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 0 #725AC1;
+
+}
+.btn:hover {
+color: white;
+box-shadow: inset 0 -100px 0 0 #725AC1;
+}
+.btn:active {
+transform: scale(0.9);
+}
+.primary{
+    color: #e7e7e7;
+    border: 1px solid #e7e7e7;
+    box-shadow: inset 0 0 0 0 #e7e7e7;
+
+}
+.primary:hover{
+color: #725AC1;
+box-shadow: inset 0 -100px 0 0 #e7e7e7;
+    
+}
+input:focus ~ .floating-label,
+input:not(:placeholder-shown) ~ .floating-label {
+    top: -15px;
+    bottom: 0px;
+    right: 5px;
+    font-size: .7rem;
+    opacity: 1;
+    color: #e7e7e7;
 }
 
-@media only screen and (max-width: 600px) {
-    #logo{
-        height: 80px;
-        width: 100px;
-    }
-}
-main{
-    display: flex;
-    justify-content: center;
-    height: 500px;
-    width: auto;
-}   
-#data-continer{
+.toast-container {
+    position: fixed;
     width: 100%;
-    display: grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:2rem;
-    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 100;
+    pointer-events: none;
 }
-.thing-info{
-    background-color: tomato;
+
+.toast {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: fit-content;
+    padding: .5rem .8rem;
+    gap: 0.5rem;
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    font-size: .8rem;
+    pointer-events: all;
+    opacity: 0;
+    transform: translateY(50%) scale(1);
+    transition: transform 1s ease, opacity 0.3s ease;
+}
+
+.toast-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.toast img {
+    width: 1rem;
+    height: 1rem;
+}
+
+@media only screen and (max-width: 786px) {
+.btn{
+    padding:7px 10px;
+    font-size: .8rem;
+}   
+#data-list{
+    width: 85%;
+}
+.form-data-list{
+    width: 95%;
+    font-size: .9rem;
+}
+#add-btn{
+    font-size: .6rem;
+}
+#add-icon{
+    width: .9rem;
+    position: relative;
+}
+form{
+    padding: 1rem;
+    margin: 0 1rem;
+}
+#form-btns{
+        gap: 0rem;
+        padding: 0 0 0 .2rem
+}
+.form-input{
+    height: 2rem;
+    width: 80%;
+    padding: 0 1rem;
+    border-bottom: 1px solid rgb(200, 200, 200);
+}
+.floating-label-group {
+    width: 90%;
+}
+.floating-label {
+    font-size: 0.8rem;
+    top: 16px;
+    right: 6px;
+}
+input:focus ~ .floating-label,
+input:not(:placeholder-shown) ~ .floating-label {
+    font-size: .6rem;
+    color: #e7e7e7;
+}
+
+
+
 }
