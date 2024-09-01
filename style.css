@@ -1,8 +1,55 @@
-*:focus {
-outline: none;
-padding: 0;
-margin: 0;
+*{
+    padding: 0;
+    margin: 0;
 }
+*:focus {
+    outline: none;
+    padding: 0;
+    margin: 0;
+    }
+
+body{
+    direction: rtl;
+    height: 100dvh;
+    display: grid;
+
+    overflow: hidden;
+    background-color: #272727;
+}
+
+header{
+    background-color: palevioletred;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    align-items: center;
+}
+#logo{
+    height: 100px;
+    width: 150px;
+}
+#user-logo{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid black;
+    padding: .15rem;
+}   
+#continer{
+    gap: .4rem;
+    display: flex;
+    flex-direction: row-reverse;
+    height: fit-content;
+    align-items: center;
+}
+
+
+
+
+
+
+
 button{
     background: none;
     color: inherit;
@@ -49,12 +96,7 @@ form{
     background-color: #272727;
 
 }
-body{
-    direction: rtl;
-    height: 100dvh;
-    overflow: hidden;
-    background-color: #272727;
-}
+
 #form-btns{
         display: flex;
         gap: .5rem;
@@ -247,7 +289,72 @@ input:not(:placeholder-shown) ~ .floating-label {
     font-size: .6rem;
     color: #e7e7e7;
 }
+}
 
 
+@media only screen and (max-width: 600px) {
+    #logo{
+        height: 80px;
+        width: 100px;
+    }
+}
+main{
+    display: flex;
+    justify-content: center;
+    height: 500px;
+    width: auto;
+}   
+#data-continer{
+    width: 100%;
+    display: grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:2rem;
+    padding: 2rem;
+    align-content: start;
 
+}
+.thing-info{
+    border: 1px solid palevioletred;
+    padding: 50px;
+    align-content: center;
+    align-self: center;    
+}
+#add-thing{
+    display: grid;
+    justify-content: space-between;
+    gap: 10px;
+}
+#hamburger {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.bar {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: black;
+    margin: 6px;
+}
+.hidden {
+    transform: translateX(100%); 
+}
+.menu {
+    position: fixed;
+    top: 40px;
+    right: 0;
+    width: 180px;
+    height: 80%;
+    background: #333;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;  
+    transition: transform 0.3s ease-in-out;
+}
+.menu:not(.hidden) {
+    transform: translateX(0);
+}
+.menu p {
+    margin: 10px 0;
 }
