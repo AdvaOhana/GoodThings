@@ -1,6 +1,6 @@
 const toasts = []
 let toastContainer;
-
+const iconsPath = "./public/icons"
 const hamburger = document.querySelector('#hamburger');
 const menu = document.querySelector('.menu');
 const formBtn = document.querySelector('#show-form')
@@ -17,7 +17,7 @@ function delay(timeInMs) {
 
 
 async function toaster(text, type, duration = 2000) {
-    let iconType = "check-solid.svg"
+    let iconType = `${iconsPath}/check-solid.svg`
     if (!toastContainer) {
         createToastContainer()
     }
@@ -25,12 +25,13 @@ async function toaster(text, type, duration = 2000) {
     toastElement.classList.add('toast')
 
     if (type === 'delete') {
-        iconType = "trash-can-regular.svg"
+        iconType = `${iconsPath}/trash-can-regular.svg`
 
     }
     if (type === 'fail') {
-        iconType = "circle-xmark-regular.svg"
+        iconType = `${iconsPath}/circle-xmark-regular.svg`
     }
+
 
     const toast = `<img src=${iconType} />
                    <span>${text}</span>`
@@ -85,32 +86,30 @@ function loadForm() {
     let inputsData;
     let formBg
     const formElement = `
- <div class="form-bg">
-        <form id="things-form">
-            <div id="input-container">
-
-            <div id="add-thing-form" class="b-and-i">
-                <div class="floating-label-group">
-                    <input type="text" class="form-input" placeholder="" />
-                    <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
-                </div>
-                <button type="button" id="add-btn">
-                    <img id="add-icon" src="plus-solid.svg" alt="">
-                    <span>הוסף</span>
-                </button>
-            </div>
-            <div id="data-list">
-            </div>
-            <div id="form-btns">
-                <button class="btn primary" type="reset" onclick="">נקה הכל</button>
-                <button class="btn confirm" type="submit">שלח</button>
-            </div>
-        </div>
-
-
-        </form>
-    </div>
+                        <div class="form-bg">
+                                <form id="things-form">
+                                    <div id="input-container">
+                                    <div id="add-thing-form" class="b-and-i">
+                                        <div class="floating-label-group">
+                                            <input type="text" class="form-input" placeholder="" />
+                                            <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
+                                        </div>
+                                        <button type="button" id="add-btn">
+                                            <img id="add-icon" src=${iconsPath}/plus-solid.svg alt="">
+                                            <span>הוסף</span>
+                                        </button>
+                                    </div>
+                                    <div id="data-list">
+                                    </div>
+                                    <div id="form-btns">
+                                        <button class="btn primary" type="reset" onclick="">נקה הכל</button>
+                                        <button class="btn confirm" type="submit">שלח</button>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
     `
+
     document.body.insertAdjacentHTML('beforeend', formElement)
     formBg = document.querySelector('.form-bg')
     addBtn = document.querySelector("#add-btn");
@@ -137,10 +136,9 @@ function loadForm() {
         let data = ""
         inputsData.forEach((el, i) => {
             data += `
-        
         <div class="form-data-list">
             <p class="text">${el.thing}</p>
-            <img class="${i} del-icon" src="./trash-can-regular.svg" />
+            <img class="${i} del-icon" src=${iconsPath}/trash-can-regular.svg />
         </div>
         `;
             formInput.value = "";
