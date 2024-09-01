@@ -16,18 +16,24 @@ function delay(timeInMs) {
 }
 
 
-async function toaster(text, success, duration = 2000) {
+async function toaster(text, type, duration = 2000) {
+    let iconType = "check-solid.svg"
     if (!toastContainer) {
         createToastContainer()
     }
     const toastElement = document.createElement('div')
     toastElement.classList.add('toast')
 
-    const toast = `
-                    <img src=${success ? "check-solid.svg" : "circle-xmark-regular.svg"} />
-                    <span>${text}</span>
-                 
-                    `
+    if (type === 'delete') {
+        iconType = "trash-can-regular.svg"
+    }
+    if (type === 'fail') {
+        iconType = "circle-xmark-regular.svg"
+    }
+
+    const toast = `<img src=${iconType} />
+                   <span>${text}</span>`
+
     toastElement.insertAdjacentHTML('beforeend', toast)
     toastContainer.appendChild(toastElement)
 
