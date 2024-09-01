@@ -8,11 +8,20 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-    <button id="show-form">הוסף טובית</button>
     <header>
         <img id="logo" src="logo.png" alt="" srcset="">
         <div id="continer">
-            <h4>שמואל</h4>
+            <h4></h4>
+            <button id="hamburger" >
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <div class="menu hidden">
+                <button id="show-form">הוסף טובית</button>
+                <p>פריט 2</p>
+                <p>פריט 3</p>
+            </div>
             <img id="user-logo" src="user-regular.svg" alt="">
         </div>
     </header>
@@ -41,6 +50,10 @@
                     <li>כסף </li>
                     <li>חתונה </li>
                 </ul>
+            </div>
+            <div id="add-thing">
+                <label>בחר תאריך:</label> <input type="date">
+                <button>הוספה</button>
             </div>
         </div>
     </main>

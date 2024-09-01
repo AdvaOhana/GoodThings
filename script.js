@@ -1,18 +1,22 @@
 const toasts = []
 let toastContainer;
 
-function createToastContainer() {
-    toastContainer = document.createElement('div')
-    toastContainer.classList.add('toast-container')
-    document.body.appendChild(toastContainer)
-}
+const hamburger = document.querySelector('#hamburger');
+const menu = document.querySelector('.menu');
+const formBtn = document.querySelector('#show-form')
+
+hamburger.addEventListener('click', function () {
+    menu.classList.toggle('hidden');
+});
+formBtn.addEventListener('click', loadForm)
+
 
 function delay(timeInMs) {
     return new Promise(res => setTimeout(res, timeInMs))
 }
 
-async function toaster(text, success, duration = 2000) {
 
+async function toaster(text, success, duration = 2000) {
     if (!toastContainer) {
         createToastContainer()
     }
@@ -53,6 +57,12 @@ async function toaster(text, success, duration = 2000) {
             toast.style.zIndex = `${toasts.length - i}`;
         });
     }
+
+    function createToastContainer() {
+        toastContainer = document.createElement('div')
+        toastContainer.classList.add('toast-container')
+        document.body.appendChild(toastContainer)
+    }
 }
 
 function setStorage(key, data) {
@@ -62,8 +72,7 @@ function getStorage(key) {
     return JSON.parse(localStorage.getItem(key))
 }
 
-const formBtn = document.querySelector('#show-form')
-formBtn.addEventListener('click', loadForm)
+
 
 
 function loadForm() {
