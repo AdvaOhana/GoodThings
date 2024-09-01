@@ -26,6 +26,7 @@ async function toaster(text, type, duration = 2000) {
 
     if (type === 'delete') {
         iconType = "trash-can-regular.svg"
+
     }
     if (type === 'fail') {
         iconType = "circle-xmark-regular.svg"
@@ -33,6 +34,8 @@ async function toaster(text, type, duration = 2000) {
 
     const toast = `<img src=${iconType} />
                    <span>${text}</span>`
+
+
 
     toastElement.insertAdjacentHTML('beforeend', toast)
     toastContainer.appendChild(toastElement)
@@ -45,9 +48,6 @@ async function toaster(text, type, duration = 2000) {
     updateToastPositions()
 
     await delay(duration)
-    toastElement.classList.remove('toast-active');
-
-    await delay(duration / 3)
     toastElement.remove();
     toasts.pop();
     updateToastPositions();
@@ -77,10 +77,6 @@ function setStorage(key, data) {
 function getStorage(key) {
     return JSON.parse(localStorage.getItem(key))
 }
-
-
-
-
 function loadForm() {
     let addBtn;
     let allData;
@@ -160,14 +156,14 @@ function loadForm() {
         if (inputsData.length === 0) return
         setStorage(`inputs-data`, inputsData)
         e.target.parentElement.remove()
-        toaster('נתונים נשלחו בהצלחה', true)
+        toaster('נתונים נשלחו בהצלחה')
     }
 
     function handleAdd() {
         if (formInput.value.length < 3) return
         inputsData.unshift({ date: new Date().toLocaleDateString(), thing: formInput.value })
         setStorage('inputs-data', inputsData)
-        toaster('טובית נוספה בהצלחה', true)
+        toaster('טובית נוספה בהצלחה')
         fillList();
     }
 
@@ -175,7 +171,7 @@ function loadForm() {
         elNum = +e.target.className.split(' ')[0]
         inputsData = inputsData.filter((el, i) => i !== elNum)
         setStorage('inputs-data', inputsData)
-        toaster('טובית נמחקה בהצלחה', true)
+        toaster('טובית נמחקה בהצלחה', "delete")
         fillList()
     }
 
