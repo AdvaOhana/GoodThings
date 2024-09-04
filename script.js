@@ -3,12 +3,16 @@ let toastContainer;
 const iconsPath = "./public/icons"
 const hamburger = document.querySelector('#hamburger');
 const menu = document.querySelector('.menu');
-const formBtn = document.querySelector('#show-form')
+const formBtn = document.querySelectorAll('.show-form')
+let timeOut;
 
-hamburger.addEventListener('click', function () {
+hamburger.addEventListener('click', () => {
     menu.classList.toggle('hidden');
+    delay(50)
 });
-formBtn.addEventListener('click', loadForm)
+
+
+formBtn.forEach(btn => btn.addEventListener('click', loadForm))
 
 
 function delay(timeInMs) {
@@ -84,7 +88,7 @@ function loadForm() {
     let formInput;
     let form;
     let inputsData;
-    let formBg
+    let formBg;
     const formElement = `
                         <div class="form-bg">
                                 <form id="things-form">
@@ -125,6 +129,7 @@ function loadForm() {
     form.addEventListener('submit', handleSubmit)
 
     formBg.addEventListener('click', e => {
+
         if (e.target === e.currentTarget)
             e.target.remove()
     }
