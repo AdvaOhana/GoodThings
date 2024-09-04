@@ -11,7 +11,6 @@ hamburger.addEventListener('click', () => {
     delay(50)
 });
 
-
 formBtn.forEach(btn => btn.addEventListener('click', loadForm))
 
 
@@ -179,3 +178,6 @@ function loadForm() {
     }
 
 }
+console.log(getStorage("inputs-data"));
+console.log(new Date());
+
