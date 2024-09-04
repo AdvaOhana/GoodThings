@@ -255,13 +255,7 @@ form{
         padding: 0 0 0 .2rem
 }
 .form-input{
-    height: 2rem;
     width: 80%;
-    padding: 0 1rem;
-    border-bottom: 1px solid rgb(238, 238, 238);
-}
-.floating-label-group {
-    width: 90%;
 }
 .floating-label {
     font-size: 0.8rem;
