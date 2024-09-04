@@ -1,15 +1,37 @@
+// const fakeData = [
+//     {
+//         date: "9/4/2024",
+//         thing: [
+//             "12f1f",
+//             "3132r132f",
+//             "veverbe"
+//         ]
+//     },
+//     {
+//         date: "8/4/2024",
+//         thing: [
+//             "c cxbxc",
+//             "2g2g2",
+//             "j987"
+//         ]
+//     }
+// ]
+// setStorage('inputs-data', fakeData)
+
 const toasts = []
 let toastContainer;
 const iconsPath = "./public/icons"
 const hamburger = document.querySelector('#hamburger');
 const menu = document.querySelector('.menu');
+let inputsData = getStorage('inputs-data') || []
+
 const formBtn = document.querySelectorAll('.show-form')
 let timeOut;
 
-hamburger.addEventListener('click', () => {
+hamburger.addEventListener('click', (e) => {
     menu.classList.toggle('hidden');
-    delay(50)
 });
+
 
 
 formBtn.forEach(btn => btn.addEventListener('click', loadForm))
@@ -83,11 +105,11 @@ function getStorage(key) {
     return JSON.parse(localStorage.getItem(key))
 }
 function loadForm() {
+    const today = new Date().toLocaleDateString()
     let addBtn;
     let allData;
     let formInput;
     let form;
-    let inputsData;
     let formBg;
     const formElement = `
                         <div class="form-bg">
@@ -120,16 +142,13 @@ function loadForm() {
     allData = document.querySelector("#data-list");
     formInput = document.querySelector(".form-input");
     form = document.querySelector('#things-form')
-    inputsData = getStorage('inputs-data') || []
+
 
     if (inputsData.length > 0) fillList()
 
-
     addBtn.addEventListener('click', handleAdd)
     form.addEventListener('submit', handleSubmit)
-
     formBg.addEventListener('click', e => {
-
         if (e.target === e.currentTarget)
             e.target.remove()
     }
@@ -139,13 +158,14 @@ function loadForm() {
 
     function fillList() {
         let data = ""
-        inputsData.forEach((el, i) => {
+        const things = inputsData.filter(el => el.date === today)[0].thing
+        things.forEach((el, i) => {
             data += `
-        <div class="form-data-list">
-            <p class="text">${el.thing}</p>
-            <img class="${i} del-icon" src=${iconsPath}/trash-can-regular.svg />
-        </div>
-        `;
+                    <div class="form-data-list">
+                        <p class="text">${el}</p>
+                        <img class="${i} del-icon" src=${iconsPath}/trash-can-regular.svg />
+                    </div>
+            `;
             formInput.value = "";
         })
         allData.innerHTML = data
@@ -164,15 +184,29 @@ function loadForm() {
 
     function handleAdd() {
         if (formInput.value.length < 3) return
-        inputsData.unshift({ date: new Date().toLocaleDateString(), thing: formInput.value })
+        inputsData?.forEach(input => {
+            if (input.hasOwnProperty('date')) {
+                input.thing.push(formInput.value)
+            }
+        })
+        if (!inputsData.length) {
+            inputsData.unshift({ date: new Date().toLocaleDateString(), thing: [formInput.value] })
+        }
         setStorage('inputs-data', inputsData)
         toaster('טובית נוספה בהצלחה')
         fillList();
     }
 
     function handleDelete(e) {
-        elNum = +e.target.className.split(' ')[0]
-        inputsData = inputsData.filter((el, i) => i !== elNum)
+        thingNum = +e.target.className.split(' ')[0]
+        let things = inputsData.filter(el => el.date === today)[0].thing
+        things = things.filter((el, i) => i !== thingNum)
+        inputsData.forEach(el => {
+            if (el.date === today) {
+                el.thing = things
+            }
+        })
+
         setStorage('inputs-data', inputsData)
         toaster('טובית נמחקה בהצלחה', "delete")
         fillList()
