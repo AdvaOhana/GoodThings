@@ -153,12 +153,10 @@ function loadForm() {
     }
     )
 
-
-
     function fillList() {
         let data = ""
         const things = inputsData.filter(el => el.date === today)[0].thing
-        things.forEach((el, i) => {
+        things?.forEach((el, i) => {
             data += `
                     <div class="form-data-list">
                         <p class="text">${el}</p>
@@ -212,6 +210,5 @@ function loadForm() {
     }
 
 }
-console.log(getStorage("inputs-data"));
-console.log(new Date());
+
 
