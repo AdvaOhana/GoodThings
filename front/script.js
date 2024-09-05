@@ -110,6 +110,31 @@ function loadForm() {
     let formInput;
     let form;
     let formBg;
+    // const formElement = `
+    //                     <div class="form-bg">
+    //                             <form id="things-form">
+    //                                 <div id="input-container">
+    //                                 <div id="add-thing-form" class="b-and-i">
+    //                                     <div class="floating-label-group">
+    //                                         <input type="text" class="form-input" placeholder="" />
+    //                                         <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
+    //                                     </div>
+    //                                     <button type="button" id="add-btn">
+    //                                         <img id="add-icon" src=${iconsPath}/plus-solid.svg alt="">
+    //                                         <span>הוסף</span>
+    //                                     </button>
+    //                                 </div>
+    //                                 <div id="data-list">
+    //                                 </div>
+    //                                 <div id="form-btns">
+    //                                     <button class="btn primary" type="reset" onclick="">נקה הכל</button>
+    //                                     <button class="btn confirm" type="submit">שלח</button>
+    //                                 </div>
+    //                             </div>
+    //                             </form>
+    //                         </div>
+    // `
+
     const formElement = `
                         <div class="form-bg">
                                 <form id="things-form">
