@@ -1,5 +1,6 @@
 import delay from "./delay.js";
-const iconsPath = "../../public/icons"
+const iconsPath = "./src/assets/icons"
+
 export default async function toaster(text, type, duration = 2000) {
     const toasts = []
     let toastContainer;

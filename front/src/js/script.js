@@ -17,9 +17,10 @@
 //     }
 // ]
 // setStorage('inputs-data', fakeData)
-import toaster from "../../helpers/toaster.js";
+import toaster from "../helpers/toaster.js";
+import { setStorage, getStorage } from '../helpers/globalHelpers.js'
 
-const iconsPath = "../../public/icons"
+const iconsPath = "./src/assets/icons"
 const hamburger = document.querySelector('#hamburger');
 const menu = document.querySelector('.menu');
 let inputsData = getStorage('inputs-data') || []
@@ -34,12 +35,6 @@ hamburger.addEventListener('click', (e) => {
 
 formBtn.forEach(btn => btn.addEventListener('click', loadForm))
 
-function setStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data))
-}
-function getStorage(key) {
-    return JSON.parse(localStorage.getItem(key))
-}
 function loadForm() {
     const today = new Date().toLocaleDateString()
     let isPublic = false;
@@ -73,6 +68,7 @@ function loadForm() {
                                 </form>
                             </div>
     `
+
     document.body.insertAdjacentHTML('beforeend', formElement)
     formBg = document.querySelector('.form-bg')
     addBtn = document.querySelector("#add-btn");
@@ -126,7 +122,6 @@ function loadForm() {
             return
         };
         let createTovitToday = inputsData?.filter(el => el.date === today)
-        console.log(createTovitToday);
 
         if (createTovitToday.length) {
             createTovitToday[0].thing.push(formInput.value)
