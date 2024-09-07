@@ -76,6 +76,12 @@ button{
     backdrop-filter: blur(10px);
     overflow: hidden;
 }
+#input-error{
+    width: fit-content;
+    color: rgb(249, 60, 60);
+    font-size: .9rem;
+    transform: translateY(-20px);
+}
 form{
     justify-content: center;
     box-shadow: 0.1rem 0.1rem 1rem .2rem rgba(57, 62, 70, 0.721);

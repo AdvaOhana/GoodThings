@@ -20,7 +20,7 @@
 
 const toasts = []
 let toastContainer;
-const iconsPath = "./public/icons"
+const iconsPath = "../../public/icons"
 const hamburger = document.querySelector('#hamburger');
 const menu = document.querySelector('.menu');
 let inputsData = getStorage('inputs-data') || []
@@ -110,45 +110,22 @@ function loadForm() {
     let formInput;
     let form;
     let formBg;
-    // const formElement = `
-    //                     <div class="form-bg">
-    //                             <form id="things-form">
-    //                                 <div id="input-container">
-    //                                 <div id="add-thing-form" class="b-and-i">
-    //                                     <div class="floating-label-group">
-    //                                         <input type="text" class="form-input" placeholder="" />
-    //                                         <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
-    //                                     </div>
-    //                                     <button type="button" id="add-btn">
-    //                                         <img id="add-icon" src=${iconsPath}/plus-solid.svg alt="">
-    //                                         <span>הוסף</span>
-    //                                     </button>
-    //                                 </div>
-    //                                 <div id="data-list">
-    //                                 </div>
-    //                                 <div id="form-btns">
-    //                                     <button class="btn primary" type="reset" onclick="">נקה הכל</button>
-    //                                     <button class="btn confirm" type="submit">שלח</button>
-    //                                 </div>
-    //                             </div>
-    //                             </form>
-    //                         </div>
-    // `
-
+    let error;
     const formElement = `
                         <div class="form-bg">
                                 <form id="things-form">
                                     <div id="input-container">
                                     <div id="add-thing-form" class="b-and-i">
-                                        <div class="floating-label-group">
-                                            <input type="text" class="form-input" placeholder="" />
-                                            <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
-                                        </div>
-                                        <button type="button" id="add-btn">
-                                            <img id="add-icon" src=${iconsPath}/plus-solid.svg alt="">
-                                            <span>הוסף</span>
-                                        </button>
+                                    <div class="floating-label-group">
+                                    <input type="text" class="form-input" placeholder="" />
+                                    <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
                                     </div>
+                                    <button type="button" id="add-btn">
+                                    <img id="add-icon" src=${iconsPath}/plus-solid.svg alt="">
+                                    <span>הוסף</span>
+                                    </button>
+                                    </div>
+                                    <p id="input-error"></p>
                                     <div id="data-list">
                                     </div>
                                     <div id="form-btns">
@@ -177,10 +154,14 @@ function loadForm() {
             e.target.remove()
     }
     )
+    formInput.addEventListener('input', () => {
+        handleError("")
+
+    })
 
     function fillList() {
         let data = ""
-        const things = inputsData.filter(el => el.date === today)[0].thing
+        const things = inputsData?.filter(el => el.date === today)[0]?.thing
         things?.forEach((el, i) => {
             data += `
                     <div class="form-data-list">
@@ -205,14 +186,16 @@ function loadForm() {
     }
 
     function handleAdd() {
-        if (formInput.value.length < 3) return
-        inputsData?.forEach(input => {
-            if (input.hasOwnProperty('date')) {
-                input.thing.push(formInput.value)
-            }
-        })
-        if (!inputsData.length) {
-            inputsData.unshift({ date: new Date().toLocaleDateString(), thing: [formInput.value] })
+        if (formInput.value.length < 3) {
+            handleError("מינימום 3 תווים")
+            return
+        };
+        createTovitToday = inputsData?.filter(el => el.date === today)
+        if (createTovitToday.length) {
+            createTovitToday[0].thing.push(formInput.value)
+        }
+        if (!createTovitToday.length) {
+            inputsData.unshift({ date: today, thing: [formInput.value] })
         }
         setStorage('inputs-data', inputsData)
         toaster('טובית נוספה בהצלחה')
@@ -232,6 +215,11 @@ function loadForm() {
         setStorage('inputs-data', inputsData)
         toaster('טובית נמחקה בהצלחה', "delete")
         fillList()
+    }
+
+    function handleError(text) {
+        errorEl = document.getElementById('input-error');
+        errorEl.innerHTML = text
     }
 
 }
