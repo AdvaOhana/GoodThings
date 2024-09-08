@@ -1,24 +1,4 @@
-// const fakeData = [
-//     {
-//         date: "9/4/2024",
-//         thing: [
-//             "12f1f",
-//             "3132r132f",
-//             "veverbe"
-//         ]
-//     },
-//     {
-//         date: "8/4/2024",
-//         thing: [
-//             "c cxbxc",
-//             "2g2g2",
-//             "j987"
-//         ]
-//     }
-// ]
-// setStorage('inputs-data', fakeData)
-import toaster from "../helpers/toaster.js";
-import { setStorage, getStorage } from '../helpers/globalHelpers.js'
+import { toaster, setStorage, getStorage, createElement } from '../helpers/globalHelpers.js'
 
 const iconsPath = "./src/assets/icons"
 const hamburger = document.querySelector('#hamburger');
@@ -69,7 +49,8 @@ function loadForm() {
                             </div>
     `
 
-    document.body.insertAdjacentHTML('beforeend', formElement)
+    createElement('beforeend', formElement)
+
     formBg = document.querySelector('.form-bg')
     addBtn = document.querySelector("#add-btn");
     allData = document.querySelector("#data-list");
@@ -83,13 +64,11 @@ function loadForm() {
     formBg.addEventListener('click', e => {
         if (e.target === e.currentTarget)
             e.target.remove()
-    }
-    )
+    })
     formInput.addEventListener('input', () => {
-        handleError("")
+        handleInputError("")
 
     })
-
     function fillList() {
         let data = ""
         const things = inputsData?.filter(el => el.date === today)[0]?.thing
@@ -100,14 +79,13 @@ function loadForm() {
                         <img class="${i} del-icon" src=${iconsPath}/trash-can-regular.svg />
                     </div>
             `;
-            formInput.value = "";
         })
+        formInput.value = "";
         allData.innerHTML = data
         document.querySelectorAll('.del-icon').forEach(icon =>
             icon.addEventListener('click', handleDelete)
         )
     }
-
     function handleSubmit(e) {
         e.preventDefault();
         if (inputsData.length === 0) return
@@ -115,10 +93,9 @@ function loadForm() {
         e.target.parentElement.remove()
         toaster('נתונים נשלחו בהצלחה')
     }
-
     function handleAdd() {
         if (formInput.value.length < 3) {
-            handleError("מינימום 3 תווים")
+            handleInputError("מינימום 3 תווים")
             return
         };
         let createTovitToday = inputsData?.filter(el => el.date === today)
@@ -129,27 +106,45 @@ function loadForm() {
         if (!createTovitToday.length) {
             inputsData.unshift({ date: today, thing: [formInput.value], user_id: "fake-id-1012", public: isPublic, img_url: 'url-for-img/123' })
         }
+
+        const markup = `
+                    <div class="form-data-list">
+                        <p class="text">${formInput.value}</p>
+                        <img class="${createTovitToday[0].thing.length - 1} del-icon" src=${iconsPath}/trash-can-regular.svg />
+                    </div>
+                    `
         setStorage('inputs-data', inputsData)
         toaster('טובית נוספה בהצלחה')
-        fillList();
+        formInput.value = ""
+        createElement('beforeend', markup, 'data-list', 'id')
+        const newElDelIcon = document.querySelectorAll('.del-icon')[createTovitToday[0].thing.length - 1]
+        newElDelIcon.addEventListener('click', handleDelete)
     }
-
     function handleDelete(e) {
-        const thingNum = +e.target.className.split(' ')[0]
-        let things = inputsData.filter(el => el.date === today)[0].thing
-        things = things.filter((el, i) => i !== thingNum)
-        inputsData.forEach(el => {
+        const allIcons = document.querySelectorAll('.del-icon')
+        const thingNum = +this.className.split(' ')[0]
+
+        allIcons.forEach(el => {
+            if (el === this) {
+                allData.removeChild(this.parentElement)
+            }
+        })
+        let todayThings = inputsData.find(el => el.date === today)?.thing
+
+        todayThings = todayThings.filter((el, i) => {
+            return el !== this.parentElement.children[0].innerHTML
+        })
+
+        inputsData.forEach((el) => {
             if (el.date === today) {
-                el.thing = things
+                el.thing = todayThings
             }
         })
 
         setStorage('inputs-data', inputsData)
         toaster('טובית נמחקה בהצלחה', "delete")
-        fillList()
     }
-
-    function handleError(text) {
+    function handleInputError(text) {
         const errorEl = document.getElementById('input-error');
         errorEl.innerHTML = text
     }

@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv'
 dotenv.config()
+
 const { DB_PASSWORD, DB_HOST, DB_NAME, DB_USER } = process.env
 
 const pool = mysql.createPool({
@@ -26,8 +27,8 @@ export async function freeQuery(query) {
         console.log(error);
 
     }
-
 }
+
 export async function createUser() {
     try {
         const [results, fields] = await pool.query(`
