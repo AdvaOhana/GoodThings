@@ -1,10 +1,20 @@
 import { Router } from "express";
+// import { getAllGroups } from "../controllers/groups/groupsController.js";
+import { allGroups } from "../db/models/groupModel.js";
 
 export const groupsRouter = Router()
 const userRouter = Router({ mergeParams: true })
 const tovitRouter = Router({ mergeParams: true })
-// http://localhost:8000/groups/
-groupsRouter.get('/all', async (req, res) => { })
+
+groupsRouter.get('/all', allGroups, (req, res) => {
+    res.status(200).json(req.allGroups)
+})
+
+
+
+
+
+
 groupsRouter.get('/:id', async (req, res) => { })
 groupsRouter.get('/byName/:name', async (req, res) => { })
 groupsRouter.post('/', async (req, res) => { })
