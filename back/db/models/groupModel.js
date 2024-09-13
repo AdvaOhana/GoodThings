@@ -68,6 +68,7 @@ export async function deleteGroup(req, res, next) {
 
 export async function createGroup(req, res, next) {
     try {
+
         const name = req.body.name;
         const about = req.body.about;
 
@@ -92,28 +93,29 @@ export async function createGroup(req, res, next) {
 
 export async function updateGroup(req, res, next) {
     try {
-        // const name = req.params.name;
-        // const [results] = await pool.query(`
-        //     select * from all_groups where name like '%${name}%'
-        //     `)
-        // if (!results.length) throw Error(`Group ${name} could not be found.`)
-        // req.groupData = results;
-        // next()
+        const id = req.params.id;
+        if (lettersReg.test(id)) throw Error('Id is not valid, please check again')
+        const name = req.body.name;
+        const about = req.body.about;
+
+        if (name) {
+            const [foundGroupName] = await pool.query(`
+                select * from all_groups where name = '${name}' and not (id=${id})
+                `)
+            if (foundGroupName.length) throw Error(`The group '${name}' already exist, Please choose another name !`)
+        }
+
+        const [results] = await pool.query(`
+            update all_groups set 
+            ${name ? `name = "${name}"` : ""}
+            ${name && about ? ',' : ''}
+            ${about ? `about = "${about}"` : ""}
+            WHERE id = ${id}
+            `)
+
+        next()
     } catch (error) {
-        // res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-
-// export async function createType() {
-//     try {
-//         const [results, fields] = await pool.query(`
-//             insert into user_types (type) values ('Admin')
-//             `)
-//         console.log(results);
-//         console.log(fields);
-//     } catch (err) {
-//         console.log(err);
-
-//     }
-// }
 

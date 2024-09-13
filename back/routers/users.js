@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { allUsers } from "../db/models/userModel"
+import { allUsers } from "../db/models/userModel.js"
 
 export const usersRouter = Router()
 const tovitRouter = Router({ mergeParams: true })

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName } from "../db/models/groupModel.js";
+import { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup } from "../db/models/groupModel.js";
 
 export const groupsRouter = Router()
 const userRouter = Router({ mergeParams: true })
@@ -17,13 +17,15 @@ groupsRouter.get('/byName/:name', getGroupByName, (req, res) => {
 
 })
 groupsRouter.post('/', createGroup, (req, res) => {
-    res.status(200).json({ message: `Created ${req.body.name} successfully` })
+    res.status(200).json({ message: `Created ${req.body.name} successfully`, data: [] })
 })
 groupsRouter.delete('/:id', deleteGroup, (req, res) => {
-    res.status(200).json({ message: `Deleted the group:'${req.groupName}' successfully` })
+    res.status(200).json({ message: `Deleted the group:'${req.groupName}' successfully`, data: [] })
 })
 
-// groupsRouter.patch('/:id', (req, res) => { })
+groupsRouter.patch('/:id', updateGroup, (req, res) => {
+    res.status(200).json({ message: `Updated the group successfully`, data: [] })
+})
 
 // // http://localhost:8000/groups/:groupId/tovit
 // groupsRouter.use('/:groupId/tovit', tovitRouter)
