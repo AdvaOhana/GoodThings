@@ -1,5 +1,5 @@
 import { pool } from "../dbConnection.js";
-
+import { lettersReg } from '../helpers/helper.js'
 export async function allGroups(req, res, next) {
     try {
         const [results] = await pool.query(`select * from all_groups`)
@@ -7,17 +7,40 @@ export async function allGroups(req, res, next) {
         req.allGroups = results;
         next();
     } catch (error) {
-        res.status(404).send(`${error.sqlMessage || error}`)
+        res.status(404).send(`${error.sqlMessage || error.message}`)
     }
 }
 
-export async function getGroupById(id) {
+export async function getGroupById(req, res, next) {
     try {
-        const [results, fields] = await pool.query(`select * from all_groups`)
-        return results
-        return null
+        const id = req.params.id;
+        if (lettersReg.test(id)) throw Error('Id is not valid, please check again')
+
+        const [results] = await pool.query(`
+            select * from all_groups where id = ${id}
+            `)
+
+        if (!results.length) throw Error('No groups found.')
+        req.groupData = results;
+        next()
     } catch (error) {
-        console.log(error);
+        res.status(404).send(`${error.sqlMessage || error.message}`)
+        // console.log(error);
+
+    }
+}
+
+export async function getGroupByName(req, res, next) {
+    try {
+        const name = req.params.name;
+        const [results] = await pool.query(`
+            select * from all_groups where name like '%${name}%'
+            `)
+        if (!results.length) throw Error(`Group ${name} could not be found.`)
+        req.groupData = results;
+        next()
+    } catch (error) {
+        res.status(404).send(`${error.sqlMessage || error.message}`)
 
     }
 }

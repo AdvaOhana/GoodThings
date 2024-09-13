@@ -22,7 +22,7 @@ tovitRouter.post('/', async (req, res) => { })
 tovitRouter.patch('/:id', async (req, res) => { })
 tovitRouter.delete('/:id', async (req, res) => { })
 
-usersRouter.use('/:usersId/group')
+usersRouter.use('/:usersId/group', groupsRouter)
 groupsRouter.get('/all', async (req, res) => { })
 groupsRouter.post('/', async (req, res) => { })
 groupsRouter.patch('/:id', async (req, res) => { })
