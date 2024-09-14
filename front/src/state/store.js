@@ -1,3 +1,5 @@
+import { getStorage } from "../helpers/globalHelpers.js";
+
 export class Store {
     constructor(initState) {
         this.state = initState;
@@ -24,7 +26,9 @@ export class Store {
 }
 
 export const globalState = new Store({
-    user: null,
-    theme: 'light',
+    userName: "Shmuel",
+    userLName: "Atar",
+    inputsData: getStorage('inputs-data') || [],
+    theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
     isAuthenticated: false,
 });

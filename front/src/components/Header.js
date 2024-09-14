@@ -1,6 +1,5 @@
 import { Image } from './Image.js'
 import { Button } from './Button.js'
-import { getStorage } from '../helpers/globalHelpers.js';
 import { loadForm } from '../js/tovitForm.js';
 import { globalState } from '../state/store.js';
 
@@ -42,7 +41,6 @@ export function Header() {
     const hamburger = header.querySelector('#hamburger');
     const menu = header.querySelector('.menu');
     const formBtn = header.querySelectorAll('.show-form')
-    let inputsData = getStorage('inputs-data') || []
 
     hamburger.addEventListener('click', (e) => {
         menu.classList.toggle('hidden');
@@ -55,7 +53,6 @@ export function Header() {
         root.addEventListener('click', closeMenu)
     });
 
-
     function themeHandler(state) {
         root.className = state.theme;
     }
@@ -63,14 +60,14 @@ export function Header() {
     globalState.subscribe(themeHandler)
 
     themeToggle.addEventListener('click', () => {
-        const currTheme = globalState.getState().theme;
-        const newTheme = currTheme === 'dark' ? 'light' : 'dark'
+        const { theme, user } = globalState.getState();
+        const newTheme = theme === 'dark' ? 'light' : 'dark'
         globalState.setState({ theme: newTheme })
     })
 
     themeHandler(globalState.getState())
 
-    formBtn.forEach(btn => btn.addEventListener('click', () => loadForm(inputsData)))
+    formBtn.forEach(btn => btn.addEventListener('click', () => loadForm()))
 
 
     return header

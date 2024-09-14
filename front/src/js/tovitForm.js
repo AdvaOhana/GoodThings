@@ -3,30 +3,27 @@ import { Error } from '../components/Error.js';
 import { Image } from '../components/Image.js';
 import { Input } from '../components/Input.js';
 import { Span } from '../components/Span.js';
-
 import { toaster, setStorage, createElement } from '../helpers/globalHelpers.js'
+import { globalState } from '../state/store.js';
+
 const iconsPath = "./src/assets/icons"
 
-export function loadForm(tovitData) {
+export function loadForm() {
     const today = new Date().toLocaleDateString()
     let isPublic = false;
-    let addBtn;
-    let allData;
-    let formInput;
-    let form;
-    let formBg;
-
 
     const InputBtn = Button('button', "", "", "add-btn")
     InputBtn.insertAdjacentElement('afterbegin', Image(`${iconsPath}/plus-solid.svg`, 'הוסף', 'add-icon'))
     InputBtn.insertAdjacentElement('beforeend', Span('הוסף'))
 
+    let inputText = `${globalState.getState().userName}, כתוב/י משהו טוב שקרה לך היום...`
+    const inputEl = Input(inputText).outerHTML
     const formElement = `
                         <div class="form-bg">
                                 <form id="things-form">
                                     <div id="input-container">
                                     <div id="add-thing-form" class="b-and-i">
-                                        ${Input('כתוב/י משהו טוב שקה לך היום...').outerHTML}
+                                        ${inputEl}
                                         ${InputBtn.outerHTML}
                                     </div>
                                     ${Error().outerHTML}
@@ -43,13 +40,11 @@ export function loadForm(tovitData) {
 
     createElement('beforeend', formElement)
 
-    formBg = document.querySelector('.form-bg')
-    addBtn = document.querySelector("#add-btn");
-    allData = document.querySelector("#data-list");
-    formInput = document.querySelector(".form-input");
-    form = document.querySelector('#things-form')
+    const formBg = document.querySelector('.form-bg')
+    const addBtn = document.querySelector("#add-btn");
+    const formInput = document.querySelector(".form-input");
+    const form = document.querySelector('#things-form')
 
-    if (tovitData.length > 0) fillList()
 
     addBtn.addEventListener('click', handleAdd)
     form.addEventListener('submit', handleSubmit)
@@ -60,86 +55,97 @@ export function loadForm(tovitData) {
 
     formInput.addEventListener('input', () => {
         handleInputError("")
-
     })
-    function fillList() {
-        let data = ""
-        const things = tovitData?.filter(el => el.date === today)[0]?.thing
-        things?.forEach((el, i) => {
-            data += `
-                    <div class="form-data-list">
-                        <p class="text">${el}</p>
-                        ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", "${i} del-icon").outerHTML}
-                    </div>
-            `;
-        })
-        formInput.value = "";
-        allData.innerHTML = data
-        document.querySelectorAll('.del-icon').forEach(icon =>
-            icon.addEventListener('click', handleDelete)
-        )
-    }
-    function handleSubmit(e) {
-        e.preventDefault();
-        if (tovitData.length === 0) return
-        setStorage(`inputs-data`, tovitData)
-        e.target.parentElement.remove()
-        toaster('נתונים נשלחו בהצלחה')
-    }
+
+    globalState.subscribe(state => {
+        updateUI(state);
+        updateInputPlaceholder(state.userName);
+    })
+    updateUI(globalState.getState())
+
     function handleAdd() {
         if (formInput.value.length < 3) {
             handleInputError("מינימום 3 תווים")
             return
         };
+        let tovitData = globalState.getState().inputsData;
         let createTovitToday = tovitData?.filter(el => el.date === today)
 
         if (createTovitToday.length) {
             createTovitToday[0]?.thing.push(formInput.value)
+        } else {
+            tovitData.unshift(
+                {
+                    date: today,
+                    thing: [formInput.value],
+                    user_id: "fake-id-1012",
+                    public: isPublic,
+                    img_url: 'url-for-img/123'
+                })
         }
-        if (!createTovitToday.length) {
-            tovitData.unshift({ date: today, thing: [formInput.value], user_id: "fake-id-1012", public: isPublic, img_url: 'url-for-img/123' })
-        }
-
-        const markup = `
-                    <div class="form-data-list">
-                        <p class="text">${formInput.value}</p>
-                        ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `${createTovitToday[0]?.thing.length - 1} del-icon`).outerHTML}
-                    </div>
-                    `
+        globalState.setState({ inputsData: tovitData })
         setStorage('inputs-data', tovitData)
+
         toaster('טובית נוספה בהצלחה')
         formInput.value = ""
-        createElement('beforeend', markup, 'data-list', 'id')
-        const newElDelIcon = document.querySelectorAll('.del-icon')[createTovitToday[0]?.thing.length - 1]
-        newElDelIcon.addEventListener('click', handleDelete)
     }
-    function handleDelete(e) {
-        const allIcons = document.querySelectorAll('.del-icon')
-        const thingNum = +this.className.split(' ')[0]
 
-        allIcons.forEach(el => {
-            if (el === this) {
-                allData.removeChild(this.parentElement)
-            }
-        })
-        let todayThings = tovitData.find(el => el.date === today)?.thing
+    function handleSubmit(e) {
+        e.preventDefault();
+        let tovitData = globalState.getState().inputsData;
+        if (tovitData.length === 0) return
 
-        todayThings = todayThings.filter((el, i) => {
-            return el !== this.parentElement.children[0].innerHTML
-        })
+        globalState.setState({ inputsData: tovitData })
+        setStorage(`inputs-data`, tovitData)
+        e.target.parentElement.remove()
+        toaster('נתונים נשלחו בהצלחה')
+    }
 
-        tovitData.forEach((el) => {
-            if (el.date === today) {
-                el.thing = todayThings
-            }
-        })
 
+
+    function handleDelete(index) {
+        let tovitData = globalState.getState().inputsData;
+        let todayThings = tovitData.find(el => el.date === today)?.thing;
+
+        if (todayThings) {
+            todayThings.splice(index, 1)
+        }
+
+        globalState.setState({ inputsData: tovitData })
         setStorage('inputs-data', tovitData)
         toaster('טובית נמחקה בהצלחה', "delete")
     }
+
     function handleInputError(text) {
         const errorEl = document.getElementById('input-error');
         errorEl.innerHTML = text
     }
 
-}
+    function updateUI(state) {
+        const allData = document.querySelector("#data-list");
+        const things = state.inputsData.filter(el => el.date === today)[0]?.thing;
+        allData.innerHTML = "";
+
+        if (things && things.length) {
+            things.forEach((thing, i) => {
+
+                const markup = `
+                <div class="form-data-list">
+                <p class="text">${thing}</p>
+                ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `${i} del-icon`).outerHTML}
+                </div>
+                `
+                createElement('beforeend', markup, 'data-list', 'id');
+            })
+            document.querySelectorAll('.del-icon').forEach((icon, i) => {
+                icon.addEventListener('click', () => handleDelete(i));
+            });
+        }
+    }
+
+    function updateInputPlaceholder(newName) {
+        inputText = `${newName}, כתוב/י משהו טוב שקרה לך היום...`
+        document.querySelector('.floating-label').innerHTML = inputText
+    }
+
+} 
