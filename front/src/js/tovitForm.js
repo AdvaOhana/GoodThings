@@ -1,3 +1,9 @@
+import { Button } from '../components/Button.js';
+import { Error } from '../components/Error.js';
+import { Image } from '../components/Image.js';
+import { Input } from '../components/Input.js';
+import { Span } from '../components/Span.js';
+
 import { toaster, setStorage, createElement } from '../helpers/globalHelpers.js'
 const iconsPath = "./src/assets/icons"
 
@@ -9,26 +15,26 @@ export function loadForm(tovitData) {
     let formInput;
     let form;
     let formBg;
+
+
+    const InputBtn = Button('button', "", "", "add-btn")
+    InputBtn.insertAdjacentElement('afterbegin', Image(`${iconsPath}/plus-solid.svg`, 'הוסף', 'add-icon'))
+    InputBtn.insertAdjacentElement('beforeend', Span('הוסף'))
+
     const formElement = `
                         <div class="form-bg">
                                 <form id="things-form">
                                     <div id="input-container">
                                     <div id="add-thing-form" class="b-and-i">
-                                    <div class="floating-label-group">
-                                    <input type="text" class="form-input" placeholder="" />
-                                    <label class="floating-label">כתוב/י דבר אחד טוב שקרה לך היום</label>
+                                        ${Input('כתוב/י משהו טוב שקה לך היום...').outerHTML}
+                                        ${InputBtn.outerHTML}
                                     </div>
-                                    <button type="button" id="add-btn">
-                                    <img id="add-icon" src=${iconsPath}/plus-solid.svg alt="">
-                                    <span>הוסף</span>
-                                    </button>
-                                    </div>
-                                    <p id="input-error"></p>
+                                    ${Error().outerHTML}
                                     <div id="data-list">
                                     </div>
                                     <div id="form-btns">
-                                        <button class="btn primary" type="reset" onclick="">נקה הכל</button>
-                                        <button class="btn confirm" type="submit">שלח</button>
+                                    ${Button('reset', "נקה", 'btn primary', "").outerHTML}
+                                    ${Button('submit', "שלח", 'btn confirm', "").outerHTML}
                                     </div>
                                 </div>
                                 </form>
@@ -63,7 +69,7 @@ export function loadForm(tovitData) {
             data += `
                     <div class="form-data-list">
                         <p class="text">${el}</p>
-                        <img class="${i} del-icon" src=${iconsPath}/trash-can-regular.svg />
+                        ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", "${i} del-icon").outerHTML}
                     </div>
             `;
         })
@@ -88,7 +94,7 @@ export function loadForm(tovitData) {
         let createTovitToday = tovitData?.filter(el => el.date === today)
 
         if (createTovitToday.length) {
-            createTovitToday[0].thing.push(formInput.value)
+            createTovitToday[0]?.thing.push(formInput.value)
         }
         if (!createTovitToday.length) {
             tovitData.unshift({ date: today, thing: [formInput.value], user_id: "fake-id-1012", public: isPublic, img_url: 'url-for-img/123' })
@@ -97,14 +103,14 @@ export function loadForm(tovitData) {
         const markup = `
                     <div class="form-data-list">
                         <p class="text">${formInput.value}</p>
-                        <img class="${createTovitToday[0].thing.length - 1} del-icon" src=${iconsPath}/trash-can-regular.svg />
+                        ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `${createTovitToday[0]?.thing.length - 1} del-icon`).outerHTML}
                     </div>
                     `
         setStorage('inputs-data', tovitData)
         toaster('טובית נוספה בהצלחה')
         formInput.value = ""
         createElement('beforeend', markup, 'data-list', 'id')
-        const newElDelIcon = document.querySelectorAll('.del-icon')[createTovitToday[0].thing.length - 1]
+        const newElDelIcon = document.querySelectorAll('.del-icon')[createTovitToday[0]?.thing.length - 1]
         newElDelIcon.addEventListener('click', handleDelete)
     }
     function handleDelete(e) {

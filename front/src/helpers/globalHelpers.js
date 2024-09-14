@@ -1,4 +1,6 @@
 const iconsPath = "./src/assets/icons"
+import { Image } from '../components/Image.js'
+import { Span } from '../components/Span.js'
 
 export function delay(timeInMs) {
     return new Promise(res => setTimeout(res, timeInMs))
@@ -12,10 +14,10 @@ export function getStorage(key) {
 }
 
 
-export function createElement(location, markup, parentName = 'body', parentType) {
-    let parentEl = document.body
+export function createElement(location, markup, parentName = 'root', parentType) {
+    let parentEl = document.getElementById('root')
 
-    if (parentName !== 'body') {
+    if (parentName !== 'root') {
         if (parentType === 'id') {
             parentEl = document.getElementById(parentName)
         }
@@ -45,13 +47,11 @@ export async function toaster(text, type, duration = 2000) {
         iconType = `${iconsPath}/circle-xmark-regular.svg`
     }
 
+    const img = Image(iconType).outerHTML
+    const span = Span(text).outerHTML
 
-    const toast = `<img src=${iconType} />
-                   <span>${text}</span>`
-
-
-
-    toastElement.insertAdjacentHTML('beforeend', toast)
+    toastElement.insertAdjacentHTML('beforeend', img)
+    toastElement.insertAdjacentHTML('beforeend', span)
     toastContainer.appendChild(toastElement)
 
     toasts.unshift(toastElement)
