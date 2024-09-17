@@ -1,54 +1,76 @@
 import { Button } from '../components/Button.js';
+import { Div } from '../components/Div.js';
 import { Error } from '../components/Error.js';
 import { Image } from '../components/Image.js';
 import { Input } from '../components/Input.js';
 import { Span } from '../components/Span.js';
+import { ToggleElement } from '../components/Toggle.js';
 import { toaster, setStorage, createElement } from '../helpers/globalHelpers.js'
-import { globalState } from '../state/store.js';
+import { globalState, Store } from '../state/store.js';
 
 const iconsPath = "./src/assets/icons"
 
+const formState = new Store({
+    isPublic: false,
+    today: new Date().toLocaleDateString(),
+    errorText: "",
+})
+
 export function loadForm() {
-    const today = new Date().toLocaleDateString()
-    let isPublic = false;
+    const body = document.getElementById('root')
+    const addBtn = Button('button', "", "", "add-btn")
+    addBtn.insertAdjacentElement('afterbegin', Image(`${iconsPath}/plus-solid.svg`, 'הוסף', 'add-icon'))
+    addBtn.insertAdjacentElement('beforeend', Span('הוסף'))
 
-    const InputBtn = Button('button', "", "", "add-btn")
-    InputBtn.insertAdjacentElement('afterbegin', Image(`${iconsPath}/plus-solid.svg`, 'הוסף', 'add-icon'))
-    InputBtn.insertAdjacentElement('beforeend', Span('הוסף'))
+    const inputEl = Input(`${globalState.getState().userName}, כתוב/י משהו טוב שקרה לך היום...`);
+    const formBgElement = Div('form-bg');
 
-    let inputText = `${globalState.getState().userName}, כתוב/י משהו טוב שקרה לך היום...`
-    const inputEl = Input(inputText).outerHTML
-    const formElement = `
-                        <div class="form-bg">
-                                <form id="things-form">
-                                    <div id="input-container">
-                                    <div id="add-thing-form" class="b-and-i">
-                                        ${inputEl}
-                                        ${InputBtn.outerHTML}
-                                    </div>
-                                    ${Error().outerHTML}
-                                    <div id="data-list">
-                                    </div>
-                                    <div id="form-btns">
-                                    ${Button('reset', "נקה", 'btn primary', "").outerHTML}
-                                    ${Button('submit', "שלח", 'btn confirm', "").outerHTML}
-                                    </div>
-                                </div>
-                                </form>
-                            </div>
-    `
+    // Create form and its inner elements using DOM methods
+    const form = document.createElement('form');
+    form.id = "things-form";
 
-    createElement('beforeend', formElement)
+    const inputContainer = Div("", 'input-container');
+    const addThingForm = Div('b-and-i', "add-thing-form");
 
-    const formBg = document.querySelector('.form-bg')
-    const addBtn = document.querySelector("#add-btn");
+    addThingForm.appendChild(inputEl);
+    addThingForm.appendChild(addBtn);
+
+    inputContainer.appendChild(addThingForm);
+    inputContainer.appendChild(Error());
+
+    const dataList = Div("", 'data-list');
+    inputContainer.appendChild(dataList);
+
+    const formBtns = Div("", 'form-btns');
+    const submitBtn = Button('submit', "שיתוף", 'btn confirm')
+    const resetBtn = Button('reset', "ביטול", 'btn primary')
+    formBtns.appendChild(resetBtn);
+    formBtns.appendChild(submitBtn);
+    inputContainer.appendChild(formBtns);
+
+    const toggleDiv = Div('toggle-div')
+    const togglePublic = ToggleElement()
+    toggleDiv.appendChild(Span('שיתוף לכולם'))
+    toggleDiv.appendChild(togglePublic)
+    form.appendChild(toggleDiv);
+    form.appendChild(inputContainer);
+
+    togglePublic.addEventListener('click', () => {
+        formState.setState({ isPublic: !formState.getState().isPublic })
+
+    }
+
+    )
+
+    formBgElement.appendChild(form);
+    body.insertAdjacentElement('beforeend', formBgElement)
+
     const formInput = document.querySelector(".form-input");
-    const form = document.querySelector('#things-form')
 
 
     addBtn.addEventListener('click', handleAdd)
     form.addEventListener('submit', handleSubmit)
-    formBg.addEventListener('click', e => {
+    formBgElement.addEventListener('click', e => {
         if (e.target === e.currentTarget)
             e.target.remove()
     })
@@ -59,27 +81,36 @@ export function loadForm() {
 
     globalState.subscribe(state => {
         updateUI(state);
-        updateInputPlaceholder(state.userName);
     })
+
+    formState.subscribe(state => {
+        updateError(state.errorText)
+        updateToggle(state.isPublic)
+
+    })
+
     updateUI(globalState.getState())
+    updateError(formState.getState().errorText)
+    updateToggle(formState.getState().isPublic)
 
     function handleAdd() {
         if (formInput.value.length < 3) {
-            handleInputError("מינימום 3 תווים")
+            formState.setState({ errorText: "מינימום 3 תווים" })
             return
         };
         let tovitData = globalState.getState().inputsData;
-        let createTovitToday = tovitData?.filter(el => el.date === today)
 
-        if (createTovitToday.length) {
+        let createTovitToday = tovitData?.filter(el => el.date === formState.getState().today)
+
+        if (createTovitToday?.length) {
             createTovitToday[0]?.thing.push(formInput.value)
         } else {
             tovitData.unshift(
                 {
-                    date: today,
+                    date: formState.getState().today,
                     thing: [formInput.value],
                     user_id: "fake-id-1012",
-                    public: isPublic,
+                    public: formState.getState().isPublic,
                     img_url: 'url-for-img/123'
                 })
         }
@@ -101,11 +132,9 @@ export function loadForm() {
         toaster('נתונים נשלחו בהצלחה')
     }
 
-
-
     function handleDelete(index) {
         let tovitData = globalState.getState().inputsData;
-        let todayThings = tovitData.find(el => el.date === today)?.thing;
+        let todayThings = tovitData.find(el => el.date === formState.getState().today)?.thing;
 
         if (todayThings) {
             todayThings.splice(index, 1)
@@ -116,6 +145,8 @@ export function loadForm() {
         toaster('טובית נמחקה בהצלחה', "delete")
     }
 
+
+
     function handleInputError(text) {
         const errorEl = document.getElementById('input-error');
         errorEl.innerHTML = text
@@ -123,16 +154,18 @@ export function loadForm() {
 
     function updateUI(state) {
         const allData = document.querySelector("#data-list");
-        const things = state.inputsData.filter(el => el.date === today)[0]?.thing;
-        allData.innerHTML = "";
+        const things = state.inputsData?.filter(el => el.date === formState.getState().today)[0]?.thing;
+        if (allData) {
+            allData.innerHTML = "";
 
+        }
         if (things && things.length) {
             things.forEach((thing, i) => {
 
                 const markup = `
                 <div class="form-data-list">
                 <p class="text">${thing}</p>
-                ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `${i} del-icon`).outerHTML}
+                ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `del-icon`).outerHTML}
                 </div>
                 `
                 createElement('beforeend', markup, 'data-list', 'id');
@@ -143,9 +176,13 @@ export function loadForm() {
         }
     }
 
-    function updateInputPlaceholder(newName) {
-        inputText = `${newName}, כתוב/י משהו טוב שקרה לך היום...`
-        document.querySelector('.floating-label').innerHTML = inputText
+    function updateToggle(isPublic) {
+        submitBtn.innerHTML = isPublic ? "שיתוף לכולם" : "שיתוף"
+    }
+
+    function updateError(error) {
+        const errorText = `${error}`
+        document.getElementById('input-error').innerText = errorText
     }
 
 } 

@@ -2,6 +2,7 @@ import { Image } from './Image.js'
 import { Button } from './Button.js'
 import { loadForm } from '../js/tovitForm.js';
 import { globalState } from '../state/store.js';
+import { ToggleElement } from './Toggle.js';
 
 
 const root = document.getElementById('root')
@@ -17,14 +18,14 @@ export function Header() {
                 <li>פריט 3</li>
             </ul>
     </nav>
-    <div id="continer">
+    <div id="hamburger-container">
         <button id="hamburger" >
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </button>
         <img id="user-logo" src="./src/assets/icons/user-regular.svg" alt="">
-        ${Button('text', 'שנה תצוגה', 'btn primary', 'theme-color').outerHTML}
+     
     </div>
     <div class="menu hidden">
                 <ul>
@@ -35,12 +36,18 @@ export function Header() {
     </div>
 `
     const header = document.createElement('header')
-
     header.insertAdjacentHTML('afterbegin', markup)
-    const themeToggle = header.querySelector('#theme-color')
+
+
     const hamburger = header.querySelector('#hamburger');
     const menu = header.querySelector('.menu');
     const formBtn = header.querySelectorAll('.show-form')
+    const hamburgerContainer = header.querySelector('#hamburger-container')
+    hamburgerContainer.appendChild(ToggleElement(globalState.getState().theme))
+    const themeToggle = header.querySelector('.toggle-container')
+
+
+
 
     hamburger.addEventListener('click', (e) => {
         menu.classList.toggle('hidden');

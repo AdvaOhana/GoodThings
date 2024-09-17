@@ -9,6 +9,7 @@ export class Store {
     getState() {
         return this.state
     }
+
     setState(newState) {
         this.state = { ...this.state, ...newState }
         this.notifyStateChange()
@@ -17,12 +18,8 @@ export class Store {
         this.listeners.push(listener)
     }
     notifyStateChange() {
-        this.listeners.forEach(subscriber => subscriber(this.state))
+        this.listeners.forEach(listener => listener(this.state))
     }
-    getListners() {
-        console.log(this.stateListeners);
-    }
-
 }
 
 export const globalState = new Store({
