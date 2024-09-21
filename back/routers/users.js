@@ -8,7 +8,9 @@ const groupsRouter = Router({ mergeParams: true })
 usersRouter.get('/all', allUsers, (req, res) => {
     res.status(200).json({ message: 'Found users', data: req.allUsers })
 })
-usersRouter.get('/:id', (req, res) => { })
+usersRouter.get('/:id', getUserById, (req, res) => {
+    res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.groupData })
+})
 usersRouter.get('/byName/:id', (req, res) => { })
 
 usersRouter.post('/sign-up', (req, res) => { })
