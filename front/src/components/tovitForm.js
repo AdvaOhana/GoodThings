@@ -1,14 +1,14 @@
-import { Button } from '../components/Button.js';
-import { Div } from '../components/Div.js';
-import { Error } from '../components/Error.js';
-import { Image } from '../components/Image.js';
-import { Input } from '../components/Input.js';
-import { Span } from '../components/Span.js';
-import { ToggleElement } from '../components/Toggle.js';
-import { toaster, setStorage, createElement } from '../helpers/globalHelpers.js'
+import { Button } from './Button.js';
+import { Div } from './Div.js';
+import { Error } from './Error.js';
+import { Image } from './Image.js';
+import { Input } from './Input.js';
+import { Span } from './Span.js';
+import { ToggleElement } from './Toggle.js';
+import { toaster, setStorage, createElement, defaultRef } from '../helpers/globalHelpers.js'
 import { globalState, Store } from '../state/store.js';
 
-const iconsPath = "./src/assets/icons"
+const iconsPath = "../../src/assets/icons"
 
 const formState = new Store({
     isPublic: false,
@@ -16,10 +16,10 @@ const formState = new Store({
     errorText: "",
 })
 
-export function loadForm() {
+export default function loadForm() {
     const body = document.getElementById('root')
     const addBtn = Button('button', "", "", "add-btn")
-    addBtn.insertAdjacentElement('afterbegin', Image(`${iconsPath}/plus-solid.svg`, 'הוסף', 'add-icon'))
+    addBtn.insertAdjacentElement('afterbegin', Image(`${iconsPath}/plus-solid.svg`, 'הוסף', "add-icon", 'icons icons-big'))
     addBtn.insertAdjacentElement('beforeend', Span('הוסף'))
 
     const inputEl = Input(`${globalState.getState().userName}, כתוב/י משהו טוב שקרה לך היום...`);
@@ -70,9 +70,12 @@ export function loadForm() {
 
     addBtn.addEventListener('click', handleAdd)
     form.addEventListener('submit', handleSubmit)
+
     formBgElement.addEventListener('click', e => {
-        if (e.target === e.currentTarget)
+        if (e.target === e.currentTarget) {
             e.target.remove()
+            history.pushState('', '', location.origin + defaultRef)
+        }
     })
 
     formInput.addEventListener('input', () => {
@@ -165,7 +168,7 @@ export function loadForm() {
                 const markup = `
                 <div class="form-data-list">
                 <p class="text">${thing}</p>
-                ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `del-icon`).outerHTML}
+                ${Image(`${iconsPath}/trash-can-regular.svg`, "מחק", "", `icons icons-small del-icon`).outerHTML}
                 </div>
                 `
                 createElement('beforeend', markup, 'data-list', 'id');

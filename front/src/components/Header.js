@@ -1,8 +1,8 @@
 import { Image } from './Image.js'
 import { Button } from './Button.js'
-import { loadForm } from '../js/tovitForm.js';
 import { globalState } from '../state/store.js';
-import { ToggleElement } from './Toggle.js';
+import { defaultRef } from '../helpers/globalHelpers.js';
+
 
 
 const root = document.getElementById('root')
@@ -10,12 +10,13 @@ const root = document.getElementById('root')
 
 export function Header() {
     const markup = `
-    ${Image('./src/assets/imgs/logo.png', 'טוב יומי', 'logo').outerHTML}
+    ${Image('imgs/logo.png', 'טוב יומי', 'logo').outerHTML}
     <nav id="menu-bar" class="navbar">
             <ul class="nav-list">
-                <li>${Button('text', 'הוסף טובית', 'btn primary show-form').outerHTML}</li>
-                <li>פריט 2</li>
-                <li>פריט 3</li>
+                <li><a data-link href="${defaultRef}">בית</a></li>
+                <li><a data-link href="${defaultRef}/tovit/form">הוסף טובית</a></li>
+                <li><a data-link href="${defaultRef}/login">התחברות</a></li>
+                <li><a data-link href="${defaultRef}/error">שגיאה</a></li>
             </ul>
     </nav>
     <div id="hamburger-container">
@@ -23,9 +24,7 @@ export function Header() {
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
-        </button>
-        <img id="user-logo" src="./src/assets/icons/user-regular.svg" alt="">
-     
+        </button> 
     </div>
     <div class="menu hidden">
                 <ul>
@@ -41,13 +40,13 @@ export function Header() {
 
     const hamburger = header.querySelector('#hamburger');
     const menu = header.querySelector('.menu');
-    const formBtn = header.querySelectorAll('.show-form')
     const hamburgerContainer = header.querySelector('#hamburger-container')
-    hamburgerContainer.appendChild(ToggleElement(globalState.getState().theme))
-    const themeToggle = header.querySelector('.toggle-container')
+    const themeToggle = Image(`${globalState.getState().theme === 'dark' ? 'icons/moon-regular.svg' : 'icons/sun-regular.svg'}`, `${globalState.getState().theme === 'dark' ? 'moon' : 'sun'}`, "theme-toggle", "icons icons-primary")
 
+    const userIcon = Image('icons/user-regular.svg', "user", "", "icons icons-primary round-icon")
+    hamburgerContainer.appendChild(userIcon)
 
-
+    hamburgerContainer.appendChild(themeToggle)
 
     hamburger.addEventListener('click', (e) => {
         menu.classList.toggle('hidden');
@@ -62,6 +61,10 @@ export function Header() {
 
     function themeHandler(state) {
         root.className = state.theme;
+        const themeToggler = document.getElementById('theme-toggle')
+        if (!themeToggler) return
+        themeToggler.src = `${globalState.getState().theme === 'dark' ? 'icons/moon-regular.svg' : 'icons/sun-regular.svg'}`
+        themeToggler.alt = `${globalState.getState().theme}`
     }
 
     globalState.subscribe(themeHandler)
@@ -73,9 +76,6 @@ export function Header() {
     })
 
     themeHandler(globalState.getState())
-
-    formBtn.forEach(btn => btn.addEventListener('click', () => loadForm()))
-
 
     return header
 }
