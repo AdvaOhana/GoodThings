@@ -151,12 +151,12 @@ header{
     width: 150px;
 }
 
-#hamburger-container{
-    gap: .7rem;
+#actions-container{
+    gap: .8rem;
     display: flex;
-    flex-direction: row-reverse;    
-    height: fit-content;
     align-items: center;
+    justify-content: center;
+
 }
 button{
     background: none;
@@ -452,23 +452,20 @@ input:not(:placeholder-shown) ~ .floating-label {
 
 #data-continer{
     height: 500px;
-    width: 100%;
-    display: grid;
-    grid-template-columns:repeat(3, 1fr);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 .thing-info{
-    background-color: var(--color-grey-100);
-    box-shadow: .1rem .1rem 1rem .05rem var(--color-grey-400);
+    background-color: var(--color-grey-200);
     border-radius: var(--border-radius-lg);
     height: 10rem;
-    width: 20rem;
-    padding: 2rem;  
-    align-self: center;
-    justify-self: center;  
+    width: 20%;
+    padding: 1rem 1.5rem;
+    transition: 0.2s all;
 }
 .thing-info:hover{
-    background-color:rgba(0, 172, 181, 0.594) ;
-    opacity: 0.6;
+    box-shadow: .1rem .1rem 1rem .05rem var(--color-grey-400);
 }
 
 #add-thing{
