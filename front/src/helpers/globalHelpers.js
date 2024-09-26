@@ -2,6 +2,9 @@ const iconsPath = "./src/assets/icons"
 import { Image } from '../components/Image.js'
 import { Span } from '../components/Span.js'
 
+export const defaultRef = '/front/GoodThings.html'
+
+
 export function delay(timeInMs) {
     return new Promise(res => setTimeout(res, timeInMs))
 }
@@ -32,7 +35,7 @@ export function createElement(location, markup, parentName = 'root', parentType)
 export async function toaster(text, type, duration = 2000) {
     const toasts = []
     let toastContainer;
-    let iconType = `${iconsPath}/check-solid.svg`
+    let iconType = `./icons/check-solid.svg`
     if (!toastContainer) {
         createToastContainer()
     }
@@ -40,14 +43,14 @@ export async function toaster(text, type, duration = 2000) {
     toastElement.classList.add('toast')
 
     if (type === 'delete') {
-        iconType = `${iconsPath}/trash-can-regular.svg`
+        iconType = `./icons/trash-can-regular.svg`
 
     }
     if (type === 'fail') {
-        iconType = `${iconsPath}/circle-xmark-regular.svg`
+        iconType = `./icons/circle-xmark-regular.svg`
     }
 
-    const img = Image(iconType).outerHTML
+    const img = Image(iconType, `${type}`, "", "icons icons-primary").outerHTML
     const span = Span(text).outerHTML
 
     toastElement.insertAdjacentHTML('beforeend', img)
