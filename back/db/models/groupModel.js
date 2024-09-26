@@ -1,5 +1,5 @@
 import { pool } from "../dbConnection.js";
-import { lettersReg } from '../helpers/helper.js'
+import { lettersReg } from '../../helpers/helper.js'
 export async function allGroups(req, res, next) {
     try {
         const [results] = await pool.query(`select * from all_groups`)
