@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { allUsers, createUser, getUserById, getUserByName } from "../db/models/userModel.js"
+import { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser } from "../db/models/userModel.js"
 
 export const usersRouter = Router()
 const tovitRouter = Router({ mergeParams: true })
@@ -18,9 +18,15 @@ usersRouter.get('/byName/:id', getUserByName, (req, res) => {
 usersRouter.post('/sign-up', createUser, (req, res) => {
     res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
 })
-usersRouter.post('/login', (req, res) => { })
-usersRouter.post('/logout/:id', (req, res) => { })
-usersRouter.post('/forgot', (req, res) => { })
+usersRouter.post('/login', loginUser, (req, res) => {
+    res.status(200).json({ message: `logged in successfully`, data: req.userData })
+})
+
+// usersRouter.post('/logout/:id', (req, res) => { })
+
+usersRouter.post('/forgot', forgotPassword, (req, res) => {
+
+})
 usersRouter.patch('/:id', (req, res) => { })
 usersRouter.delete('/:id', (req, res) => { })
 

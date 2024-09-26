@@ -1,5 +1,5 @@
 import { pool } from "../dbConnection.js";
-import { lettersReg } from "../helpers/helper.js";
+import { lettersReg, generateCode } from "../../helpers/helper.js";
 export async function allUsers(req, res, next) {
     try {
         const [results] = await pool.query(`select first_name,last_name,country,bio from users`)
@@ -36,7 +36,7 @@ export async function getUserByName(req, res, next) {
 }
 export async function createUser(req, res, next) {
     try {
-        let user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email, password: req.body.password, phone: req.body.phone, country: req.body.country, bio: req.body.bio, image: req.body.image, userType: `3`, lastLoginDate: new Date(), loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName };
+        const user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email, password: req.body.password, phone: req.body.phone, country: req.body.country, bio: req.body.bio, image: req.body.image, userType: `3`, lastLoginDate: new Date(), loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName };
 
         const query = `
     INSERT INTO users (
@@ -64,6 +64,33 @@ export async function createUser(req, res, next) {
 
         const [results] = await pool.query(query, values);
         next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+export async function loginUser(req, res, next) {
+    try {
+        const userName = req.body.userName
+        const userPassword = req.body.userPassword
+
+        const [user] = await pool.query(`select * from users where user_name=?`, [userName])
+        if (!user.length || user[0].password !== userPassword) throw Error(`login faild`)
+
+        req.userData = { ...user[0], password: '' };
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+
+export async function forgotPassword(req, res, next) {
+    try {
+        let code = generateCode(6)
+        // const userName =
+        // const email =
+
+
+
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
