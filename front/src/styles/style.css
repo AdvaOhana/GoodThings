@@ -118,11 +118,10 @@ input:disabled {
   color: var(--color-grey-500);
 }
 
-input:focus,
 button:focus,
 textarea:focus,
 select:focus {
-  outline: 2px solid var(--color-brand-600);
+  outline: 2px solid var(--color-brand-700);
   outline-offset: -1px;
 }
 
@@ -411,13 +410,29 @@ input:not(:placeholder-shown) ~ .floating-label {
     transition: transform 500ms ease-in-out; 
 }
 
-main{
+#login-container{
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 3rem;
     justify-content: center;
-    height: 500px;
-    width: auto;
+}
+.login-form > .floating-label-group{
+    width: 100%;
+}
+.wide{
+    margin: 2rem 0;
+    width: 80%;
+}
 
-} 
+.user-actions{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    font-size: .8rem;
+}
+
 .navbar{
     display: flex;
     justify-content: space-between;
@@ -436,21 +451,20 @@ main{
 }
 
 #data-continer{
+    height: 500px;
     width: 100%;
     display: grid;
     grid-template-columns:repeat(3, 1fr);
-    gap:2rem;
-    padding: 2rem;
-    align-content: start;
-
 }
 .thing-info{
     background-color: var(--color-grey-100);
     box-shadow: .1rem .1rem 1rem .05rem var(--color-grey-400);
     border-radius: var(--border-radius-lg);
     height: 10rem;
-    width: 10rem;
-    padding: 2rem;    
+    width: 20rem;
+    padding: 2rem;  
+    align-self: center;
+    justify-self: center;  
 }
 .thing-info:hover{
     background-color:rgba(0, 172, 181, 0.594) ;

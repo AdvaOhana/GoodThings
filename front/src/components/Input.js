@@ -6,9 +6,8 @@ export function Input(
     const inputWrapper = Div('floating-label-group')
 
     const markup = `
-        <input type="text" class="form-input ${inputClass}" placeholder="" />
+        <input type=${type} class="form-input ${inputClass}" placeholder="" />
         <label class="floating-label ${labelClass}">${labelText}</label>
-
     `
 
 

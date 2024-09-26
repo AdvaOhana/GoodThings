@@ -4,6 +4,7 @@ const routes = [
     { path: ``, page: () => import('../pages/Home.js') },
     { path: `/tovit/form`, page: () => import('../components/tovitForm.js') },
     { path: `/login`, page: () => import('../pages/Login.js') },
+    { path: `/signup`, page: () => import('../pages/Header.js') },
     { path: `/error`, page: () => import('../pages/Error.js') },
 ]
 

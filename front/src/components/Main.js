@@ -25,12 +25,12 @@ export function Main() {
                     <li>חתונה </li>
                 </ul>
             </div>
-            <div id="add-thing">
-                <label>בחר תאריך:</label> <input type="date">
-                <button>הוספה</button>
             </div>
-        </div>
-        `
+            `
+    // <div id="add-thing">
+    //     <label>בחר תאריך:</label> <input type="date">
+    //     <button>הוספה</button>
+    // </div>
     const main = document.createElement('main')
     main.insertAdjacentHTML('afterbegin', markup)
     return main

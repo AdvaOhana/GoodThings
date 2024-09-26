@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", renderView);
 const body = document.getElementById('root')
 export default function Home() {
     body.innerHTML = ''
-    body.insertAdjacentElement('beforeend', Header())
-    body.insertAdjacentElement('beforeend', Main())
-    body.insertAdjacentElement('beforeend', Footer())
+    body.appendChild(Header())
+    body.appendChild(Main())
+    body.appendChild(Footer())
 }
 
 
