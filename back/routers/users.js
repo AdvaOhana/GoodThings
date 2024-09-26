@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { allUsers } from "../db/models/userModel.js"
+import { allUsers, createUser, getUserById, getUserByName } from "../db/models/userModel.js"
 
 export const usersRouter = Router()
 const tovitRouter = Router({ mergeParams: true })
@@ -9,11 +9,15 @@ usersRouter.get('/all', allUsers, (req, res) => {
     res.status(200).json({ message: 'Found users', data: req.allUsers })
 })
 usersRouter.get('/:id', getUserById, (req, res) => {
-    res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.groupData })
+    res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.userData })
 })
-usersRouter.get('/byName/:id', (req, res) => { })
+usersRouter.get('/byName/:id', getUserByName, (req, res) => {
+    res.status(200).json({ message: `Found user by name:${req.params.name}`, data: req.userData })
+})
 
-usersRouter.post('/sign-up', (req, res) => { })
+usersRouter.post('/sign-up', createUser, (req, res) => {
+    res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
+})
 usersRouter.post('/login', (req, res) => { })
 usersRouter.post('/logout/:id', (req, res) => { })
 usersRouter.post('/forgot', (req, res) => { })
