@@ -300,7 +300,7 @@ input{
     font-size: 1.1rem;
     letter-spacing: 2px;
     text-decoration: none;
-    color: var(--color-brand-700);
+    color: var(--color-brand-500);
     background: transparent;
     cursor: pointer;
     transition: ease-out 0.5s;
@@ -417,6 +417,13 @@ input:not(:placeholder-shown) ~ .floating-label {
     text-align: center;
     gap: 3rem;
     justify-content: center;
+}
+
+.page-header > h1{
+  font-size: 3rem;
+}
+.page-header > p {
+    font-size: 1.3rem;
 }
 .login-form > .floating-label-group{
     width: 100%;

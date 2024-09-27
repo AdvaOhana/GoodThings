@@ -37,6 +37,7 @@ export default function LoginPage() {
     forgotPassword.innerHTML = 'שכחת את הסיסמה?'
 
     const createUser = document.createElement('a')
+    createUser.setAttribute('data-link', '');
     createUser.innerHTML = 'צור חשבון'
     createUser.href = '/signup'
     const newUser = Span(`משתמש חדש? `)

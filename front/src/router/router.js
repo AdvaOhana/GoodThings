@@ -1,22 +1,26 @@
-import { defaultRef } from '../helpers/globalHelpers.js';
-
 const routes = [
-    { path: ``, page: () => import('../pages/Home.js') },
+    { path: `/`, page: () => import('../pages/Home.js') },
     { path: `/tovit/form`, page: () => import('../components/tovitForm.js') },
     { path: `/login`, page: () => import('../pages/Login.js') },
-    { path: `/signup`, page: () => import('../pages/Header.js') },
-    { path: `/error`, page: () => import('../pages/Error.js') },
+    { path: `/signup`, page: () => import('../pages/Login.js') },
+    { path: `/*`, page: () => import('../pages/NotFound.js') },
 ]
 
 
 function matchRoute() {
-    return routes.find(route => `${defaultRef}${route.path}` === location.pathname)
+
+    return routes.find(route => `${route.path}` === location.pathname)
 }
 
 export async function renderView() {
     const foundRoute = matchRoute()
 
-    if (!foundRoute) return
+    if (!foundRoute) {
+        const foundRoute = routes.find(route => route.path === '/*')
+        const module = await foundRoute.page()
+        module.default()
+        return
+    }
 
     const module = await foundRoute.page()
     module.default()

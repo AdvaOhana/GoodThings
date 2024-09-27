@@ -74,7 +74,7 @@ export default function loadForm() {
     formBgElement.addEventListener('click', e => {
         if (e.target === e.currentTarget) {
             e.target.remove()
-            history.pushState('', '', location.origin + defaultRef)
+            history.pushState('', '', location.origin)
         }
     })
 
