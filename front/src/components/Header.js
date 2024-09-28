@@ -16,18 +16,18 @@ export function Header() {
             </ul>
     </nav>
     <div id="actions-container">
-      
     </div>
 `
     const header = document.createElement('header')
     header.insertAdjacentHTML('afterbegin', markup)
 
 
+
     const hamburgerContainer = header.querySelector('#actions-container')
     const themeToggle = Image(`${globalState.getState().theme === 'dark' ?
-        `${iconsPath}/icons/moon-regular.svg` : `${iconsPath}/icons/sun-regular.svg`
+        `${iconsPath}/icons/sun-regular.svg` : `${iconsPath}/icons/moon-regular.svg`
         }`
-        , `${globalState.getState().theme === 'dark' ? 'moon' : 'sun'}`, "theme-toggle", "icons icons-primary")
+        , `${globalState.getState().theme === 'dark' ? 'sun' : 'moon'}`, "theme-toggle", "icons icons-primary")
     const userIcon = Image(`${iconsPath}/icons/user-regular.svg`, "user", "", "icons icons-primary")
     hamburgerContainer.appendChild(themeToggle)
     hamburgerContainer.appendChild(userIcon)
@@ -38,7 +38,7 @@ export function Header() {
         root.className = state.theme;
         const themeToggler = document.getElementById('theme-toggle')
         if (!themeToggler) return
-        themeToggler.src = `${globalState.getState().theme === 'dark' ? `${iconsPath}/icons/moon-regular.svg` : `${iconsPath}/icons/sun-regular.svg`}`
+        themeToggler.src = `${globalState.getState().theme === 'dark' ? `${iconsPath}/icons/sun-regular.svg` : `${iconsPath}/icons/moon-regular.svg`}`
         themeToggler.alt = `${globalState.getState().theme}`
     }
 

@@ -2,22 +2,20 @@ const routes = [
     { path: `/`, page: () => import('../pages/Home.js') },
     { path: `/tovit/form`, page: () => import('../components/tovitForm.js') },
     { path: `/login`, page: () => import('../pages/Login.js') },
-    { path: `/signup`, page: () => import('../pages/Login.js') },
+    { path: `/signup`, page: () => import('../pages/Signup.js') },
     { path: `/*`, page: () => import('../pages/NotFound.js') },
 ]
 
-
-function matchRoute() {
-
-    return routes.find(route => `${route.path}` === location.pathname)
+function matchRoute(url) {
+    return routes.find(route => route.path === url)
 }
 
-export async function renderView() {
-    const foundRoute = matchRoute()
+export async function renderView(url) {
+    const foundRoute = matchRoute(url || location.pathname)
 
     if (!foundRoute) {
-        const foundRoute = routes.find(route => route.path === '/*')
-        const module = await foundRoute.page()
+        const notFound = routes.find(route => route.path === '/*')
+        const module = await notFound.page()
         module.default()
         return
     }
@@ -30,7 +28,6 @@ function navTo(url) {
     history.pushState(null, null, url)
     renderView()
 }
-
 
 
 document.addEventListener('click', (e) => {

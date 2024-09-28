@@ -1,9 +1,7 @@
-const iconsPath = "./src/assets/icons"
 import { Image } from '../components/Image.js'
 import { Span } from '../components/Span.js'
 
-export const defaultRef = '/front/GoodThings.html'
-
+export const imgsRef = '../src/assets'
 
 export function delay(timeInMs) {
     return new Promise(res => setTimeout(res, timeInMs))
@@ -16,10 +14,8 @@ export function getStorage(key) {
     return JSON.parse(localStorage.getItem(key))
 }
 
-
 export function createElement(location, markup, parentName = 'root', parentType) {
     let parentEl = document.getElementById('root')
-
     if (parentName !== 'root') {
         if (parentType === 'id') {
             parentEl = document.getElementById(parentName)
@@ -28,14 +24,14 @@ export function createElement(location, markup, parentName = 'root', parentType)
             parentEl = document.querySelector(`.${parentName}`)
         }
     }
-
+    if (!parentEl) return
     parentEl.insertAdjacentHTML(location, markup)
 }
 
-export async function toaster(text, type, duration = 2000) {
+export async function toaster(text, type = "check", duration = 2000) {
     const toasts = []
     let toastContainer;
-    let iconType = `./icons/check-solid.svg`
+    let iconType = `${imgsRef}/icons/check-solid.svg`
     if (!toastContainer) {
         createToastContainer()
     }
@@ -43,22 +39,21 @@ export async function toaster(text, type, duration = 2000) {
     toastElement.classList.add('toast')
 
     if (type === 'delete') {
-        iconType = `./icons/trash-can-regular.svg`
+        iconType = `${imgsRef}/icons/trash-can-regular.svg`
 
     }
     if (type === 'fail') {
-        iconType = `./icons/circle-xmark-regular.svg`
+        iconType = `${imgsRef}/icons/circle-xmark-regular.svg`
     }
 
-    const img = Image(iconType, `${type}`, "", "icons icons-primary").outerHTML
-    const span = Span(text).outerHTML
+    const img = Image(iconType, `${type}`, "", "icons icons-primary")
+    const span = Span(text)
 
-    toastElement.insertAdjacentHTML('beforeend', img)
-    toastElement.insertAdjacentHTML('beforeend', span)
+    toastElement.insertAdjacentElement('beforeend', img)
+    toastElement.insertAdjacentElement('beforeend', span)
     toastContainer.appendChild(toastElement)
 
     toasts.unshift(toastElement)
-
 
     await delay(50)
     toastElement.classList.add('toast-active')
@@ -86,4 +81,25 @@ export async function toaster(text, type, duration = 2000) {
         toastContainer.classList.add('toast-container')
         document.body.appendChild(toastContainer)
     }
+}
+
+export async function getCountries() {
+    const res = await fetch(`https://restcountries.com/v3.1/all
+        `)
+    if (!res.ok) {
+        history.pushState(null, null, "/")
+        toaster('Could not fetch counties', 'fail')
+        return
+    }
+    let data = await res.json()
+
+    data.sort((a, b) => {
+        a.name.common.toLowerCase() > b.name.common.toLowerCase() ? -1 : 1
+    })
+    data = data.map(country => { return { name: country.name.common, flag: country.flag } })
+    data.sort((a, b) => {
+        return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+    })
+
+    return data
 }

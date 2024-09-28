@@ -16,6 +16,10 @@ export class Store {
     }
     subscribe(listener) {
         this.listeners.push(listener)
+
+        return () => {
+            this.listeners = this.listeners.filter(l => l !== listener);
+        };
     }
     notifyStateChange() {
         this.listeners.forEach(listener => listener(this.state))
@@ -27,5 +31,5 @@ export const globalState = new Store({
     userLName: "Atar",
     inputsData: getStorage('inputs-data') || [],
     theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-    isAuthenticated: false,
+    isAuthenticated: getStorage('auth') || false,
 });

@@ -1,12 +1,13 @@
 import { Button } from '../components/Button.js'
 import { Div } from '../components/Div.js'
+import { Header } from '../components/Header.js'
 import { Input } from '../components/Input.js'
 import { Span } from '../components/Span.js'
 
 const body = document.getElementById('root')
 export default function LoginPage() {
     body.innerHTML = ''
-
+    body.appendChild(Header())
     const emailInput = Input('אימייל / שם משתמש', 'email')
     const passwordInput = Input('סיסמה', 'password')
 
@@ -17,7 +18,7 @@ export default function LoginPage() {
     const title = document.createElement('h1')
     title.innerHTML = 'התחברות'
     const subTitle = document.createElement('p')
-    subTitle.innerHTML = 'הכנס את הדואר האלקטרוני והסיסמה שלך'
+    subTitle.innerHTML = 'הכנס/י את הדואר האלקטרוני והסיסמה שלך'
     header.appendChild(title);
     header.appendChild(subTitle);
     main.appendChild(header);
@@ -34,11 +35,12 @@ export default function LoginPage() {
 
     const action = Div('user-actions')
     const forgotPassword = document.createElement('a')
+    forgotPassword.href = '/password-recovery'
     forgotPassword.innerHTML = 'שכחת את הסיסמה?'
 
     const createUser = document.createElement('a')
     createUser.setAttribute('data-link', '');
-    createUser.innerHTML = 'צור חשבון'
+    createUser.innerHTML = 'צור/י חשבון'
     createUser.href = '/signup'
     const newUser = Span(`משתמש חדש? `)
     newUser.appendChild(createUser)

@@ -5,7 +5,7 @@ import { Image } from './Image.js';
 import { Input } from './Input.js';
 import { Span } from './Span.js';
 import { ToggleElement } from './Toggle.js';
-import { toaster, setStorage, createElement, defaultRef } from '../helpers/globalHelpers.js'
+import { toaster, setStorage, createElement } from '../helpers/globalHelpers.js'
 import { globalState, Store } from '../state/store.js';
 
 const iconsPath = "../../src/assets/icons"
@@ -57,10 +57,7 @@ export default function loadForm() {
 
     togglePublic.addEventListener('click', () => {
         formState.setState({ isPublic: !formState.getState().isPublic })
-
-    }
-
-    )
+    })
 
     formBgElement.appendChild(form);
     body.insertAdjacentElement('beforeend', formBgElement)
@@ -74,7 +71,9 @@ export default function loadForm() {
     formBgElement.addEventListener('click', e => {
         if (e.target === e.currentTarget) {
             e.target.remove()
-            history.pushState('', '', location.origin)
+            globalStateUnSubscriber()
+            formStateUnSubscriber()
+            history.pushState(null, null, location.origin)
         }
     })
 
@@ -82,14 +81,13 @@ export default function loadForm() {
         handleInputError("")
     })
 
-    globalState.subscribe(state => {
+    const globalStateUnSubscriber = globalState.subscribe(state => {
         updateUI(state);
     })
 
-    formState.subscribe(state => {
+    const formStateUnSubscriber = formState.subscribe(state => {
         updateError(state.errorText)
         updateToggle(state.isPublic)
-
     })
 
     updateUI(globalState.getState())
@@ -131,6 +129,8 @@ export default function loadForm() {
 
         globalState.setState({ inputsData: tovitData })
         setStorage(`inputs-data`, tovitData)
+        globalStateUnSubscriber()
+        formStateUnSubscriber()
         e.target.parentElement.remove()
         toaster('נתונים נשלחו בהצלחה')
     }
