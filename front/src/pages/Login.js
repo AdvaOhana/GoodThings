@@ -1,15 +1,13 @@
 import { Button } from '../components/Button.js'
 import { Div } from '../components/Div.js'
-import { Header } from '../components/Header.js'
 import { Input } from '../components/Input.js'
 import { Span } from '../components/Span.js'
 
 const body = document.getElementById('root')
 export default function LoginPage() {
     body.innerHTML = ''
-    body.appendChild(Header())
-    const emailInput = Input('אימייל / שם משתמש', 'email')
-    const passwordInput = Input('סיסמה', 'password')
+    const emailInput = Input('אימייל / שם משתמש', 'email', "email")
+    const passwordInput = Input('סיסמה', 'password', "current-password")
 
     const main = document.createElement('main')
     main.id = 'login-container'

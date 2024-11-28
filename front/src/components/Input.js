@@ -2,7 +2,7 @@ import { Div } from "./Div.js"
 import { Span } from "./Span.js";
 
 export function Input(
-    labelText = 'נא לכתוב כאן...', type = 'text', inputClass = "", labelClass = "", options = [], defaultOption, requierd = true, disabled = false) {
+    labelText = 'נא לכתוב כאן...', type = 'text', autoComplete = 'off', inputClass = "", labelClass = "", options = [], defaultOption, name, requierd = true, disabled = false) {
     let markup;
     const inputWrapper = Div('floating-label-group')
 
@@ -14,7 +14,7 @@ export function Input(
         options.map(option => optionsMarkup += `
             <option value="${option.name ? option.name.toLowerCase() : option}" id=${option.flag ? option.flag : ""}>${option.name ? option.name.toLowerCase() : option}</option>`)
         markup = `
-        <select name="country" dir="rtl" class="select ${inputClass}" ${requierd} ${disabled}>
+        <select name="${name}" dir="rtl" class="select ${inputClass}" ${requierd} ${disabled}>
         ${optionsMarkup}
         </select>
         `
@@ -26,7 +26,7 @@ export function Input(
 
     } else {
         markup = `
-    <input type=${type} class="form-input ${inputClass}" ${requierd} placeholder="" ${disabled} />
+    <input type=${type} class="form-input ${inputClass}" ${requierd} placeholder="" ${disabled} autocomplete="${autoComplete}" />
     <label class="floating-label ${labelClass}">${labelText}</label>
     `
         inputWrapper.insertAdjacentHTML('afterbegin', markup)

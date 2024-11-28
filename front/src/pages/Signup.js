@@ -7,7 +7,7 @@ const body = document.getElementById('root')
 const countries = await getCountries()
 const genders = ['נקבה', 'זכר', 'מעדיף שלא לבחור']
 const days = Array.from({ length: 31 }, (el, i) => i + 1)
-const mounths = Array.from({ length: 12 }, (el, i) => i + 1)
+const months = Array.from({ length: 12 }, (el, i) => i + 1)
 const years = Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i)
 
 export default function Signup() {
@@ -15,25 +15,24 @@ export default function Signup() {
     const datesContainer = Div('dates-container', "signup-dates")
     const datesTitle = Span('תאריך לידה', "mini-title")
     datesContainer.appendChild(datesTitle)
-    const genderContainer = Div('gender-container')
 
     const dates = [
-        Input('', "select", "", "", days, 'יום'),
-        Input('', "select", "", "", mounths, 'חודש'),
-        Input('', "select", "", "", years, 'שנה')
+        Input('', "select", "", "", "", days, 'יום', 'day'),
+        Input('', "select", "", "", "", months, 'חודש', 'month'),
+        Input('', "select", "", "", "", years, 'שנה', 'year')
     ]
     dates.forEach(date =>
         datesContainer.appendChild(date))
     const inputsArr = [
-        Input('שם פרטי', 'text'),
-        Input('שם משפחה', 'text'),
+        Input('שם פרטי', 'text', "given-name"),
+        Input('שם משפחה', 'text', "family-name"),
         Input('שם משתמש', 'text'),
-        Input('פלאפון', 'phone', "", "", "", "", false),
-        Input('סיסמה', 'password'),
-        Input('אימות סיסמה', 'password'),
-        Input('אימייל', 'email'),
-        Input('', "select", "", "", genders, 'בחר/י מגדר'),
-        Input('', "select", "", "", countries, 'בחר/י מדינה'),
+        Input('פלאפון', 'phone', "tel", "", "", "", "", "", false),
+        Input('סיסמה', 'password', ""),
+        Input('אימות סיסמה', 'password', ""),
+        Input('אימייל', 'email', "email"),
+        Input('', "select", "", "", "", genders, 'בחר/י מגדר', "gender"),
+        Input('', "select", "", "", "", countries, 'בחר/י מדינה', "country"),
         datesContainer,
     ]
 
@@ -53,6 +52,7 @@ export default function Signup() {
     const signupForm = document.createElement('form');
     signupForm.className = "signup-form"
     signupForm.method = 'post';
+    signupForm.action = '/user/signup'
     inputsArr.map(input => {
         signupForm.appendChild(input)
     })

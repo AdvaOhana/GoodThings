@@ -3,7 +3,8 @@ const routes = [
     { path: `/tovit/form`, page: () => import('../components/tovitForm.js') },
     { path: `/login`, page: () => import('../pages/Login.js') },
     { path: `/signup`, page: () => import('../pages/Signup.js') },
-    { path: `/*`, page: () => import('../pages/NotFound.js') },
+    { path: `/*`, page: () => import('../pages/Home.js') },
+    // { path: `/*`, page: () => import('../pages/NotFound.js') },
 ]
 
 function matchRoute(url) {
@@ -22,6 +23,7 @@ export async function renderView(url) {
 
     const module = await foundRoute.page()
     module.default()
+
 }
 
 function navTo(url) {
