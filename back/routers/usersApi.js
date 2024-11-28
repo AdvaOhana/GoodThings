@@ -31,9 +31,14 @@ usersApiRouter.patch('/:id', (req, res) => { })
 usersApiRouter.delete('/:id', (req, res) => { })
 
 usersApiRouter.use('/:usersId/tovit', tovitRouter)
-tovitRouter.get('/all', (req, res) => { })
+tovitRouter.get('/all', (req, res) => {
+
+})
 tovitRouter.get('/:id', (req, res) => { })
-tovitRouter.post('/', (req, res) => { })
+
+tovitRouter.post('/', createTovits, (req, res) => {
+    res.status(200).json({ message: `tovit created successfully`, data: req.createTovits })
+})
 tovitRouter.patch('/:id', (req, res) => { })
 tovitRouter.delete('/:id', (req, res) => { })
 
