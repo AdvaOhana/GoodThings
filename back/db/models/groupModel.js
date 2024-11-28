@@ -1,6 +1,11 @@
-import { pool } from "../dbConnection.js";
-import { lettersReg } from '../../helpers/helper.js'
-export async function allGroups(req, res, next) {
+const { pool } = require("../dbConnection.js")
+const { lettersReg } = require('../../helpers/helper.js')
+
+module.exports = {
+    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup
+}
+
+async function allGroups(req, res, next) {
     try {
         const [results] = await pool.query(`select * from all_groups`)
         if (!results.length) throw Error('No groups found.')
@@ -11,7 +16,7 @@ export async function allGroups(req, res, next) {
     }
 }
 
-export async function getGroupById(req, res, next) {
+async function getGroupById(req, res, next) {
     try {
         const id = req.params.id;
         if (lettersReg.test(id)) throw Error('Id is not valid, please check again')
@@ -29,7 +34,7 @@ export async function getGroupById(req, res, next) {
     }
 }
 
-export async function getGroupByName(req, res, next) {
+async function getGroupByName(req, res, next) {
     try {
         const name = req.params.name;
         const [results] = await pool.query(`
@@ -44,7 +49,7 @@ export async function getGroupByName(req, res, next) {
     }
 }
 
-export async function deleteGroup(req, res, next) {
+async function deleteGroup(req, res, next) {
     try {
         const id = req.params.id;
         if (lettersReg.test(id)) throw Error('Id is not valid, please check again')
@@ -66,7 +71,7 @@ export async function deleteGroup(req, res, next) {
     }
 }
 
-export async function createGroup(req, res, next) {
+async function createGroup(req, res, next) {
     try {
 
         const name = req.body.name;
@@ -91,7 +96,7 @@ export async function createGroup(req, res, next) {
 
 
 
-export async function updateGroup(req, res, next) {
+async function updateGroup(req, res, next) {
     try {
         const id = req.params.id;
         if (lettersReg.test(id)) throw Error('Id is not valid, please check again')

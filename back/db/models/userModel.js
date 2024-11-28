@@ -1,6 +1,6 @@
-import { pool } from "../dbConnection.js";
-import { lettersReg, generateCode } from "../../helpers/helper.js";
-export async function allUsers(req, res, next) {
+const { pool } = require("../dbConnection.js");
+const { lettersReg, generateCode } = require("../../helpers/helper.js");
+async function allUsers(req, res, next) {
     try {
         const [results] = await pool.query(`select first_name,last_name,country,bio from users`)
         if (!results.length) throw Error(`No users found.`)
@@ -10,7 +10,7 @@ export async function allUsers(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` });
     }
 }
-export async function getUserById(req, res, next) {
+async function getUserById(req, res, next) {
     try {
         const id = req.params.id;
         if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
@@ -23,7 +23,7 @@ export async function getUserById(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-export async function getUserByName(req, res, next) {
+async function getUserByName(req, res, next) {
     try {
         const name = req.params.name;
         const [results] = await pool.query(`select first_name, last_name, country,bio from users where (first_name like '%${name}%' or last_name like '%${name}%' or user_name like '%${name}%') `)
@@ -34,7 +34,7 @@ export async function getUserByName(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-export async function createUser(req, res, next) {
+async function createUser(req, res, next) {
     try {
         const user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email, password: req.body.password, phone: req.body.phone, country: req.body.country, bio: req.body.bio, image: req.body.image, userType: `3`, lastLoginDate: new Date(), loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName };
 
@@ -68,7 +68,7 @@ export async function createUser(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-export async function loginUser(req, res, next) {
+async function loginUser(req, res, next) {
     try {
         const userName = req.body.userName
         const userPassword = req.body.userPassword
@@ -83,7 +83,7 @@ export async function loginUser(req, res, next) {
     }
 }
 
-export async function forgotPassword(req, res, next) {
+async function forgotPassword(req, res, next) {
     try {
         let code = generateCode(6)
         // const userName =
@@ -95,3 +95,7 @@ export async function forgotPassword(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
+
+
+module.exports =
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser }
