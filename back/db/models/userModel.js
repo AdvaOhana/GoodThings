@@ -121,4 +121,4 @@ async function createTovits(req, res, next) {
 }
 
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser }
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, createTovits }

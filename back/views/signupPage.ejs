@@ -1,463 +1,104 @@
 <%- include('./generals/pageTop') %>
 
-<main id="signup-container"><div class="page-header"><h1>הרשמה</h1><p>הכנס את הדואר האלקטרוני והסיסמה שלך</p></div><form class="signup-form" method="post" action="/user/signup"><div class="floating-label-group">
-    <input type="text" class="form-input " true="" placeholder="" false="" autocomplete="given-name">
-    <label class="floating-label ">שם פרטי</label>
-    </div><div class="floating-label-group">
-    <input type="text" class="form-input " true="" placeholder="" false="" autocomplete="family-name">
-    <label class="floating-label ">שם משפחה</label>
-    </div><div class="floating-label-group">
-    <input type="text" class="form-input " true="" placeholder="" false="" autocomplete="off">
-    <label class="floating-label ">שם משתמש</label>
-    </div><div class="floating-label-group">
-    <input type="phone" class="form-input " false="" placeholder="" autocomplete="tel">
-    <label class="floating-label ">פלאפון</label>
-    </div><div class="floating-label-group">
-    <input type="password" class="form-input " true="" placeholder="" false="" autocomplete="">
-    <label class="floating-label ">סיסמה</label>
-    </div><div class="floating-label-group">
-    <input type="password" class="form-input " true="" placeholder="" false="" autocomplete="">
-    <label class="floating-label ">אימות סיסמה</label>
-    </div><div class="floating-label-group">
-    <input type="email" class="form-input " true="" placeholder="" false="" autocomplete="email">
-    <label class="floating-label ">אימייל</label>
-    </div><div class="floating-label-group">
-        <div class="select-container"><span></span>
-        <select name="gender" dir="rtl" class="select " true="" false="">
-        <option value="" hidden="">בחר/י מגדר</option>
-            <option value="נקבה" id="">נקבה</option>
-            <option value="זכר" id="">זכר</option>
-            <option value="מעדיף שלא לבחור" id="">מעדיף שלא לבחור</option>
-        </select>
-        </div></div><div class="floating-label-group"><div class="select-container"><span></span>
-        <select name="country" dir="rtl" class="select " true="" false="">
-        <option value="" hidden="">בחר/י מדינה</option>
-            <option value="afghanistan" id="🇦🇫">afghanistan</option>
-            <option value="albania" id="🇦🇱">albania</option>
-            <option value="algeria" id="🇩🇿">algeria</option>
-            <option value="american samoa" id="🇦🇸">american samoa</option>
-            <option value="andorra" id="🇦🇩">andorra</option>
-            <option value="angola" id="🇦🇴">angola</option>
-            <option value="anguilla" id="🇦🇮">anguilla</option>
-            <option value="antarctica" id="🇦🇶">antarctica</option>
-            <option value="antigua and barbuda" id="🇦🇬">antigua and barbuda</option>
-            <option value="argentina" id="🇦🇷">argentina</option>
-            <option value="armenia" id="🇦🇲">armenia</option>
-            <option value="aruba" id="🇦🇼">aruba</option>
-            <option value="australia" id="🇦🇺">australia</option>
-            <option value="austria" id="🇦🇹">austria</option>
-            <option value="azerbaijan" id="🇦🇿">azerbaijan</option>
-            <option value="bahamas" id="🇧🇸">bahamas</option>
-            <option value="bahrain" id="🇧🇭">bahrain</option>
-            <option value="bangladesh" id="🇧🇩">bangladesh</option>
-            <option value="barbados" id="🇧🇧">barbados</option>
-            <option value="belarus" id="🇧🇾">belarus</option>
-            <option value="belgium" id="🇧🇪">belgium</option>
-            <option value="belize" id="🇧🇿">belize</option>
-            <option value="benin" id="🇧🇯">benin</option>
-            <option value="bermuda" id="🇧🇲">bermuda</option>
-            <option value="bhutan" id="🇧🇹">bhutan</option>
-            <option value="bolivia" id="🇧🇴">bolivia</option>
-            <option value="bosnia and herzegovina" id="🇧🇦">bosnia and herzegovina</option>
-            <option value="botswana" id="🇧🇼">botswana</option>
-            <option value="bouvet island" id="🇧🇻">bouvet island</option>
-            <option value="brazil" id="🇧🇷">brazil</option>
-            <option value="british indian ocean territory" id="🇮🇴">british indian ocean territory</option>
-            <option value="british virgin islands" id="🇻🇬">british virgin islands</option>
-            <option value="brunei" id="🇧🇳">brunei</option>
-            <option value="bulgaria" id="🇧🇬">bulgaria</option>
-            <option value="burkina faso" id="🇧🇫">burkina faso</option>
-            <option value="burundi" id="🇧🇮">burundi</option>
-            <option value="cambodia" id="🇰🇭">cambodia</option>
-            <option value="cameroon" id="🇨🇲">cameroon</option>
-            <option value="canada" id="🇨🇦">canada</option>
-            <option value="cape verde" id="🇨🇻">cape verde</option>
-            <option value="caribbean netherlands" id="🇧🇶">caribbean netherlands</option>
-            <option value="cayman islands" id="🇰🇾">cayman islands</option>
-            <option value="central african republic" id="🇨🇫">central african republic</option>
-            <option value="chad" id="🇹🇩">chad</option>
-            <option value="chile" id="🇨🇱">chile</option>
-            <option value="china" id="🇨🇳">china</option>
-            <option value="christmas island" id="🇨🇽">christmas island</option>
-            <option value="cocos (keeling) islands" id="🇨🇨">cocos (keeling) islands</option>
-            <option value="colombia" id="🇨🇴">colombia</option>
-            <option value="comoros" id="🇰🇲">comoros</option>
-            <option value="cook islands" id="🇨🇰">cook islands</option>
-            <option value="costa rica" id="🇨🇷">costa rica</option>
-            <option value="croatia" id="🇭🇷">croatia</option>
-            <option value="cuba" id="🇨🇺">cuba</option>
-            <option value="curaçao" id="🇨🇼">curaçao</option>
-            <option value="cyprus" id="🇨🇾">cyprus</option>
-            <option value="czechia" id="🇨🇿">czechia</option>
-            <option value="denmark" id="🇩🇰">denmark</option>
-            <option value="djibouti" id="🇩🇯">djibouti</option>
-            <option value="dominica" id="🇩🇲">dominica</option>
-            <option value="dominican republic" id="🇩🇴">dominican republic</option>
-            <option value="dr congo" id="🇨🇩">dr congo</option>
-            <option value="ecuador" id="🇪🇨">ecuador</option>
-            <option value="egypt" id="🇪🇬">egypt</option>
-            <option value="el salvador" id="🇸🇻">el salvador</option>
-            <option value="equatorial guinea" id="🇬🇶">equatorial guinea</option>
-            <option value="eritrea" id="🇪🇷">eritrea</option>
-            <option value="estonia" id="🇪🇪">estonia</option>
-            <option value="eswatini" id="🇸🇿">eswatini</option>
-            <option value="ethiopia" id="🇪🇹">ethiopia</option>
-            <option value="falkland islands" id="🇫🇰">falkland islands</option>
-            <option value="faroe islands" id="🇫🇴">faroe islands</option>
-            <option value="fiji" id="🇫🇯">fiji</option>
-            <option value="finland" id="🇫🇮">finland</option>
-            <option value="france" id="🇫🇷">france</option>
-            <option value="french guiana" id="🇬🇫">french guiana</option>
-            <option value="french polynesia" id="🇵🇫">french polynesia</option>
-            <option value="french southern and antarctic lands" id="🇹🇫">french southern and antarctic lands</option>
-            <option value="gabon" id="🇬🇦">gabon</option>
-            <option value="gambia" id="🇬🇲">gambia</option>
-            <option value="georgia" id="🇬🇪">georgia</option>
-            <option value="germany" id="🇩🇪">germany</option>
-            <option value="ghana" id="🇬🇭">ghana</option>
-            <option value="gibraltar" id="🇬🇮">gibraltar</option>
-            <option value="greece" id="🇬🇷">greece</option>
-            <option value="greenland" id="🇬🇱">greenland</option>
-            <option value="grenada" id="🇬🇩">grenada</option>
-            <option value="guadeloupe" id="🇬🇵">guadeloupe</option>
-            <option value="guam" id="🇬🇺">guam</option>
-            <option value="guatemala" id="🇬🇹">guatemala</option>
-            <option value="guernsey" id="🇬🇬">guernsey</option>
-            <option value="guinea" id="🇬🇳">guinea</option>
-            <option value="guinea-bissau" id="🇬🇼">guinea-bissau</option>
-            <option value="guyana" id="🇬🇾">guyana</option>
-            <option value="haiti" id="🇭🇹">haiti</option>
-            <option value="heard island and mcdonald islands" id="🇭🇲">heard island and mcdonald islands</option>
-            <option value="honduras" id="🇭🇳">honduras</option>
-            <option value="hong kong" id="🇭🇰">hong kong</option>
-            <option value="hungary" id="🇭🇺">hungary</option>
-            <option value="iceland" id="🇮🇸">iceland</option>
-            <option value="india" id="🇮🇳">india</option>
-            <option value="indonesia" id="🇮🇩">indonesia</option>
-            <option value="iran" id="🇮🇷">iran</option>
-            <option value="iraq" id="🇮🇶">iraq</option>
-            <option value="ireland" id="🇮🇪">ireland</option>
-            <option value="isle of man" id="🇮🇲">isle of man</option>
-            <option value="israel" id="🇮🇱">israel</option>
-            <option value="italy" id="🇮🇹">italy</option>
-            <option value="ivory coast" id="🇨🇮">ivory coast</option>
-            <option value="jamaica" id="🇯🇲">jamaica</option>
-            <option value="japan" id="🇯🇵">japan</option>
-            <option value="jersey" id="🇯🇪">jersey</option>
-            <option value="jordan" id="🇯🇴">jordan</option>
-            <option value="kazakhstan" id="🇰🇿">kazakhstan</option>
-            <option value="kenya" id="🇰🇪">kenya</option>
-            <option value="kiribati" id="🇰🇮">kiribati</option>
-            <option value="kosovo" id="🇽🇰">kosovo</option>
-            <option value="kuwait" id="🇰🇼">kuwait</option>
-            <option value="kyrgyzstan" id="🇰🇬">kyrgyzstan</option>
-            <option value="laos" id="🇱🇦">laos</option>
-            <option value="latvia" id="🇱🇻">latvia</option>
-            <option value="lebanon" id="🇱🇧">lebanon</option>
-            <option value="lesotho" id="🇱🇸">lesotho</option>
-            <option value="liberia" id="🇱🇷">liberia</option>
-            <option value="libya" id="🇱🇾">libya</option>
-            <option value="liechtenstein" id="🇱🇮">liechtenstein</option>
-            <option value="lithuania" id="🇱🇹">lithuania</option>
-            <option value="luxembourg" id="🇱🇺">luxembourg</option>
-            <option value="macau" id="🇲🇴">macau</option>
-            <option value="madagascar" id="🇲🇬">madagascar</option>
-            <option value="malawi" id="🇲🇼">malawi</option>
-            <option value="malaysia" id="🇲🇾">malaysia</option>
-            <option value="maldives" id="🇲🇻">maldives</option>
-            <option value="mali" id="🇲🇱">mali</option>
-            <option value="malta" id="🇲🇹">malta</option>
-            <option value="marshall islands" id="🇲🇭">marshall islands</option>
-            <option value="martinique" id="🇲🇶">martinique</option>
-            <option value="mauritania" id="🇲🇷">mauritania</option>
-            <option value="mauritius" id="🇲🇺">mauritius</option>
-            <option value="mayotte" id="🇾🇹">mayotte</option>
-            <option value="mexico" id="🇲🇽">mexico</option>
-            <option value="micronesia" id="🇫🇲">micronesia</option>
-            <option value="moldova" id="🇲🇩">moldova</option>
-            <option value="monaco" id="🇲🇨">monaco</option>
-            <option value="mongolia" id="🇲🇳">mongolia</option>
-            <option value="montenegro" id="🇲🇪">montenegro</option>
-            <option value="montserrat" id="🇲🇸">montserrat</option>
-            <option value="morocco" id="🇲🇦">morocco</option>
-            <option value="mozambique" id="🇲🇿">mozambique</option>
-            <option value="myanmar" id="🇲🇲">myanmar</option>
-            <option value="namibia" id="🇳🇦">namibia</option>
-            <option value="nauru" id="🇳🇷">nauru</option>
-            <option value="nepal" id="🇳🇵">nepal</option>
-            <option value="netherlands" id="🇳🇱">netherlands</option>
-            <option value="new caledonia" id="🇳🇨">new caledonia</option>
-            <option value="new zealand" id="🇳🇿">new zealand</option>
-            <option value="nicaragua" id="🇳🇮">nicaragua</option>
-            <option value="niger" id="🇳🇪">niger</option>
-            <option value="nigeria" id="🇳🇬">nigeria</option>
-            <option value="niue" id="🇳🇺">niue</option>
-            <option value="norfolk island" id="🇳🇫">norfolk island</option>
-            <option value="north korea" id="🇰🇵">north korea</option>
-            <option value="north macedonia" id="🇲🇰">north macedonia</option>
-            <option value="northern mariana islands" id="🇲🇵">northern mariana islands</option>
-            <option value="norway" id="🇳🇴">norway</option>
-            <option value="oman" id="🇴🇲">oman</option>
-            <option value="pakistan" id="🇵🇰">pakistan</option>
-            <option value="palau" id="🇵🇼">palau</option>
-            <option value="palestine" id="🇵🇸">palestine</option>
-            <option value="panama" id="🇵🇦">panama</option>
-            <option value="papua new guinea" id="🇵🇬">papua new guinea</option>
-            <option value="paraguay" id="🇵🇾">paraguay</option>
-            <option value="peru" id="🇵🇪">peru</option>
-            <option value="philippines" id="🇵🇭">philippines</option>
-            <option value="pitcairn islands" id="🇵🇳">pitcairn islands</option>
-            <option value="poland" id="🇵🇱">poland</option>
-            <option value="portugal" id="🇵🇹">portugal</option>
-            <option value="puerto rico" id="🇵🇷">puerto rico</option>
-            <option value="qatar" id="🇶🇦">qatar</option>
-            <option value="republic of the congo" id="🇨🇬">republic of the congo</option>
-            <option value="romania" id="🇷🇴">romania</option>
-            <option value="russia" id="🇷🇺">russia</option>
-            <option value="rwanda" id="🇷🇼">rwanda</option>
-            <option value="réunion" id="🇷🇪">réunion</option>
-            <option value="saint barthélemy" id="🇧🇱">saint barthélemy</option>
-            <option value="saint helena, ascension and tristan da cunha" id="🇸🇭">saint helena, ascension and tristan da cunha</option>
-            <option value="saint kitts and nevis" id="🇰🇳">saint kitts and nevis</option>
-            <option value="saint lucia" id="🇱🇨">saint lucia</option>
-            <option value="saint martin" id="🇲🇫">saint martin</option>
-            <option value="saint pierre and miquelon" id="🇵🇲">saint pierre and miquelon</option>
-            <option value="saint vincent and the grenadines" id="🇻🇨">saint vincent and the grenadines</option>
-            <option value="samoa" id="🇼🇸">samoa</option>
-            <option value="san marino" id="🇸🇲">san marino</option>
-            <option value="saudi arabia" id="🇸🇦">saudi arabia</option>
-            <option value="senegal" id="🇸🇳">senegal</option>
-            <option value="serbia" id="🇷🇸">serbia</option>
-            <option value="seychelles" id="🇸🇨">seychelles</option>
-            <option value="sierra leone" id="🇸🇱">sierra leone</option>
-            <option value="singapore" id="🇸🇬">singapore</option>
-            <option value="sint maarten" id="🇸🇽">sint maarten</option>
-            <option value="slovakia" id="🇸🇰">slovakia</option>
-            <option value="slovenia" id="🇸🇮">slovenia</option>
-            <option value="solomon islands" id="🇸🇧">solomon islands</option>
-            <option value="somalia" id="🇸🇴">somalia</option>
-            <option value="south africa" id="🇿🇦">south africa</option>
-            <option value="south georgia" id="🇬🇸">south georgia</option>
-            <option value="south korea" id="🇰🇷">south korea</option>
-            <option value="south sudan" id="🇸🇸">south sudan</option>
-            <option value="spain" id="🇪🇸">spain</option>
-            <option value="sri lanka" id="🇱🇰">sri lanka</option>
-            <option value="sudan" id="🇸🇩">sudan</option>
-            <option value="suriname" id="🇸🇷">suriname</option>
-            <option value="svalbard and jan mayen" id="🇸🇯">svalbard and jan mayen</option>
-            <option value="sweden" id="🇸🇪">sweden</option>
-            <option value="switzerland" id="🇨🇭">switzerland</option>
-            <option value="syria" id="🇸🇾">syria</option>
-            <option value="são tomé and príncipe" id="🇸🇹">são tomé and príncipe</option>
-            <option value="taiwan" id="🇹🇼">taiwan</option>
-            <option value="tajikistan" id="🇹🇯">tajikistan</option>
-            <option value="tanzania" id="🇹🇿">tanzania</option>
-            <option value="thailand" id="🇹🇭">thailand</option>
-            <option value="timor-leste" id="🇹🇱">timor-leste</option>
-            <option value="togo" id="🇹🇬">togo</option>
-            <option value="tokelau" id="🇹🇰">tokelau</option>
-            <option value="tonga" id="🇹🇴">tonga</option>
-            <option value="trinidad and tobago" id="🇹🇹">trinidad and tobago</option>
-            <option value="tunisia" id="🇹🇳">tunisia</option>
-            <option value="turkey" id="🇹🇷">turkey</option>
-            <option value="turkmenistan" id="🇹🇲">turkmenistan</option>
-            <option value="turks and caicos islands" id="🇹🇨">turks and caicos islands</option>
-            <option value="tuvalu" id="🇹🇻">tuvalu</option>
-            <option value="uganda" id="🇺🇬">uganda</option>
-            <option value="ukraine" id="🇺🇦">ukraine</option>
-            <option value="united arab emirates" id="🇦🇪">united arab emirates</option>
-            <option value="united kingdom" id="🇬🇧">united kingdom</option>
-            <option value="united states" id="🇺🇸">united states</option>
-            <option value="united states minor outlying islands" id="🇺🇲">united states minor outlying islands</option>
-            <option value="united states virgin islands" id="🇻🇮">united states virgin islands</option>
-            <option value="uruguay" id="🇺🇾">uruguay</option>
-            <option value="uzbekistan" id="🇺🇿">uzbekistan</option>
-            <option value="vanuatu" id="🇻🇺">vanuatu</option>
-            <option value="vatican city" id="🇻🇦">vatican city</option>
-            <option value="venezuela" id="🇻🇪">venezuela</option>
-            <option value="vietnam" id="🇻🇳">vietnam</option>
-            <option value="wallis and futuna" id="🇼🇫">wallis and futuna</option>
-            <option value="western sahara" id="🇪🇭">western sahara</option>
-            <option value="yemen" id="🇾🇪">yemen</option>
-            <option value="zambia" id="🇿🇲">zambia</option>
-            <option value="zimbabwe" id="🇿🇼">zimbabwe</option>
-            <option value="åland islands" id="🇦🇽">åland islands</option>
-        </select>
-        </div></div><div class="dates-container" id="signup-dates"><span class="mini-title">תאריך לידה</span><div class="floating-label-group"><div class="select-container"><span></span>
-        <select name="day" dir="rtl" class="select " true="" false="">
-        <option value="" hidden="">יום</option>
-            <option value="1" id="">1</option>
-            <option value="2" id="">2</option>
-            <option value="3" id="">3</option>
-            <option value="4" id="">4</option>
-            <option value="5" id="">5</option>
-            <option value="6" id="">6</option>
-            <option value="7" id="">7</option>
-            <option value="8" id="">8</option>
-            <option value="9" id="">9</option>
-            <option value="10" id="">10</option>
-            <option value="11" id="">11</option>
-            <option value="12" id="">12</option>
-            <option value="13" id="">13</option>
-            <option value="14" id="">14</option>
-            <option value="15" id="">15</option>
-            <option value="16" id="">16</option>
-            <option value="17" id="">17</option>
-            <option value="18" id="">18</option>
-            <option value="19" id="">19</option>
-            <option value="20" id="">20</option>
-            <option value="21" id="">21</option>
-            <option value="22" id="">22</option>
-            <option value="23" id="">23</option>
-            <option value="24" id="">24</option>
-            <option value="25" id="">25</option>
-            <option value="26" id="">26</option>
-            <option value="27" id="">27</option>
-            <option value="28" id="">28</option>
-            <option value="29" id="">29</option>
-            <option value="30" id="">30</option>
-            <option value="31" id="">31</option>
-        </select>
-        </div></div><div class="floating-label-group"><div class="select-container"><span></span>
-        <select name="month" dir="rtl" class="select " true="" false="">
-        <option value="" hidden="">חודש</option>
-            <option value="1" id="">1</option>
-            <option value="2" id="">2</option>
-            <option value="3" id="">3</option>
-            <option value="4" id="">4</option>
-            <option value="5" id="">5</option>
-            <option value="6" id="">6</option>
-            <option value="7" id="">7</option>
-            <option value="8" id="">8</option>
-            <option value="9" id="">9</option>
-            <option value="10" id="">10</option>
-            <option value="11" id="">11</option>
-            <option value="12" id="">12</option>
-        </select>
-        </div></div><div class="floating-label-group"><div class="select-container"><span></span>
-        <select name="year" dir="rtl" class="select " true="" false="">
-        <option value="" hidden="">שנה</option>
-            <option value="2024" id="">2024</option>
-            <option value="2023" id="">2023</option>
-            <option value="2022" id="">2022</option>
-            <option value="2021" id="">2021</option>
-            <option value="2020" id="">2020</option>
-            <option value="2019" id="">2019</option>
-            <option value="2018" id="">2018</option>
-            <option value="2017" id="">2017</option>
-            <option value="2016" id="">2016</option>
-            <option value="2015" id="">2015</option>
-            <option value="2014" id="">2014</option>
-            <option value="2013" id="">2013</option>
-            <option value="2012" id="">2012</option>
-            <option value="2011" id="">2011</option>
-            <option value="2010" id="">2010</option>
-            <option value="2009" id="">2009</option>
-            <option value="2008" id="">2008</option>
-            <option value="2007" id="">2007</option>
-            <option value="2006" id="">2006</option>
-            <option value="2005" id="">2005</option>
-            <option value="2004" id="">2004</option>
-            <option value="2003" id="">2003</option>
-            <option value="2002" id="">2002</option>
-            <option value="2001" id="">2001</option>
-            <option value="2000" id="">2000</option>
-            <option value="1999" id="">1999</option>
-            <option value="1998" id="">1998</option>
-            <option value="1997" id="">1997</option>
-            <option value="1996" id="">1996</option>
-            <option value="1995" id="">1995</option>
-            <option value="1994" id="">1994</option>
-            <option value="1993" id="">1993</option>
-            <option value="1992" id="">1992</option>
-            <option value="1991" id="">1991</option>
-            <option value="1990" id="">1990</option>
-            <option value="1989" id="">1989</option>
-            <option value="1988" id="">1988</option>
-            <option value="1987" id="">1987</option>
-            <option value="1986" id="">1986</option>
-            <option value="1985" id="">1985</option>
-            <option value="1984" id="">1984</option>
-            <option value="1983" id="">1983</option>
-            <option value="1982" id="">1982</option>
-            <option value="1981" id="">1981</option>
-            <option value="1980" id="">1980</option>
-            <option value="1979" id="">1979</option>
-            <option value="1978" id="">1978</option>
-            <option value="1977" id="">1977</option>
-            <option value="1976" id="">1976</option>
-            <option value="1975" id="">1975</option>
-            <option value="1974" id="">1974</option>
-            <option value="1973" id="">1973</option>
-            <option value="1972" id="">1972</option>
-            <option value="1971" id="">1971</option>
-            <option value="1970" id="">1970</option>
-            <option value="1969" id="">1969</option>
-            <option value="1968" id="">1968</option>
-            <option value="1967" id="">1967</option>
-            <option value="1966" id="">1966</option>
-            <option value="1965" id="">1965</option>
-            <option value="1964" id="">1964</option>
-            <option value="1963" id="">1963</option>
-            <option value="1962" id="">1962</option>
-            <option value="1961" id="">1961</option>
-            <option value="1960" id="">1960</option>
-            <option value="1959" id="">1959</option>
-            <option value="1958" id="">1958</option>
-            <option value="1957" id="">1957</option>
-            <option value="1956" id="">1956</option>
-            <option value="1955" id="">1955</option>
-            <option value="1954" id="">1954</option>
-            <option value="1953" id="">1953</option>
-            <option value="1952" id="">1952</option>
-            <option value="1951" id="">1951</option>
-            <option value="1950" id="">1950</option>
-            <option value="1949" id="">1949</option>
-            <option value="1948" id="">1948</option>
-            <option value="1947" id="">1947</option>
-            <option value="1946" id="">1946</option>
-            <option value="1945" id="">1945</option>
-            <option value="1944" id="">1944</option>
-            <option value="1943" id="">1943</option>
-            <option value="1942" id="">1942</option>
-            <option value="1941" id="">1941</option>
-            <option value="1940" id="">1940</option>
-            <option value="1939" id="">1939</option>
-            <option value="1938" id="">1938</option>
-            <option value="1937" id="">1937</option>
-            <option value="1936" id="">1936</option>
-            <option value="1935" id="">1935</option>
-            <option value="1934" id="">1934</option>
-            <option value="1933" id="">1933</option>
-            <option value="1932" id="">1932</option>
-            <option value="1931" id="">1931</option>
-            <option value="1930" id="">1930</option>
-            <option value="1929" id="">1929</option>
-            <option value="1928" id="">1928</option>
-            <option value="1927" id="">1927</option>
-            <option value="1926" id="">1926</option>
-            <option value="1925" id="">1925</option>
-            <option value="1924" id="">1924</option>
-            <option value="1923" id="">1923</option>
-            <option value="1922" id="">1922</option>
-            <option value="1921" id="">1921</option>
-            <option value="1920" id="">1920</option>
-            <option value="1919" id="">1919</option>
-            <option value="1918" id="">1918</option>
-            <option value="1917" id="">1917</option>
-            <option value="1916" id="">1916</option>
-            <option value="1915" id="">1915</option>
-            <option value="1914" id="">1914</option>
-            <option value="1913" id="">1913</option>
-            <option value="1912" id="">1912</option>
-            <option value="1911" id="">1911</option>
-            <option value="1910" id="">1910</option>
-            <option value="1909" id="">1909</option>
-            <option value="1908" id="">1908</option>
-            <option value="1907" id="">1907</option>
-            <option value="1906" id="">1906</option>
-            <option value="1905" id="">1905</option>
-        </select>
-        </div></div></div><button type="submit" class="btn confirm wide">הרשמה</button><div class="user-actions"><span>משתמש קיים? <a data-link="" href="/login">התחבר</a></span></div></form></main>
+    <main id="signup-container">
+        <div class="page-header">
+            <h1>הרשמה</h1>
+            <p>הכנס את הדואר האלקטרוני והסיסמה שלך</p>
+        </div>
+        <form class="signup-form" method="post" action="/user/signup">
+            <div class="floating-label-group">
+                <input type="text" class="form-input" true="" placeholder="" false="" autocomplete="given-name" />
+                <label class="floating-label">שם פרטי</label>
+            </div>
+            <div class="floating-label-group">
+                <input type="text" class="form-input" true="" placeholder="" false="" autocomplete="family-name" />
+                <label class="floating-label">שם משפחה</label>
+            </div>
+            <div class="floating-label-group">
+                <input type="text" class="form-input" true="" placeholder="" false="" autocomplete="off" />
+                <label class="floating-label">שם משתמש (אנגלית)</label>
+            </div>
+            <div class="floating-label-group">
+                <input type="phone" class="form-input" false="" placeholder="" autocomplete="tel" />
+                <label class="floating-label">פלאפון</label>
+            </div>
+            <div class="floating-label-group">
+                <input type="password" class="form-input" true="" placeholder="" false="" autocomplete="" />
+                <label class="floating-label">סיסמה</label>
+            </div>
+            <div class="floating-label-group">
+                <input type="password" class="form-input" true="" placeholder="" false="" autocomplete="" />
+                <label class="floating-label">אימות סיסמה</label>
+            </div>
+            <div class="floating-label-group">
+                <input type="email" class="form-input" true="" placeholder="" false="" autocomplete="email" />
+                <label class="floating-label">אימייל</label>
+            </div>
+            <div class="floating-label-group">
+                <div class="select-container">
+                    <span></span>
+                    <select name="gender" dir="rtl" class="select" true="" false="">
+                        <option value="" hidden="">בחר/י מגדר</option>
+                        <option value="נקבה" id="">נקבה</option>
+                        <option value="זכר" id="">זכר</option>
+                        <option value="מעדיף שלא לבחור" id="">מעדיף שלא לבחור</option>
+                    </select>
+                </div>
+            </div>
+            <div class="floating-label-group">
+                <div class="select-container">
+                    <span id="flag"></span>
+                    <select id="country" name="country" dir="rtl" class="select">
+                        <option value="" hidden="">בחר/י מדינה</option>
+                        <% countries?.forEach(country=>{ %>
+                            <option value="<%=country.name%>#<%=country.flag%>">
+                                <%=country.name%>
+                            </option>
+                            <%})%>
+                    </select>
+                </div>
+            </div>
+            <div class="dates-container" id="signup-dates">
+                <span class="mini-title">תאריך לידה</span>
+                <div class="floating-label-group">
+                    <div class="select-container">
+                        <span></span>
+                        <select name="day" dir="rtl" class="select" true="" false="">
+                            <option value="" hidden="">יום</option>
+                            <% days?.forEach(day=>{ %>
+                                <option value="<%=day%>"><%=day%></option>
+                                <%})%>
+                        </select>
+                    </div>
+                </div>
+                <div class="floating-label-group">
+                    <div class="select-container">
+                        <span></span>
+                        <select name="month" dir="rtl" class="select" true="" false="">
+                            <option value="" hidden="">חודש</option>
+                            <% months?.forEach(month=>{ %>
+                                <option value="<%=month%>"><%=month%></option>
+                                <%})%>
+                        </select>
+                    </div>
+                </div>
+                <div class="floating-label-group">
+                    <div class="select-container">
+                        <span></span>
+                        <select name="year" dir="rtl" class="select" true="" false="">
+                            <option value="" hidden="">שנה</option>
+                            <% years?.forEach(year=>{ %>
+                                <option value="<%=year%>"><%=year%></option>
+                                <%})%>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn confirm wide">הרשמה</button>
+            <div class="user-actions">
+                <span>משתמש קיים? <a data-link="" href="/login">התחבר</a></span>
+            </div>
+        </form>
+    </main>
 
-<%- include('./generals/pageBottom') %>
+    <%-include('./generals/pageBottom') %>
