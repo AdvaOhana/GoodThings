@@ -1,0 +1,17 @@
+<% if(auth){ %>
+ <header >
+    <img src="./assets/imgs/logo.png" alt="img" id="logo" srcset="">
+    <nav id="menu-bar" class="navbar">
+        <ul class="nav-list">
+            <li><a data-link href="/">בית</a></li>
+            <li><a data-link href="/tovit/form">הוסף טובית</a></li>
+            <li><a data-link href="/login">התחברות</a></li>
+            <li><a data-link href="/error">שגיאה</a></li>
+        </ul>
+    </nav>
+    <div id="actions-container">
+        <img src="./assets/icons/user-regular.svg" alt="user" class="icons icons-primary">
+        <img src="./assets/icons/moon-regular.svg" alt="theme" class="icons icons-primary">
+    </div>
+</header>
+<% } %>

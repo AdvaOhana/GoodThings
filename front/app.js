@@ -3,10 +3,10 @@ import { globalState } from './src/state/store.js';
 
 
 // localStorage.setItem('auth', true)
-if (globalState.getState().isAuthenticated) {
-    window.addEventListener('popstate', () => renderView())
-    document.addEventListener("DOMContentLoaded", () => renderView());
-}
-else {
-    document.addEventListener("DOMContentLoaded", () => renderView('/login'));
-}
+window.addEventListener('popstate', () => renderView())
+document.addEventListener("DOMContentLoaded", () => renderView());
+// if (globalState.getState().isAuthenticated) {
+// }
+// else {
+//     document.addEventListener("DOMContentLoaded", () => renderView('/login'));
+// }
