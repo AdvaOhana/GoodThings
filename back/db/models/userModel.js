@@ -96,6 +96,29 @@ async function forgotPassword(req, res, next) {
     }
 }
 
+async function createTovits(req, res, next) {
+    try {
+        const tovit = { user_id: req.params.user_id, post_date: new Date(), public: req.body.public, post_content: req.body.post_content, backgrond: req.body.backgrond }
+
+        const query =
+            `INSERT INTO posts (
+        user_id, post_date, public, post_content,background
+    ) values (?,?,?,?,?)`
+
+        const values = [
+            tovit.user_id,
+            tovit.post_date,
+            tovit.public,
+            tovit.post_content,
+            tovit.background
+        ];
+        const [results] = await pool.query(query, values);
+        next()
+    }
+    catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
 
 module.exports =
     { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser }
