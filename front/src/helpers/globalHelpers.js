@@ -86,11 +86,6 @@ export async function toaster(text, type = "check", duration = 2000) {
 export async function getCountries() {
     const res = await fetch(`https://restcountries.com/v3.1/all
         `)
-    if (!res.ok) {
-        history.pushState(null, null, "/")
-        toaster('Could not fetch counties', 'fail')
-        return
-    }
     let data = await res.json()
 
     data.sort((a, b) => {

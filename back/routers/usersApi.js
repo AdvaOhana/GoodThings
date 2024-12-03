@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, createTovits, getTovits, getTovitsById, } = require("../db/models/userModel.js")
+const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, createTovits, getTovits, getTovitsById } = require("../db/models/userModel.js")
 
 const usersApiRouter = Router()
 
@@ -39,7 +39,7 @@ tovitRouter.get('/:id', getTovitsById, (req, res) => {
     res.status(200).json({ message: `Found tovit by id:${req.params.id}`, data: req.tovitData })
 })
 tovitRouter.post('/', createTovits, (req, res) => {
-    res.status(200).json({ message: `tovit created successfully`, data: req.tovit_id })
+    res.status(200).json({ message: `tovit created successfully`, data: req.createTovits })
 })
 tovitRouter.patch('/:id', (req, res) => { })
 tovitRouter.delete('/:id', (req, res) => { })
