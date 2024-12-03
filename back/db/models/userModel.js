@@ -98,12 +98,18 @@ async function forgotPassword(req, res, next) {
 
 async function createTovits(req, res, next) {
     try {
-        const tovit = { user_id: req.params.user_id, post_date: new Date(), public: req.body.public, post_content: req.body.post_content, backgrond: req.body.backgrond }
+
+        const tovit = {
+            user_id: +req.params.usersId,
+            post_date: new Date().toISOString().split("T").at(0),
+            public: req.body.public,
+            post_content: req.body.post_content,
+            background: +req.body.background || null
+        }
 
         const query =
-            `INSERT INTO posts (
-        user_id, post_date, public, post_content,background
-    ) values (?,?,?,?,?)`
+            `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
+
 
         const values = [
             tovit.user_id,
@@ -112,13 +118,38 @@ async function createTovits(req, res, next) {
             tovit.post_content,
             tovit.background
         ];
+
         const [results] = await pool.query(query, values);
+        req.tovit_id = results.insertId
         next()
     }
     catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
+async function getTovits(req, res, next) {
+    try {
+        const [results] = await pool.query(`select * from posts`)
+        if (!results.length) throw Error(`No tovits found.`)
+        req.getTovits = results;
+        next();
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` });
+    }
 
+}
+async function getTovitsById(req, res, next) {
+    try {
+        const id = req.params.id;
+        if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
+
+        const [results] = await pool.query(`select * from posts where id = ${id}`)
+        if (!results.length) throw Error(`No tovits found.`)
+        req.tovitData = results;
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser }
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, createTovits, getTovits, getTovitsById }

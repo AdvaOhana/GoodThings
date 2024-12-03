@@ -1,3 +1,6 @@
+create database tov_yomi;
+use tov_yomi;
+
 CREATE TABLE IF NOT EXISTS `users` (
 	`id` int AUTO_INCREMENT NOT NULL,
 	`user_type` int NOT NULL,
@@ -13,11 +16,12 @@ CREATE TABLE IF NOT EXISTS `users` (
 	`login_cnt` int NOT NULL,
 	`last_post_time` date NOT NULL,
 	`tovit_template` int NOT NULL,
+    `user_name` varchar(255) not null,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_types` (
-	`id` int NOT NULL,
+	`id` int AUTO_INCREMENT NOT NULL,
 	`type` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
@@ -27,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
 	`user_id` int NOT NULL,
 	`post_date` date NOT NULL,
 	`public` bool NOT NULL DEFAULT false,
-	`post_info` int NOT NULL,
+	`post_content` varchar(255) NOT NULL,
 	`background` int,
 	PRIMARY KEY (`id`)
 );
@@ -105,3 +109,6 @@ ALTER TABLE `users_to_groups` ADD CONSTRAINT `users_to_groups_fk2` FOREIGN KEY (
 ALTER TABLE `groups_to_posts` ADD CONSTRAINT `groups_to_posts_fk1` FOREIGN KEY (`post_id`) REFERENCES `posts`(`id`);
 
 ALTER TABLE `groups_to_posts` ADD CONSTRAINT `groups_to_posts_fk2` FOREIGN KEY (`group_id`) REFERENCES `all_groups`(`id`);
+
+alter table `comment_to_post` add index idx (post_id,comment_id);
+alter table `groups_to_posts` add index idx (post_id,group_id);

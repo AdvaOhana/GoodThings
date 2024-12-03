@@ -7,7 +7,7 @@ const { DB_PASSWORD, DB_HOST, DB_NAME, DB_USER } = process.env
 const pool = mysql.createPool({
     host: `${DB_HOST}`,
     user: `${DB_USER}`,
-    password: `${DB_PASSWORD}`,
+    password: ``,
     database: `${DB_NAME}`,
     waitForConnections: true,
     connectionLimit: 10,
@@ -17,5 +17,6 @@ const pool = mysql.createPool({
     enableKeepAlive: true,
     keepAliveInitialDelay: 0,
 });
+
 
 module.exports = { pool }
