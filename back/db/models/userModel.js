@@ -151,5 +151,34 @@ async function getTovitsById(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
+async function editTovit(req, res, next) {
+    try {
+        const id = req.params.id;
+        const newPostContent = req.body.post_content
+
+        if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
+
+        const [results] = await pool.query(`update posts set post_content = '${JSON.stringify(newPostContent)}' where id = ${id}`)
+
+        req.editTovit = results;
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+async function deleteTovit(req, res, next) {
+    try {
+        const id = req.params.id
+
+        if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
+
+        const [results] = await pool.query(`delete from posts where id = ${id}`)
+
+        req.deleteTovit = results;
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, createTovits, getTovits, getTovitsById }
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, createTovits, getTovits, getTovitsById, editTovit, deleteTovit }
