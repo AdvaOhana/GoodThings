@@ -99,3 +99,5 @@ async function forgotPassword(req, res, next) {
 
 module.exports =
     { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser }
+           
+

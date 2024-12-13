@@ -7,7 +7,8 @@ const { DB_PASSWORD, DB_HOST, DB_NAME, DB_USER } = process.env
 const pool = mysql.createPool({
     host: `${DB_HOST}`,
     user: `${DB_USER}`,
-    password: ``,
+    password: `${DB_PASSWORD}`,//shmuel
+    // password: ``,//adva
     database: `${DB_NAME}`,
     waitForConnections: true,
     connectionLimit: 10,

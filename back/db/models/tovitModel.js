@@ -6,10 +6,9 @@ module.exports = {
 }
 
 async function createTovits(req, res, next) {
-    try {
-
+    try {                
         const tovit = {
-            user_id: +req.params.usersId,
+            user_id: +req.query.userId,
             post_date: new Date().toISOString().split("T").at(0),
             public: req.body.public,
             post_content: req.body.post_content,
@@ -62,14 +61,17 @@ async function getTovitsById(req, res, next) {
 }
 async function editTovit(req, res, next) {
     try {
+        //Adva: Add public or private update.
+        //Adva: Need to make sure that only the creator of the post allow to change it.
         const id = req.params.id;
         const newPostContent = req.body.post_content
         if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
 
-        const [results] = await pool.query(`update posts set post_content = ${newPostContent} where id = ${id}`)
+        const [results] = await pool.query(`update posts set post_content = '${newPostContent}' where id = ${id}`)
 
-        // req.editedContent = results;
-        // next()
+        if(results.affectedRows === 0 ) throw Error('Failed to update, please check the id.')
+        req.editedContent = results;
+        next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
