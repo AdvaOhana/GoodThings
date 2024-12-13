@@ -9,20 +9,20 @@ const groupsRouter = Router({ mergeParams: true })
 
 
 
-tovitsApiRouter.get('/all', getTovits, (req, res) => {
-    res.status(200).json({ message: 'Found tovits', data: req.getTovits })
+tovitsApiRouter.get('/', getTovits, (req, res) => {
+    res.status(200).json({ message: 'Found tovits', data: req.tovits })
 })
 tovitsApiRouter.get('/:id', getTovitsById, (req, res) => {
     res.status(200).json({ message: `Found tovit by id:${req.params.id}`, data: req.tovitData })
 })
 tovitsApiRouter.post('/', createTovits, (req, res) => {
-    res.status(200).json({ message: `tovit created successfully`, data: req.createTovits })
+    res.status(200).json({ message: `tovit created successfully`, data: req.tovitId })
 })
 tovitsApiRouter.patch('/:id', editTovit, (req, res) => {
-    res.status(200).json({ message: `tovit updated successfully`, data: req.editTovit })
+    res.status(200).json({ message: `tovit updated successfully`, data: req.editedContent })
 })
 tovitsApiRouter.delete('/:id', deleteTovit, (req, res) => {
-    res.status(200).json({ message: `tovit deleted successfully`, data: req.deleteTovit })
+    res.status(200).json({ message: `tovit deleted successfully`, data: req.hasDeleted })
 })
 
 

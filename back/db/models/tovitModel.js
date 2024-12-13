@@ -29,7 +29,7 @@ async function createTovits(req, res, next) {
         ];
 
         const [results] = await pool.query(query, values);
-        req.tovit_id = results.insertId
+        req.tovitId = results.insertId
         next()
     }
     catch (error) {
@@ -40,7 +40,7 @@ async function getTovits(req, res, next) {
     try {
         const [results] = await pool.query(`select * from posts`)
         if (!results.length) throw Error(`No tovits found.`)
-        req.getTovits = results;
+        req.tovits = results;
         next();
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` });
@@ -69,7 +69,7 @@ async function editTovit(req, res, next) {
 
         const [results] = await pool.query(`update posts set post_content = '${JSON.stringify(newPostContent)}' where id = ${id}`)
 
-        req.editTovit = results;
+        req.editedContent = results;
         next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
@@ -83,7 +83,7 @@ async function deleteTovit(req, res, next) {
 
         const [results] = await pool.query(`delete from posts where id = ${id}`)
 
-        req.deleteTovit = results;
+        req.hasDeleted = results;
         next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
