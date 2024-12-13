@@ -8,6 +8,7 @@ const { usersRouter } = require('./routers/users.js');
 const { usersApiRouter } = require('./routers/usersApi.js');
 const { groupsRouter } = require('./routers/groups.js');
 const { groupsApiRouter } = require('./routers/groupsApi.js');
+const { tovitsApiRouter } = require('./routers/tovitsApi.js');
 
 const path = require('path');
 
@@ -27,6 +28,9 @@ app.use('/users', usersRouter)
 app.use('/api/users', usersApiRouter)
 app.use('/groups', groupsRouter)
 app.use('/api/groups', groupsApiRouter)
+// app.use('/tovit', groupsApiRouter)
+app.use('/api/tovits', tovitsApiRouter)
+
 
 app.get('/', (req, res) => {
     res.render('homePage', { auth: true })

@@ -64,13 +64,12 @@ async function editTovit(req, res, next) {
     try {
         const id = req.params.id;
         const newPostContent = req.body.post_content
-
         if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
 
-        const [results] = await pool.query(`update posts set post_content = '${JSON.stringify(newPostContent)}' where id = ${id}`)
+        const [results] = await pool.query(`update posts set post_content = ${newPostContent} where id = ${id}`)
 
-        req.editedContent = results;
-        next()
+        // req.editedContent = results;
+        // next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }

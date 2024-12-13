@@ -1,12 +1,7 @@
 const { Router } = require("express")
-const { getTovits, getTovitsById, createTovits, editTovit, deleteTovit } = require("../db/models/groupModel.js")
+const { getTovits, getTovitsById, createTovits, editTovit, deleteTovit } = require("../db/models/tovitModel.js")
 
 const tovitsApiRouter = Router()
-
-const userRouter = Router({ mergeParams: true })
-const groupsRouter = Router({ mergeParams: true })
-
-
 
 
 tovitsApiRouter.get('/', getTovits, (req, res) => {
