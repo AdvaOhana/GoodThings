@@ -28,9 +28,8 @@ async function getCountries() {
         console.error("Error fetching countries:", error.message);
         return [];
     }
-
-
 }
+
 
 
 module.exports = {

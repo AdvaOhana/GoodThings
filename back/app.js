@@ -11,6 +11,7 @@ const { groupsApiRouter } = require('./routers/groupsApi.js');
 const { tovitsApiRouter } = require('./routers/tovitsApi.js');
 
 const path = require('path');
+const { getUserByEmail } = require('./db/models/userModel.js');
 
 
 dotenv.config()
@@ -31,21 +32,30 @@ app.use('/api/groups', groupsApiRouter)
 // app.use('/tovit', groupsApiRouter)
 app.use('/api/tovits', tovitsApiRouter)
 
+global.user = {}
 
-app.get('/', (req, res) => {
-    res.render('homePage', { auth: true })
+
+app.get('/',async (req, res) => {
+    global.user = {...await getUserByEmail("test@test.com"),auth:true}
+    if(!global.user.auth) return res.redirect('/login')
+        console.log(global.user);
+        
+    res.render('homePage', { 
+        user:global.user})
 })
 
-app.get('/login', (req, res) => {
-    res.render('loginPage', { auth: false })
+app.get('/login',async (req, res) => {
+    if(global.user.auth) return res.redirect('/')
+    res.render('loginPage')
 })
-app.get('/forgotPassword', (req, res) => {
-    res.render('forgotPage', { auth: false })
+app.get('/forgotPassword',async (req, res) => {
+    if(global.user.auth) return res.redirect('/')
+    res.render('forgotPage')
 })
 
 app.get('/signup', async (req, res) => {
+    if(global.user.auth) return res.redirect('/')
     res.render('signupPage', {
-        auth: false,
         countries: await getCountries() ,
         genders: ['נקבה', 'זכר', 'אחר'],
         days: Array.from({ length: 31 }, (el, i) => i + 1),
@@ -53,6 +63,10 @@ app.get('/signup', async (req, res) => {
         years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
     })
 })
+app.get("*",(req, res) => {
+    res.render('errorPage',{
+       user: global.user
+    })})
 
 
 app.listen(PORT, () => {

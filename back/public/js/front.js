@@ -21,3 +21,17 @@ document.querySelector('.forgot-form')?.addEventListener('submit',(e)=>{
 }
 )
 
+
+
+function toggleTheme(){
+const moonIcon = '../../assets/icons/moon-regular.svg'
+const sunIcon = '../../assets/icons/sun-regular.svg'
+
+icon = document.querySelector(".theme-icon")
+
+    userData.defTheme = userData.defTheme === 'dark' ? "light" : "dark"
+    icon.src = userData.defTheme === 'dark' ? sunIcon :moonIcon
+
+    document.body.className = userData.defTheme
+    
+}

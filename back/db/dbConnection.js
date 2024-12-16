@@ -7,9 +7,9 @@ const { DB_PASSWORD, DB_HOST, DB_NAME, DB_USER } = process.env
 const pool = mysql.createPool({
     host: `${DB_HOST}`,
     user: `${DB_USER}`,
-    password: `${DB_PASSWORD}`,//shmuel
-    // password: ``,//adva
+    password: `${DB_PASSWORD}`,
     database: `${DB_NAME}`,
+    port:3306,
     waitForConnections: true,
     connectionLimit: 10,
     maxIdle: 10,

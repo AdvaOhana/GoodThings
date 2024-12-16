@@ -4,7 +4,5 @@ export function Span(text = "", className, id) {
     span.innerHTML = `${text}`
     className ? span.className = className : null
     id ? span.id = id : null
-
-
     return span
 }
