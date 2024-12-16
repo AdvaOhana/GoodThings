@@ -30,24 +30,6 @@ usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
 usersApiRouter.patch('/:id', (req, res) => { })
 usersApiRouter.delete('/:id', (req, res) => { })
 
-usersApiRouter.use('/:usersId/tovit', tovitRouter)
-
-// tovitRouter.get('/all', getTovits, (req, res) => {
-//     res.status(200).json({ message: 'Found tovits', data: req.getTovits })
-// })
-// tovitRouter.get('/:id', getTovitsById, (req, res) => {
-//     res.status(200).json({ message: `Found tovit by id:${req.params.id}`, data: req.tovitData })
-// })
-// tovitRouter.post('/', createTovits, (req, res) => {
-//     res.status(200).json({ message: `tovit created successfully`, data: req.createTovits })
-// })
-// tovitRouter.patch('/:id', editTovit, (req, res) => {
-//     res.status(200).json({ message: `tovit updated successfully`, data: req.editTovit })
-// })
-// tovitRouter.delete('/:id', deleteTovit, (req, res) => {
-//     res.status(200).json({ message: `tovit deleted successfully`, data: req.deleteTovit })
-// })
-
 usersApiRouter.use('/:usersId/group', groupsRouter)
 groupsRouter.get('/all', (req, res) => { })
 groupsRouter.post('/', (req, res) => { })

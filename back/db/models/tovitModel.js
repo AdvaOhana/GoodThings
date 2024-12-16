@@ -2,11 +2,11 @@ const { pool } = require("../dbConnection.js")
 const { lettersReg } = require('../../helpers/helper.js')
 
 module.exports = {
-    getTovits, getTovitsById, createTovits, editTovit, deleteTovit
+    getTovits, getTovitsById, createTovits, editTovit, deleteTovit, getTovByUId
 }
 
 async function createTovits(req, res, next) {
-    try {                
+    try {
         const tovit = {
             user_id: +req.query.userId,
             post_date: new Date().toISOString().split("T").at(0),
@@ -69,7 +69,7 @@ async function editTovit(req, res, next) {
 
         const [results] = await pool.query(`update posts set post_content = '${newPostContent}' where id = ${id}`)
 
-        if(results.affectedRows === 0 ) throw Error('Failed to update, please check the id.')
+        if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
         req.editedContent = results;
         next()
     } catch (error) {
@@ -86,6 +86,31 @@ async function deleteTovit(req, res, next) {
 
         req.hasDeleted = results;
         next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+async function getTovByUId(req, res, next) {
+    try {
+        const userId = req.params.id
+        const tovDate = req.query;
+        const queryParams = [userId];
+
+        if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`)
+
+        let sql = 'SELECT * FROM posts WHERE user_id = ?';
+
+        if (tovDate.startDate?.length && tovDate.endDate?.length) {
+            sql += ' AND post_date BETWEEN ? AND ?';
+            queryParams.push(tovDate.startDate, tovDate.endDate);
+        }
+
+        const [results] = await pool.query(sql, queryParams);
+
+        if (!results.length) throw Error(`No tovits found.`)
+        req.tovData = results;
+        next()
+
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
