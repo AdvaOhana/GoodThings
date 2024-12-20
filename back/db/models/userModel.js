@@ -70,10 +70,12 @@ async function createUser(req, res, next) {
 }
 async function loginUser(req, res, next) {
     try {
-        const userName = req.body.userName
+        // const userName = req.body.userName
+        const userEmail = req.body.userEmail
+
         const userPassword = req.body.userPassword
 
-        const [user] = await pool.query(`select * from users where user_name=?`, [userName])
+        const [user] = await pool.query(`select * from users where email=?`, [userEmail])
         if (!user.length || user[0].password !== userPassword) throw Error(`login faild`)
 
         req.userData = { ...user[0], password: '' };
@@ -96,12 +98,12 @@ async function forgotPassword(req, res, next) {
     }
 }
 
-async function  getUserByEmail(email) {
+async function getUserByEmail(email) {
 
-        const [user] = await pool.query(`select * from users where email=?`, [email])
-          return user.at(0)
+    const [user] = await pool.query(`select * from users where email=?`, [email])
+    return user.at(0)
 }
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser,getUserByEmail }
-           
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, getUserByEmail }
+
 
