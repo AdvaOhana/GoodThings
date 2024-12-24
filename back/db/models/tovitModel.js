@@ -68,7 +68,7 @@ async function editTovit(req, res, next) {
         const isPublic = req.body.public
         const newPostContent = req.body.post_content
 
-        const [results] = await pool.query(`update posts set post_content = '${newPostContent}', public = '${isPublic}' where id = ${id}`)
+        const [results] = await pool.query(`update posts set post_content = '${newPostContent}', public = ${isPublic} where id = ${id}`)
 
         if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
         req.editedContent = results;
