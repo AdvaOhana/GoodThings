@@ -37,7 +37,7 @@ app.get('/',async (req, res) => {
     threeDaysAgo.setDate(threeDaysAgo.getDate()-3)
 
     global.user = await getUserByEmail("test1@test1.com")
-    global.todayPost = await getUserPosts(global.user.id,new Date())
+    global.todayPost = await getUserPosts(global.user.id,new Date()) || {}
 
     if(!global.user.auth) return res.redirect('/login')
         
@@ -47,16 +47,16 @@ app.get('/',async (req, res) => {
 })
 
 app.get('/login',async (req, res) => {
-    if(global.user.auth) return res.redirect('/')
+    if(global?.user.auth) return res.redirect('/')
     res.render('loginPage')
 })
 app.get('/forgotPassword',async (req, res) => {
-    if(global.user.auth) return res.redirect('/')
+    if(global?.user.auth) return res.redirect('/')
     res.render('forgotPage')
 })
 
 app.get('/signup', async (req, res) => {
-    if(global.user.auth) return res.redirect('/')
+    if(global?.user.auth) return res.redirect('/')
     res.render('signupPage', {
         countries: await getCountries() ,
         genders: ['נקבה', 'זכר', 'אחר'],
@@ -67,7 +67,7 @@ app.get('/signup', async (req, res) => {
 })
 app.get("*",(req, res) => {
     res.render('errorPage',{
-       user: global.user
+       user: global?.user
     })})
 
 

@@ -3,23 +3,18 @@ const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
 
 function loadTovit(){
-    const postedToday = todayPost?.length
-
+    const postedToday =  todayPost ? todayPost?.length : false
+    
     if(postedToday){
-        const postContent =  todayPost[0]?.post_content?.split("%")
+        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost[0]?.post_content?.length > 0 ? todayPost[0]?.post_content?.split("%") : []
         todayPost[0].post_content = postContent
     }
-    
     
     const tovitData = postedToday ? todayPost[0] :  {
                 public: userData?.defIsPublic,
                 post_content: JSON.parse(localStorage.getItem("post-items")) ||  [],
                 background: userData?.tovit_template || null
     }
-console.log(tovitData);
-
-
-    
     
     const fName = userData.first_name
     let error = ""
@@ -94,6 +89,7 @@ function handleAdd(e){
     tovitData.post_content.push(inputVal)
     localStorage.setItem("post-items",JSON.stringify(tovitData.post_content))
     updateListUI()
+    window.helpers.toaster('נוסף בהצלחה')
     input.value = ""  
 }
 
@@ -140,9 +136,14 @@ async function handleSubmit(e){
 
     tovitData.post_content = stringifyedPost;
 try {
-    const url = postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
+    let method = postedToday ? "PATCH" : "POST"
+    let url = postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
+    if(postedToday && !stringifyedPost.length){
+        url = `/api/tovits/${tovitData.id}`
+        method = 'DELETE'
+    }
     const res = await fetch(url,{
-        method: postedToday ? "PATCH" : "POST",
+        method: method,
         headers: {
             'Content-Type': 'application/json',
           },

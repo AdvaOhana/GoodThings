@@ -6,6 +6,7 @@
         <button class="create-tovit">לחץ כאן על מנת להתחיל לרשום משהו טוב שקרה לך</button>
     </div>
     <% } else { threeDaysPosts.forEach(post=>{ %>
+        <% if(!post.post_content.length) return %>
         <div class="thing-info bg-<%= post.background %>" onclick="">
         <ul>
             <% post.post_content.split("%").forEach(item=> { %>
