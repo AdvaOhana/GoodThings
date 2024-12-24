@@ -14,7 +14,7 @@ async function createTovits(req, res, next) {
             post_content: req.body.post_content,
             background: +req.body.background || null
         }
-        
+
         const query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
 
@@ -61,13 +61,14 @@ async function getTovitsById(req, res, next) {
 }
 async function editTovit(req, res, next) {
     try {
-        //Adva: Add public or private update.
         //Adva: Need to make sure that only the creator of the post allow to change it.
         const id = req.params.id;
-        const newPostContent = req.body.post_content
         if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
 
-        const [results] = await pool.query(`update posts set post_content = '${newPostContent}' where id = ${id}`)
+        const isPublic = req.body.public
+        const newPostContent = req.body.post_content
+
+        const [results] = await pool.query(`update posts set post_content = '${newPostContent}', public = '${isPublic}' where id = ${id}`)
 
         if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
         req.editedContent = results;
@@ -92,7 +93,7 @@ async function deleteTovit(req, res, next) {
 }
 async function getTovByUId(req, res, next) {
     try {
-        const userId = req.params.id        
+        const userId = req.params.id
         const tovDate = req.query;
         const queryParams = [userId];
 
