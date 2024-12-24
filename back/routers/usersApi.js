@@ -1,5 +1,6 @@
 const { Router } = require("express")
 const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser } = require("../db/models/userModel.js")
+const { setCookie } = require('../middlewares/auth.js')
 
 const usersApiRouter = Router()
 
@@ -19,7 +20,7 @@ usersApiRouter.get('/byName/:id', getUserByName, (req, res) => {
 usersApiRouter.post('/sign-up', createUser, (req, res) => {
     res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
 })
-usersApiRouter.post('/login', loginUser, (req, res) => {
+usersApiRouter.post('/login', loginUser, setCookie, (req, res) => {
     res.status(200).json({ message: `logged in successfully`, data: req.userData })
 })
 // usersApiRouter.post('/logout/:id', (req, res) => { })
