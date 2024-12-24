@@ -14,7 +14,7 @@ async function createTovits(req, res, next) {
             post_content: req.body.post_content,
             background: +req.body.background || null
         }
-
+        
         const query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
 
@@ -92,7 +92,7 @@ async function deleteTovit(req, res, next) {
 }
 async function getTovByUId(req, res, next) {
     try {
-        const userId = req.params.id
+        const userId = req.params.id        
         const tovDate = req.query;
         const queryParams = [userId];
 

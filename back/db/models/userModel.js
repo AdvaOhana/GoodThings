@@ -96,12 +96,8 @@ async function forgotPassword(req, res, next) {
     }
 }
 
-async function  getUserByEmail(email) {
 
-        const [user] = await pool.query(`select * from users where email=?`, [email])
-          return user.at(0)
-}
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser,getUserByEmail }
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser }
            
 

@@ -1,28 +1,35 @@
 <%- include('./generals/pageTop') %>
 <main id="data-continer">
-    <div class="thing-info" onclick="">
-        <h4>תאריך: <span>30/8/24</span></h4>
-        <ul>
-            <li>יום הולדת</li>
-            <li>כסף </li>
-            <li>חתונה </li>
-        </ul>
+    <%if(!threeDaysPosts?.length){ %>
+<div class="empty">
+        <h3>לא נמצאו פוסטים</h3>
+        <button class="create-tovit">לחץ כאן על מנת להתחיל לרשום משהו טוב שקרה לך</button>
     </div>
-    <div class="thing-info">
-        <h4>תאריך: <span>30/8/24</span></h4>
+    <% } else { threeDaysPosts.forEach(post=>{ %>
+        <div class="thing-info bg-<%= post.background %>" onclick="">
         <ul>
-            <li>יום הולדת</li>
-            <li>כסף </li>
-            <li>חתונה </li>
+            <% post.post_content.split("%").forEach(item=> { %>
+                <li><%= item %></li>
+                <%  }) %>
         </ul>
+<div class="thing-opacity">
+        <p class="">תאריך: 
+            <%if(post?.post_date.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' }) === new Date().toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' })){ %>
+                        <span class="bolder">היום</span></p>
+                        <% } else { %>
+                        <span><%= post?.post_date?.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' }) %></span></p>
+                        <% } %>
+        <% if(post.public){ %>
+            <p class="">פומבי</p>
+        <% } else { %>
+            <p class="">אישי</p>
+            <% } %>
+</div>
+
     </div>
-    <div class="thing-info">
-        <h4>תאריך: <span>30/8/24</span></h4>
-        <ul>
-            <li>יום הולדת</li>
-            <li>כסף </li>
-            <li>חתונה </li>
-        </ul>
-    </div>
+
+        <% }) %>
+    <% } %>
+
 </main>
 <%- include('./generals/pageBottom') %>

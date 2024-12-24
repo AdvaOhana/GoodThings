@@ -12,6 +12,7 @@
     --color-brand-700: #4338ca;
     --color-brand-800: #3730a3;
     --color-brand-900: #312e81;
+
 }
 
 :root .light{
@@ -33,6 +34,10 @@
     --color-silver-700: #374151;
     --color-indigo-100: #e0e7ff;
     --color-indigo-700: #4338ca;
+
+    --color-transperent: rgba(0, 0, 0, 0.3);
+
+
 
     --filter-svg: invert(100%) sepia(100%) saturate(100%) hue-rotate(180deg) brightness(100%) contrast(100%);
 
@@ -77,6 +82,8 @@
         --image-opacity: 90%;
         --filter-svg: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 
+    --color-transperent: rgba(255, 255, 255, 0.266);
+
 
     
 }
@@ -106,9 +113,7 @@ select {
     color: inherit;
 }
 
-button {
-    cursor: pointer;
-}
+
 
 li{
     list-style: none;
@@ -122,6 +127,18 @@ select:disabled,
 input:disabled {
   background-color: var(--color-grey-200);
   color: var(--color-grey-500);
+}
+button{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+button :disabled{
+    cursor:not-allowed;
 }
 
 button:focus,
@@ -175,15 +192,7 @@ footer{
 #actions-container :last-child{
     filter: var(--filter-svg);
 }
-button{
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-}
+
 
 #add-btn{
     display: flex;
@@ -192,8 +201,8 @@ button{
     align-items: center;
     gap: .2rem;
     color: var(--color-grey-800);
-
 }
+
 #add-icon{
     position: relative;
     filter: var(--filter-svg)
@@ -357,7 +366,6 @@ input:focus{
     text-decoration: none;
     color: var(--color-brand-500);
     background: transparent;
-    cursor: pointer;
     transition: ease-out 0.5s;
     border: 2px solid var(--color-brand-700);
     border-radius: var(--border-radius-md);
@@ -378,6 +386,16 @@ input:focus{
 .primary:hover{
     box-shadow: none;
 }
+
+.disabled{
+   opacity: 0.5;
+}
+.disabled:hover{
+    opacity: 0.5;
+    box-shadow: 0 0 0 0 var(--color-brand-700);
+    scale: 1;
+    cursor: not-allowed;
+ }
 
 input:focus ~ .floating-label,
 input:not(:placeholder-shown) ~ .floating-label {
@@ -556,16 +574,50 @@ input:not(:placeholder-shown) ~ .floating-label {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    overflow-x: auto;
+    gap: 1rem;
+    /* padding: 2rem; */
 }
 .thing-info{
     position: relative;
+    display: grid;
+    grid-row: 1fr span;
     background-color: var(--color-grey-0);
     border-radius: var(--border-radius-lg);
-    height: 10rem;
-    width: 20%;
-    padding: 1rem 1.5rem;
+    height: 50%;
+    width: 25%;
+    padding: 1.5rem;
     transition: 0.2s all;
     box-shadow: var(--shadow-md);
+}
+.thing-info ul{
+    
+    height: 95%;
+    max-width: 30rem;
+    overflow-x: auto;
+}
+.thing-info li{
+margin-bottom: 1rem;
+padding-bottom: 0.2rem;
+border-bottom: .05rem solid var(--color-transperent);
+
+}
+
+.thing-opacity{
+    margin-top: .1rem;
+    padding: 1rem 1rem 0 1rem;
+    border-top: .1rem solid var(--color-transperent);
+    display: flex;
+    align-self: flex-end;
+    justify-content: space-between;
+    font-size: .8rem;
+    color: var(--color-transperent);
+}
+
+
+.bolder{
+    font-weight: 700;
+
 }
 
 .thing-info:hover{

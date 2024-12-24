@@ -4,6 +4,7 @@ dotenv.config()
 
 const { DB_PASSWORD, DB_HOST, DB_NAME, DB_USER } = process.env
 
+
 const pool = mysql.createPool({
     host: `${DB_HOST}`,
     user: `${DB_USER}`,
@@ -18,6 +19,5 @@ const pool = mysql.createPool({
     enableKeepAlive: true,
     keepAliveInitialDelay: 0,
 });
-
 
 module.exports = { pool }

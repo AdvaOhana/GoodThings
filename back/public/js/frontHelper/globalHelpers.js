@@ -31,7 +31,7 @@ function setStorage(key, data) {
 
     }
     if (type === 'fail') {
-        iconType = `${imgsRef}/circle-xmark-regular.svg`
+        iconType = `${iconsPath}/circle-xmark-regular.svg`
     }
     const img = document.createElement('img')
     img.src = iconType
@@ -76,4 +76,4 @@ function setStorage(key, data) {
 }
 
 
-window.helpers = {toaster,getStorage,setStorage}
+window.helpers = {toaster,getStorage,setStorage,delay}

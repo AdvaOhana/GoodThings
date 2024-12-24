@@ -11,8 +11,7 @@ const { groupsApiRouter } = require('./routers/groupsApi.js');
 const { tovitsApiRouter } = require('./routers/tovitsApi.js');
 
 const path = require('path');
-const { getUserByEmail } = require('./db/models/userModel.js');
-
+const { getUserByEmail, getUserPosts } = require('./helpers/userHelpers.js');
 
 dotenv.config()
 const { PORT } = process.env
@@ -32,16 +31,19 @@ app.use('/api/groups', groupsApiRouter)
 // app.use('/tovit', groupsApiRouter)
 app.use('/api/tovits', tovitsApiRouter)
 
-global.user = {}
-
 
 app.get('/',async (req, res) => {
-    global.user = {...await getUserByEmail("test@test.com"),auth:true}
+    const threeDaysAgo = new Date() 
+    threeDaysAgo.setDate(threeDaysAgo.getDate()-3)
+
+    global.user = await getUserByEmail("test1@test1.com")
+    global.todayPost = await getUserPosts(global.user.id,new Date())
+
     if(!global.user.auth) return res.redirect('/login')
-        console.log(global.user);
         
     res.render('homePage', { 
-        user:global.user})
+        user:global.user,
+        threeDaysPosts: await getUserPosts(global.user.id,threeDaysAgo,new Date()) })
 })
 
 app.get('/login',async (req, res) => {
