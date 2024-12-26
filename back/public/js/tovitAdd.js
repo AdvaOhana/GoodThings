@@ -6,7 +6,7 @@ function loadTovit(){
     const postedToday =  todayPost ? todayPost?.length : false
     
     if(postedToday){
-        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost[0]?.post_content?.length > 0 ? todayPost[0]?.post_content?.split("%") : []
+        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost[0]?.post_content.includes("%") ? todayPost[0]?.post_content?.split("%") : todayPost[0]?.post_content
         todayPost[0].post_content = postContent
     }
     
@@ -15,6 +15,7 @@ function loadTovit(){
                 post_content: JSON.parse(localStorage.getItem("post-items")) ||  [],
                 background: userData?.tovit_template || null
     }
+    
     
     const fName = userData.first_name
     let error = ""
@@ -88,6 +89,7 @@ function handleAdd(e){
     }
     tovitData.post_content.push(inputVal)
     localStorage.setItem("post-items",JSON.stringify(tovitData.post_content))
+
     updateListUI()
     window.helpers.toaster('נוסף בהצלחה')
     input.value = ""  
