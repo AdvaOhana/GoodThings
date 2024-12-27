@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
-
+const cookieParser = require('cookie-parser');
 const { getCountries } = require('./helpers/helper.js');
 
 const { usersRouter } = require('./routers/users.js');
@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json())
 app.set('view engine', 'ejs');
 app.set("views", __dirname + '/views')
-
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')))
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -32,43 +32,45 @@ app.use('/api/groups', groupsApiRouter)
 app.use('/api/tovits', tovitsApiRouter)
 
 
-app.get('/',async (req, res) => {
-    const threeDaysAgo = new Date() 
-    threeDaysAgo.setDate(threeDaysAgo.getDate()-3)
+app.get('/', async (req, res) => {
+    const threeDaysAgo = new Date()
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
 
     global.user = await getUserByEmail("test1@test1.com")
-    global.todayPost = await getUserPosts(global.user.id,new Date()) || {}
+    global.todayPost = await getUserPosts(global.user.id, new Date()) || {}
 
-    if(!global.user.auth) return res.redirect('/login')
-        
-    res.render('homePage', { 
-        user:global.user,
-        threeDaysPosts: await getUserPosts(global.user.id,threeDaysAgo,new Date()) })
+    if (!global.user.auth) return res.redirect('/login')
+
+    res.render('homePage', {
+        user: global.user,
+        threeDaysPosts: await getUserPosts(global.user.id, threeDaysAgo, new Date())
+    })
 })
 
-app.get('/login',async (req, res) => {
-    if(global?.user.auth) return res.redirect('/')
+app.get('/login', async (req, res) => {
+    if (global?.user.auth) return res.redirect('/')
     res.render('loginPage')
 })
-app.get('/forgotPassword',async (req, res) => {
-    if(global?.user.auth) return res.redirect('/')
+app.get('/forgotPassword', async (req, res) => {
+    if (global?.user.auth) return res.redirect('/')
     res.render('forgotPage')
 })
 
 app.get('/signup', async (req, res) => {
-    if(global?.user.auth) return res.redirect('/')
+    if (global?.user.auth) return res.redirect('/')
     res.render('signupPage', {
-        countries: await getCountries() ,
+        countries: await getCountries(),
         genders: ['נקבה', 'זכר', 'אחר'],
         days: Array.from({ length: 31 }, (el, i) => i + 1),
         months: Array.from({ length: 12 }, (el, i) => i + 1),
         years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
     })
 })
-app.get("*",(req, res) => {
-    res.render('errorPage',{
-       user: global?.user
-    })})
+app.get("*", (req, res) => {
+    res.render('errorPage', {
+        user: global?.user
+    })
+})
 
 
 app.listen(PORT, () => {

@@ -1,4 +1,5 @@
-async function setCookie(req, res, next) {
+
+function setCookie(req, res, next) {
     console.log(req.userData);
 
     res.cookie('sId', req.userData.id, {
@@ -10,5 +11,9 @@ async function setCookie(req, res, next) {
 
     next()
 }
-
-module.exports = { setCookie };
+function getCookie(req, res, next) {
+    const { sId } = req.cookies;
+    req.sId = sId
+    next()
+}
+module.exports = { setCookie, getCookie };

@@ -37,7 +37,7 @@ async function createTovits(req, res, next) {
 }
 async function getTovits(req, res, next) {
     try {
-        const [results] = await pool.query(`select * from posts`)
+        const [results] = await pool.query(`select p.id,p.user_id,p.post_date,p.public,p.post_content,t.url as background_url from posts as p join tovit_backgrounds as t on p.background=t.id `)
         if (!results.length) throw Error(`No tovits found.`)
         req.tovits = results;
         next();
@@ -102,10 +102,18 @@ async function getTovByUId(req, res, next) {
         let sql = 'SELECT * FROM posts WHERE user_id = ?';
 
         if (tovDate.startDate?.length && tovDate.endDate?.length) {
-            sql += ' AND post_date BETWEEN ? AND ?';
-            queryParams.push(tovDate.startDate, tovDate.endDate);
+            const startDate = new Date(tovDate.startDate)
+            const endDate = new Date(tovDate.endDate)
+            if (startDate < endDate) {
+                startDate.setHours(0, 0, 0)
+                endDate.setHours(25, 59, 59)
+                sql += ' AND post_date >= ? AND post_date <= ?';
+                queryParams.push(startDate, endDate);
+            }
+            else {
+                throw Error(`First Date must be smaller then the second date`)
+            }
         }
-
         const [results] = await pool.query(sql, queryParams);
 
         if (!results.length) throw Error(`No tovits found.`)
