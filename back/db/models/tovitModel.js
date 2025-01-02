@@ -8,7 +8,7 @@ module.exports = {
 async function createTovits(req, res, next) {
     try {
         const tovit = {
-            user_id: +req.query.userId,
+            user_id: +req.query.userId || 7,
             post_date: new Date().toISOString().split("T").at(0),
             public: req.body.public,
             post_content: req.body.post_content,

@@ -2,7 +2,7 @@ const { pool } = require("../dbConnection.js")
 const { lettersReg } = require('../../helpers/helper.js')
 
 module.exports = {
-    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup
+    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo
 }
 
 async function allGroups(req, res, next) {
@@ -124,3 +124,38 @@ async function updateGroup(req, res, next) {
     }
 }
 
+async function tovitToGroup(req, res, next) {
+    try {
+        const tovitId = +req.tovitId
+        const groupId = +req.params.groupId
+
+
+        if (lettersReg.test(groupId)) throw Error('Id is not valid, please check again')
+
+        const [results] = await pool.query(`INSERT INTO groups_to_posts (post_id, group_id) VALUES(${tovitId}, ${groupId})`)
+
+        req.groupPostId = results.insertId;
+        next()
+
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+
+async function tovitByInfo(req, res, next) {
+    try {
+        const subject = req.query.subject
+        if (subject.length < 3) throw Error(`Please enter 3 notes at least`);
+
+        const [results] = await pool.query(`select * from posts where post_content LIKE '%${subject}%'`)
+
+        if (!results.length) throw Error(`Couldn't find results`)
+        console.log(results);
+
+        req.allPosts = results
+
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
