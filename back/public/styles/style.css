@@ -231,6 +231,10 @@ footer{
     font-size: .9rem;
     transform: translateY(-20px);
 }
+.error{
+    color: rgb(249, 60, 60);
+    font-size: .9rem;
+}
 form{
     justify-content: center;
     box-shadow:var(--shadow-lg);

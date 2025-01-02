@@ -1,4 +1,4 @@
-<% if(user.auth){ %>
+<% if(user?.auth){ %>
  <header >
     <img src="./assets/imgs/logo.png" alt="img" id="logo" srcset="">
     <nav id="menu-bar" class="navbar">
@@ -11,7 +11,7 @@
     </nav>
     <div id="actions-container">
         <img  src="./assets/icons/user-regular.svg" alt="user" class="icons icons-primary">
-        <% if(user.defTheme === "dark"){ %>
+        <% if(user?.defTheme === "dark"){ %>
         <img onclick="toggleTheme()" src="./assets/icons/sun-regular.svg" alt="theme" class="theme-icon icons icons-primary">
         <% } else { %>
         <img onclick="toggleTheme()" src="./assets/icons/moon-regular.svg" alt="theme" class="theme-icon icons icons-primary">

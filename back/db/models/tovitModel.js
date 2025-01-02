@@ -93,7 +93,7 @@ async function deleteTovit(req, res, next) {
 }
 async function getTovByUId(req, res, next) {
     try {
-        const userId = req.params.id
+        const userId = req.sId || req.params.id
         const tovDate = req.query;
         const queryParams = [userId];
 
@@ -114,6 +114,8 @@ async function getTovByUId(req, res, next) {
                 throw Error(`First Date must be smaller then the second date`)
             }
         }
+
+        sql += 'order by post_date desc'
         const [results] = await pool.query(sql, queryParams);
 
         if (!results.length) throw Error(`No tovits found.`)

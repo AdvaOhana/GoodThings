@@ -12,6 +12,9 @@ const { tovitsApiRouter } = require('./routers/tovitsApi.js');
 
 const path = require('path');
 const { getUserByEmail, getUserPosts } = require('./helpers/userHelpers.js');
+const { getCookie } = require('./middlewares/auth.js');
+const { loginUser } = require('./db/models/userModel.js');
+const { getTovByUId } = require('./db/models/tovitModel.js');
 
 dotenv.config()
 const { PORT } = process.env
@@ -23,7 +26,6 @@ app.set("views", __dirname + '/views')
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '/public')))
 app.use(bodyParser.urlencoded({ extended: true }))
-
 app.use('/users', usersRouter)
 app.use('/api/users', usersApiRouter)
 app.use('/groups', groupsRouter)
@@ -32,24 +34,24 @@ app.use('/api/groups', groupsApiRouter)
 app.use('/api/tovits', tovitsApiRouter)
 
 
-app.get('/', async (req, res) => {
-    const threeDaysAgo = new Date()
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
-
-    global.user = await getUserByEmail("test1@test1.com")
-    global.todayPost = await getUserPosts(global.user.id, new Date()) || {}
-
-    if (!global.user.auth) return res.redirect('/login')
-
+app.get('/',getCookie,loginUser,getTovByUId, async (req, res) => {      
+    if(!req.userData) return res.redirect('/login')
+       const threeDaysPosts =  req?.tovData?.slice(0,3)
+    const todaysPost = threeDaysPosts[0]
+    
     res.render('homePage', {
-        user: global.user,
-        threeDaysPosts: await getUserPosts(global.user.id, threeDaysAgo, new Date())
+        user: req.userData,
+        threeDaysPosts,
+        todaysPost
     })
 })
 
-app.get('/login', async (req, res) => {
-    if (global?.user.auth) return res.redirect('/')
-    res.render('loginPage')
+app.get('/login',getCookie, async (req, res) => {
+    if(req?.sId) return res.redirect('/')
+    res.render('loginPage',{
+        user:{},    
+        querys: req?.query
+    })
 })
 app.get('/forgotPassword', async (req, res) => {
     if (global?.user.auth) return res.redirect('/')

@@ -1,11 +1,19 @@
 <%- include('./generals/pageTop') %>
 
-<main id="login-container"><div class="page-header"><h1>התחברות</h1><p>הכנס/י את הדואר האלקטרוני והסיסמה שלך</p></div><form class="login-form" method="post"><div class="floating-label-group">
-    <input type="email" class="form-input " true="" placeholder="" false="" autocomplete="email">
+
+
+
+<main id="login-container"><div class="page-header"><h1>התחברות</h1><p>הכנס/י את הדואר האלקטרוני והסיסמה שלך</p></div><form onsubmit="handleSubmit" action="/api/users/login" class="login-form" method="post"><div class="floating-label-group">
+    <input name="userEmail" class="form-input " true="" placeholder="" false="" autocomplete="email">
     <label class="floating-label ">אימייל / שם משתמש</label>
     </div><div class="floating-label-group">
-    <input type="password" class="form-input " true="" placeholder="" false="" autocomplete="current-password">
+    <input type="password" name="userPassword" class="form-input " true="" placeholder="" false="" autocomplete="current-password">
     <label class="floating-label ">סיסמה</label>
-    </div><button type="submit" class="btn confirm wide">התחבר/י</button><div class="user-actions"><a href="/forgotPassword">שכחת את הסיסמה?</a><span>משתמש חדש? <a data-link="" href="/signup">צור/י חשבון</a></span></div></form></main>
+    </div>
+    <% if(querys.success) {%>
+        <p class="error">שגיאה בהתחברות, בדוק/י את שם המשתמש או הסיסמה</p>
+        <% }%>
+    <button type="submit"  class="btn confirm wide">התחבר/י</button>
+    <div class="user-actions"><a href="/forgotPassword">שכחת את הסיסמה?</a><span>משתמש חדש? <a data-link="" href="/signup">צור/י חשבון</a></span></div></form></main>
 
 <%- include('./generals/pageBottom') %>

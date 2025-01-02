@@ -69,19 +69,24 @@ async function createUser(req, res, next) {
     }
 }
 async function loginUser(req, res, next) {
-    try {
-        // const userName = req.body.userName
-        const userEmail = req.body.userEmail
-
-        const userPassword = req.body.userPassword
-
-        const [user] = await pool.query(`select * from users where email=?`, [userEmail])
-        if (!user.length || user[0].password !== userPassword) throw Error(`login faild`)
-
-        req.userData = { ...user[0], password: '' };
+    try {                
+        if(req?.sId){
+            const [user] = await pool.query(`select * from users where id=${req.sId}`) 
+            req.userData = { ...user[0],auth:true, password: '' };
+            global.user = { ...user[0],auth:true, password: '' };     
+        }else{
+            const userNameOrEmail = req.body.userEmail
+            const userPassword = req.body.userPassword
+            if(!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
+            const [user] = await pool.query(`select * from users where email=? or user_name=?`, [userNameOrEmail,userNameOrEmail])
+            if (!user.length || user[0].password !== userPassword) throw Error(`login faild`)
+    
+            req.userData = { ...user[0],auth:true, password: '' };
+            global.user = { ...user[0],auth:true, password: '' };
+        }
         next()
-    } catch (error) {
-        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    } catch (error) {                
+        res.redirect(302,'/login?success=false')
     }
 }
 

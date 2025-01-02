@@ -3,11 +3,11 @@ const { pool } = require("../db/dbConnection.js");
 
 async function  getUserByEmail(email) {
     const [user] = await pool.query(`select * from users where email=?`, [email])
-      return {...user.at(0),auth:true}
-    //   return {...user.at(0),auth:false}
+    //   return {...user.at(0),auth:true}
+      return {...user.at(0),auth:false}
     }
 
-async function getUserPosts(id,startDate,endDate) {
+async function getUserPosts(id,startDate,endDate) {    
     const queryParams = [id]
     let sql = 'SELECT id,public,post_content,background,post_date FROM posts WHERE user_id = ?';
 

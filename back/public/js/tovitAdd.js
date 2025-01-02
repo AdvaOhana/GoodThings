@@ -3,20 +3,22 @@ const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
 
 function loadTovit(){
-    const postedToday =  todayPost ? todayPost?.length : false
+    const postedToday =  todayPost ? true : false
     
     if(postedToday){
-        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost[0]?.post_content.includes("%") ? todayPost[0]?.post_content?.split("%") : todayPost[0]?.post_content
-        todayPost[0].post_content = postContent
+        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : todayPost?.post_content
+
+        todayPost.post_content = postContent
     }
+
     
-    const tovitData = postedToday ? todayPost[0] :  {
+    
+    const tovitData = postedToday ? todayPost :  {
                 public: userData?.defIsPublic,
                 post_content: JSON.parse(localStorage.getItem("post-items")) ||  [],
                 background: userData?.tovit_template || null
     }
-    
-    
+        
     const fName = userData.first_name
     let error = ""
     const markup = `<div class="form-bg">
@@ -88,6 +90,8 @@ function handleAdd(e){
         handleInputError(error)
     }
     tovitData.post_content.push(inputVal)
+    console.log(tovitData);
+    
     localStorage.setItem("post-items",JSON.stringify(tovitData.post_content))
 
     updateListUI()
@@ -136,7 +140,7 @@ async function handleSubmit(e){
         else {stringifyedPost+= item+"%"}
     } )
 
-    tovitData.post_content = stringifyedPost;
+    tovitData.post_content = stringifyedPost;    
 try {
     let method = postedToday ? "PATCH" : "POST"
     let url = postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`

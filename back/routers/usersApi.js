@@ -21,7 +21,7 @@ usersApiRouter.post('/sign-up', createUser, (req, res) => {
     res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
 })
 usersApiRouter.post('/login', loginUser, setCookie, (req, res) => {
-    res.status(200).json({ message: `logged in successfully`, data: req.userData })
+    res.status(302).redirect('/')
 })
 // usersApiRouter.post('/logout/:id', (req, res) => { })
 
