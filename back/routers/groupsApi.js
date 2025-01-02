@@ -1,6 +1,6 @@
 const { Router } = require("express")
-const { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup } = require("../db/models/groupModel.js")
-
+const { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup, tovitToGroup, tovitByInfo } = require("../db/models/groupModel.js")
+const { createTovits } = require("../db/models/tovitModel.js")
 const groupsApiRouter = Router()
 
 const userRouter = Router({ mergeParams: true })
@@ -30,8 +30,15 @@ groupsApiRouter.patch('/:id', updateGroup, (req, res) => {
 
 // // http://localhost:8000/api/groups/:groupId/tovit
 groupsApiRouter.use('/:groupId/tovit', tovitRouter)
-tovitRouter.get('/:tovitSubject', (req, res) => { })
-tovitRouter.post('/:tovitId', (req, res) => { })
+
+tovitRouter.get('/', tovitByInfo, (req, res) => {
+    res.status(200).json({ message: `Found tovits`, data: req.allPosts })
+})
+
+tovitRouter.post('/', createTovits, tovitToGroup, (req, res) => {
+    res.status(200).json({ message: `Created tovit successfully`, data: req.groupPostId })
+})
+
 tovitRouter.delete('/:tovitId', (req, res) => { })
 tovitRouter.patch('/:tovitId/comment', (req, res) => { })
 

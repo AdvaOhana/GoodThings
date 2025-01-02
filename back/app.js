@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
 const { getCountries } = require('./helpers/helper.js');
 
 const { usersRouter } = require('./routers/users.js');
@@ -14,7 +16,7 @@ const path = require('path');
 const { getUserByEmail, getUserPosts } = require('./helpers/userHelpers.js');
 
 dotenv.config()
-const { PORT } = process.env
+const { PORT, S_KEY } = process.env
 
 const app = express();
 app.use(express.json())
@@ -31,6 +33,15 @@ app.use('/api/groups', groupsApiRouter)
 // app.use('/tovit', groupsApiRouter)
 app.use('/api/tovits', tovitsApiRouter)
 
+
+console.log(S_KEY);
+
+app.use(session({
+    secret: S_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
 
 app.get('/', async (req, res) => {
     const threeDaysAgo = new Date()
