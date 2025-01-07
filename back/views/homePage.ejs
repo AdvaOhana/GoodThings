@@ -14,11 +14,14 @@
                 <%  }) %>
         </ul>
 <div class="thing-opacity">
-        <p class="">תאריך: 
-            <%if(post?.post_date.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' }) === new Date().toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' })){ %>
+        <p class="">
+            <% if(isSameDay(post?.post_date,new Date())){ %>
                         <span class="bolder">היום</span></p>
                         <% } else { %>
-                        <span><%= post?.post_date?.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' }) %></span></p>
+                        <span>
+                            <%= post?.post_date?.toLocaleDateString('en-IL', { timeZone: 'Asia/Jerusalem' }) %>
+                        </span>
+        </p>
                         <% } %>
         <% if(post.public){ %>
             <p class="">פומבי</p>

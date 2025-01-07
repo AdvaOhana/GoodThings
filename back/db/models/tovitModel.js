@@ -93,13 +93,13 @@ async function deleteTovit(req, res, next) {
 }
 async function getTovByUId(req, res, next) {
     try {
-        const userId = req.sId || req.params.id
+        const userId = req.session?.sId
         const tovDate = req.query;
         const queryParams = [userId];
 
         if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`)
 
-        let sql = 'SELECT * FROM posts WHERE user_id = ?';
+        let sql = 'SELECT * FROM posts WHERE user_id = ? ';
 
         if (tovDate.startDate?.length && tovDate.endDate?.length) {
             const startDate = new Date(tovDate.startDate)
@@ -107,15 +107,16 @@ async function getTovByUId(req, res, next) {
             if (startDate < endDate) {
                 startDate.setHours(0, 0, 0)
                 endDate.setHours(25, 59, 59)
-                sql += ' AND post_date >= ? AND post_date <= ?';
+                sql += ' AND post_date >= ? AND post_date <= ? ';
                 queryParams.push(startDate, endDate);
             }
-            else {
+            else {                
                 throw Error(`First Date must be smaller then the second date`)
             }
         }
 
         sql += 'order by post_date desc'
+        
         const [results] = await pool.query(sql, queryParams);
 
         if (!results.length) throw Error(`No tovits found.`)

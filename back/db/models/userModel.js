@@ -1,5 +1,7 @@
 const { pool } = require("../dbConnection.js");
 const { lettersReg, generateCode } = require("../../helpers/helper.js");
+
+
 async function allUsers(req, res, next) {
     try {
         const [results] = await pool.query(`select first_name,last_name,country,bio from users`)
@@ -68,21 +70,23 @@ async function createUser(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-async function loginUser(req, res, next) {
-    try {                
-        if(req?.sId){
-            const [user] = await pool.query(`select * from users where id=${req.sId}`) 
+async function loginUser(req, res, next) {    
+    try {           
+        if(req.session?.sId){
+            const [user] = await pool.query(`select * from users where id=${req.session.sId}`)
             req.userData = { ...user[0],auth:true, password: '' };
             global.user = { ...user[0],auth:true, password: '' };     
         }else{
             const userNameOrEmail = req.body.userEmail
             const userPassword = req.body.userPassword
+
             if(!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
-            const [user] = await pool.query(`select * from users where email=? or user_name=?`, [userNameOrEmail,userNameOrEmail])
+                const [user] = await pool.query(`select * from users where email=? or user_name=?`, [userNameOrEmail,userNameOrEmail])
+            
             if (!user.length || user[0].password !== userPassword) throw Error(`login faild`)
-    
             req.userData = { ...user[0],auth:true, password: '' };
             global.user = { ...user[0],auth:true, password: '' };
+            req.session.sId = user[0].id
         }
         next()
     } catch (error) {                

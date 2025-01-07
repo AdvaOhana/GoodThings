@@ -1,23 +1,24 @@
+import { isSameDay } from 'https://cdn.skypack.dev/date-fns';
+
 const root = document.getElementById("root");
 const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
-
 function loadTovit(){
-    const postedToday =  todayPost ? true : false
+    
+    const postedToday =  todayPost ? true : isSameDay(getStorage('post-items-date')?.post_date,new Date()) ? true : false
     
     if(postedToday){
         const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : todayPost?.post_content
-
         todayPost.post_content = postContent
     }
-
-    
     
     const tovitData = postedToday ? todayPost :  {
                 public: userData?.defIsPublic,
-                post_content: JSON.parse(localStorage.getItem("post-items")) ||  [],
-                background: userData?.tovit_template || null
+                post_content: window.helpers.getStorage('post-items') ||  [],
+                background: userData?.tovit_template || null,
+                post_date: new Date()
     }
+    
         
     const fName = userData.first_name
     let error = ""
@@ -45,7 +46,7 @@ function loadTovit(){
             </div>
             <div id="form-btns">
                 <button type="reset" class="btn primary">ביטול</button>
-                <button type="button" class="btn confirm">${tovitData?.public ? "שיתוף לכולם" : "שיתוף"}</button>
+                <button type="button" class="btn confirm">${tovitData?.public ? "שמור ושתף לכולם" : "שמור ושתף"}</button>
             </div>
         </div>
     </form>
