@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup, tovitToGroup, tovitByInfo } = require("../db/models/groupModel.js")
+const { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov } = require("../db/models/groupModel.js")
 const { createTovits } = require("../db/models/tovitModel.js")
 const groupsApiRouter = Router()
 
@@ -39,7 +39,9 @@ tovitRouter.post('/', createTovits, tovitToGroup, (req, res) => {
     res.status(200).json({ message: `Created tovit successfully`, data: req.groupPostId })
 })
 
-tovitRouter.delete('/:tovitId', (req, res) => { })
+tovitRouter.delete('/:tovitId', deleteGroupsTov, (req, res) => {
+    res.status(200).json({ message: `Deleted tovit successfully`, data: req.deletedTov })
+})
 tovitRouter.patch('/:tovitId/comment', (req, res) => { })
 
 // // http://localhost:8000/api/groups/:groupId/user
