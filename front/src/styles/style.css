@@ -225,8 +225,8 @@ form{
 #form-btns{
     display: flex;
     gap: .5rem;
-    justify-content: end;
-    padding: 0 0 0 1rem
+    justify-content: space-between;
+    padding: 0
 }
 .form-input,.select{
     height: 2rem;
@@ -645,3 +645,66 @@ input:not(:placeholder-shown) ~ .floating-label {
             display: none;
         }
     }
+
+
+    @keyframes arrowBox{
+        from{transform: translateY(1px);}
+        to{transform: translateY(5px);}
+    }
+
+    .image-select{
+        display: flex;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .image-container{
+        position: relative;
+        margin: 0 0.5rem;
+    }
+
+
+    .tovit-bg-blur{
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 95%;
+        border-radius: 0.4rem;
+        justify-content: center;
+        align-items: end;
+        backdrop-filter: blur(.06rem);
+    }
+
+    .chevron{    
+        animation: arrowBox 1.5s linear infinite alternate;
+
+    }
+    .tovit-bg-small{
+        width: 4.5rem;
+        height: 3rem;
+        border-radius: 0.4rem;
+    }  
+    
+
+    
+.image-dropdown{
+    overflow-y: hidden;
+    overflow-x: scroll;
+    position: absolute;
+    align-items: center;
+    justify-content: start;
+    display: none;
+    width: fit-content;
+    max-width: 580px;
+    height: 3.5rem;
+    gap: 0.5rem;
+    top: 120%;
+    background-color: #e5e7eb1e;
+    padding: 0.4rem 0.6rem;
+border-radius: 0.4rem;
+}
+
+.tovit-bg-dropdown{
+ margin-bottom: 0.2rem;   
+}

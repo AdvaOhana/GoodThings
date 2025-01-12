@@ -4,7 +4,7 @@
     <nav id="menu-bar" class="navbar">
         <ul class="nav-list">
             <li><a data-link href="/">בית</a></li>
-            <li><a class="create-tovit" id="create-tovit" >הוסף טובית</a></li>
+            <li><a class="create-tovit" id="create-tovit" data-todays-post='<%- JSON.stringify(todaysPost) %>' data-user='<%- JSON.stringify(user) %>' data-bg-options='<%- JSON.stringify(bgOptArr) %>'>הוסף טובית</a></li>
             <li><a data-link href="/login">התחברות</a></li>
             <li><a data-link href="/error">שגיאה</a></li>
         </ul>
@@ -12,10 +12,10 @@
     <div id="actions-container">
         <img  src="./assets/icons/user-regular.svg" alt="user" class="icons icons-primary">
         <% if(user?.defTheme === "dark"){ %>
-        <img onclick="toggleTheme()" src="./assets/icons/sun-regular.svg" alt="theme" class="theme-icon icons icons-primary">
+        <img data-theme='dark' src="./assets/icons/sun-regular.svg" alt="theme" class="theme-icon icons icons-primary">
         <% } else { %>
-        <img onclick="toggleTheme()" src="./assets/icons/moon-regular.svg" alt="theme" class="theme-icon icons icons-primary">
+        <img data-theme='light' src="./assets/icons/moon-regular.svg" alt="theme" class="theme-icon icons icons-primary">
         <% } %>
     </div>
 </header>
-<% } %>
+<%}%>

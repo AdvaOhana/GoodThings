@@ -71,25 +71,25 @@ async function createUser(req, res, next) {
     }
 }
 async function loginUser(req, res, next) {    
-    try {           
+    try {       
+        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `  
         if(req.session?.sId){
-            const [user] = await pool.query(`select * from users where id=${req.session.sId}`)
+            query += `where u.id=?`
+            const [user] = await pool.query(query,[req.session.sId])
             req.userData = { ...user[0],auth:true, password: '' };
-            global.user = { ...user[0],auth:true, password: '' };     
         }else{
             const userNameOrEmail = req.body.userEmail
             const userPassword = req.body.userPassword
-
+            query += `where email=? or user_name=?`
             if(!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
-                const [user] = await pool.query(`select * from users where email=? or user_name=?`, [userNameOrEmail,userNameOrEmail])
-            
-            if (!user.length || user[0].password !== userPassword) throw Error(`login faild`)
+            const [user] = await pool.query(query, [userNameOrEmail.trim(),userNameOrEmail.trim()]) 
+            if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
             req.userData = { ...user[0],auth:true, password: '' };
-            global.user = { ...user[0],auth:true, password: '' };
-            req.session.sId = user[0].id
+            req.session.sId = user[0]?.id
         }
         next()
-    } catch (error) {                
+    } catch (error) {   
+        console.log(error);
         res.redirect(302,'/login?success=false')
     }
 }

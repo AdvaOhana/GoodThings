@@ -3,12 +3,11 @@ import { isSameDay } from 'https://cdn.skypack.dev/date-fns';
 const root = document.getElementById("root");
 const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
-function loadTovit(){
-    
+function loadTovit(todayPost,userData,bgOptArr){    
     const postedToday =  todayPost ? true : isSameDay(getStorage('post-items-date')?.post_date,new Date()) ? true : false
     
     if(postedToday){
-        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : todayPost?.post_content
+        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : [todayPost?.post_content]
         todayPost.post_content = postContent
     }
     
@@ -22,6 +21,12 @@ function loadTovit(){
         
     const fName = userData.first_name
     let error = ""
+
+    let dropdownMarkup = ''
+    bgOptArr?.forEach((el,i)=> 
+        dropdownMarkup += `<img class="tovit-bg-small tovit-bg-dropdown bg-img-${i+1}" src=${el} alt="image-${i+1}">`
+    )
+    
     const markup = `<div class="form-bg">
     <form id="things-form">
         <div class="toggle-div">
@@ -45,6 +50,23 @@ function loadTovit(){
             <div id="data-list">
             </div>
             <div id="form-btns">
+            <div class="image-select">
+                                <div class="image-container">
+                                    <p class="tovit-bg-blur">
+                                        <span class="chevron">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#FFF" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/>
+                                            </svg>
+                                        </span>
+                                        </p>
+                                    <img class="tovit-bg-small bg-img-0" src=${bgOptArr[0]} alt="">
+                                    
+                                </div>
+                                <div class="image-dropdown">
+                                    ${dropdownMarkup}
+                                </div>
+                            </div>
+                            <div>
                 <button type="reset" class="btn primary">ביטול</button>
                 <button type="button" class="btn confirm">${tovitData?.public ? "שמור ושתף לכולם" : "שמור ושתף"}</button>
             </div>
@@ -52,14 +74,31 @@ function loadTovit(){
     </form>
 </div>`
 root.insertAdjacentHTML('afterend',markup)
-
 const form = document.getElementById('things-form');
+form.style.backgroundImage = `url(${userData.tovit_template})`
 const submitBtn = document.querySelector('.btn.confirm');
 const addBtn = document.getElementById('add-btn');
 const toggle = document.querySelector('.toggle-container')
 const switcher = document.querySelector('.switch')
 const  formBgElement = document.querySelector(".form-bg")
 const allData = document.querySelector("#data-list");
+const imageSelector = document.querySelector('.image-select')
+const imagesDropdown = document.querySelector('.image-dropdown');
+const dropdownImgs = imagesDropdown.querySelectorAll('.tovit-bg-dropdown')
+dropdownImgs.forEach((img,i)=>{
+    img.addEventListener('click',()=>{
+        form.style.backgroundImage = `url(${img.src})`
+        tovitData.background = i+1        
+    })
+})
+
+let isOpenImgs = false;
+imageSelector.onclick = ()=> {
+        imagesDropdown.style.display = isOpenImgs ? 'none' : "flex"
+        imagesDropdown.style.animation = "openImages 0.5s linear forwards";
+        isOpenImgs = !isOpenImgs
+}
+
 
 formBgElement.addEventListener('click', e => {
     if (e.target === e.currentTarget) {
@@ -141,7 +180,7 @@ async function handleSubmit(e){
         else {stringifyedPost+= item+"%"}
     } )
 
-    tovitData.post_content = stringifyedPost;    
+    tovitData.post_content = stringifyedPost;   
 try {
     let method = postedToday ? "PATCH" : "POST"
     let url = postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
@@ -149,6 +188,7 @@ try {
         url = `/api/tovits/${tovitData.id}`
         method = 'DELETE'
     }
+    
     const res = await fetch(url,{
         method: method,
         headers: {
@@ -210,9 +250,11 @@ if(tovitData.post_content.length) updateListUI()
 const createTovitBtn = document.querySelectorAll('.create-tovit');
 if(createTovitBtn?.length){
     createTovitBtn.forEach(btn=>{
-btn.onclick= ()=>loadTovit()
+btn.onclick= ()=>{
+    const todaysPost = JSON.parse(btn.getAttribute('data-todays-post'));
+    const userData = JSON.parse(btn.getAttribute('data-user'));
+    const bgOptArr = JSON.parse(btn.getAttribute('data-bg-options'));   
+    loadTovit(todaysPost,userData,bgOptArr)}
     })
 
 }
-
-

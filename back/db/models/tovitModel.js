@@ -39,6 +39,7 @@ async function getTovits(req, res, next) {
     try {
         const [results] = await pool.query(`select p.id,p.user_id,p.post_date,p.public,p.post_content,t.url as background_url from posts as p join tovit_backgrounds as t on p.background=t.id `)
         if (!results.length) throw Error(`No tovits found.`)
+            
         req.tovits = results;
         next();
     } catch (error) {
@@ -67,13 +68,17 @@ async function editTovit(req, res, next) {
 
         const isPublic = req.body.public
         const newPostContent = req.body.post_content
+        const newBackground = req.body.background
+        
 
-        const [results] = await pool.query(`update posts set post_content = '${newPostContent}', public = ${isPublic} where id = ${id}`)
+        const [results] = await pool.query(`update posts set post_content = '${newPostContent}', public = ${isPublic}, background = ${newBackground} where id = ${id}`)
 
         if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
         req.editedContent = results;
         next()
     } catch (error) {
+        console.log(error);
+        
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
@@ -99,7 +104,8 @@ async function getTovByUId(req, res, next) {
 
         if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`)
 
-        let sql = 'SELECT * FROM posts WHERE user_id = ? ';
+
+        let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p join tovit_backgrounds as tb on p.background = tb.id `
 
         if (tovDate.startDate?.length && tovDate.endDate?.length) {
             const startDate = new Date(tovDate.startDate)
@@ -115,7 +121,7 @@ async function getTovByUId(req, res, next) {
             }
         }
 
-        sql += 'order by post_date desc'
+        sql += 'WHERE user_id = ? order by post_date desc'
         
         const [results] = await pool.query(sql, queryParams);
 

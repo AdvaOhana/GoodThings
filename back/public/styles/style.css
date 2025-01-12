@@ -193,6 +193,9 @@ footer{
     filter: var(--filter-svg);
 }
 
+#input-container{
+    backdrop-filter: blur(2px);
+}
 
 #add-btn{
     display: flex;
@@ -225,6 +228,7 @@ footer{
     backdrop-filter: blur(10px);
     overflow: hidden;
 }
+
 #input-error{
     width: fit-content;
     color: rgb(249, 60, 60);
@@ -243,15 +247,93 @@ form{
     padding: 2rem;
     color: var(--color-grey-200);
     background-color: var(--color-grey-0);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 
+@keyframes arrowBox{
+    from{transform: translateY(1px);}
+    to{transform: translateY(5px);}
+}
+
+@keyframes openImages{
+    from{
+        transform: translateY(0);
+        max-width: 0;
+    }
+    to{
+       transform: translateY(4.5rem);
+        max-width: 580px;
+   }
+}
+.image-select{
+    display: flex;
+    align-items: center;
+    position: relative;
+    
+}
+
+.tovit-bg-blur{
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 95%;
+    border-radius: 0.4rem;
+    justify-content: center;
+    align-items: end;
+    backdrop-filter: blur(.06rem);
+}
+
+.chevron{    
+    animation: arrowBox 1.5s linear infinite alternate;
+
+}
+.tovit-bg-small{
+    width: 4.5rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+}  
+
+.image-container{
+    position: relative;
+    margin: 0 0.5rem;
+}
+
+.tovit-bg-small{
+    width: 4.5rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+}  
+
+.image-dropdown{
+display: none;
+overflow-y: hidden;
+overflow-x: auto;
+position: absolute;
+align-items: center;
+justify-content: start;
+width: fit-content;
+max-width: 0;
+height: 3.5rem;
+gap: 0.5rem;
+background-color: #e5e7eb1e;
+padding: 0.4rem 0.6rem;
+border-radius: 0.4rem;
+}
+
+.tovit-bg-dropdown{
+margin-bottom: 0.2rem;   
+}
 
 #form-btns{
     display: flex;
     gap: .5rem;
-    justify-content: end;
-    padding: 0 0 0 1rem
+    justify-content: space-between;
+    padding: 0
 }
+
 .form-input,.select{
     height: 2rem;
     width: 90%;
@@ -593,6 +675,9 @@ input:not(:placeholder-shown) ~ .floating-label {
     padding: 1.5rem;
     transition: 0.2s all;
     box-shadow: var(--shadow-md);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
 }
 .thing-info ul{
     
@@ -602,9 +687,9 @@ input:not(:placeholder-shown) ~ .floating-label {
 }
 .thing-info li{
 margin-bottom: 1rem;
-padding-bottom: 0.2rem;
+padding-bottom: 0.5rem;
 border-bottom: .05rem solid var(--color-transperent);
-
+overflow-x: auto;
 }
 
 .thing-opacity{

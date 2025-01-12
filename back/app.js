@@ -14,6 +14,7 @@ const path = require('path');
 
 
 const { loginUser } = require('./db/models/userModel.js');
+const { getAllBgs } = require('./db/models/bgModel.js');
 const { getTovByUId } = require('./db/models/tovitModel.js');
 
 dotenv.config()
@@ -44,7 +45,7 @@ app.use('/api/tovits', tovitsApiRouter)
 
 
 
-app.get('/',loginUser,getTovByUId, async (req, res) => {      
+app.get('/',loginUser,getAllBgs,getTovByUId, async (req, res) => {      
     if(!req.session.sId) return res.redirect('/login')
        const threeDaysPosts =  req?.tovData?.slice(0,3)
     const todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ?threeDaysPosts[0] : null
@@ -53,11 +54,12 @@ app.get('/',loginUser,getTovByUId, async (req, res) => {
         user: req.userData,
         threeDaysPosts,
         todaysPost,
+        bgOptArr: req.allBgs,
         isSameDay: dateFns.isSameDay,
     })
 })
 
-app.get('/login', async (req, res) => {    
+app.get('/login', async (req, res) => {     
     if(req.session.sId) return res.redirect('/')
     res.render('loginPage',{
         user:{},    
