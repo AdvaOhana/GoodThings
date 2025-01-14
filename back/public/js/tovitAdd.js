@@ -5,16 +5,20 @@ const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
 function loadTovit(todayPost,userData,bgOptArr){    
     const postedToday =  todayPost ? true : isSameDay(getStorage('post-items-date')?.post_date,new Date()) ? true : false
+
+
     
     if(postedToday){
         const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : [todayPost?.post_content]
         todayPost.post_content = postContent
     }
     
+    
     const tovitData = postedToday ? todayPost :  {
                 public: userData?.defIsPublic,
                 post_content: window.helpers.getStorage('post-items') ||  [],
-                background: userData?.tovit_template || null,
+                background: bgOptArr.indexOf(userData?.tovit_template) ||  null,
+                //Shmuel -- need to fix that if bg hasnt changed the fetch blocked because of bg need number and not string !
                 post_date: new Date()
     }
     
@@ -26,6 +30,7 @@ function loadTovit(todayPost,userData,bgOptArr){
     bgOptArr?.forEach((el,i)=> 
         dropdownMarkup += `<img class="tovit-bg-small tovit-bg-dropdown bg-img-${i+1}" src=${el} alt="image-${i+1}">`
     )
+    
     
     const markup = `<div class="form-bg">
     <form id="things-form">
@@ -63,6 +68,8 @@ function loadTovit(todayPost,userData,bgOptArr){
                                     
                                 </div>
                                 <div class="image-dropdown">
+                                    <p class="tovit-bg-small bg-null"></p>
+
                                     ${dropdownMarkup}
                                 </div>
                             </div>
@@ -85,10 +92,16 @@ const allData = document.querySelector("#data-list");
 const imageSelector = document.querySelector('.image-select')
 const imagesDropdown = document.querySelector('.image-dropdown');
 const dropdownImgs = imagesDropdown.querySelectorAll('.tovit-bg-dropdown')
+const defaultBg = imagesDropdown.querySelector('.bg-null')
+
+defaultBg.onclick = ()=>{
+    form.style.backgroundImage = `url()`
+
+}
 dropdownImgs.forEach((img,i)=>{
     img.addEventListener('click',()=>{
         form.style.backgroundImage = `url(${img.src})`
-        tovitData.background = i+1        
+        tovitData.background = i+1      
     })
 })
 
@@ -182,13 +195,13 @@ async function handleSubmit(e){
 
     tovitData.post_content = stringifyedPost;   
 try {
+    
     let method = postedToday ? "PATCH" : "POST"
     let url = postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
     if(postedToday && !stringifyedPost.length){
         url = `/api/tovits/${tovitData.id}`
         method = 'DELETE'
     }
-    
     const res = await fetch(url,{
         method: method,
         headers: {

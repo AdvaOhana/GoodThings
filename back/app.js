@@ -74,6 +74,7 @@ app.get('/forgotPassword', async (req, res) => {
 app.get('/signup', async (req, res) => {
     if(req.session.sId) return res.redirect('/')
         res.render('signupPage', {
+    user:{},
         countries: await getCountries(),
         genders: ['נקבה', 'זכר', 'אחר'],
         days: Array.from({ length: 31 }, (el, i) => i + 1),

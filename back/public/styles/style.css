@@ -289,12 +289,6 @@ form{
     animation: arrowBox 1.5s linear infinite alternate;
 
 }
-.tovit-bg-small{
-    width: 4.5rem;
-    height: 3rem;
-    border-radius: 0.4rem;
-}  
-
 .image-container{
     position: relative;
     margin: 0 0.5rem;
@@ -323,6 +317,9 @@ padding: 0.4rem 0.6rem;
 border-radius: 0.4rem;
 }
 
+.bg-null {
+    background-color: var(--color-grey-0);
+}
 .tovit-bg-dropdown{
 margin-bottom: 0.2rem;   
 }

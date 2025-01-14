@@ -25,10 +25,11 @@ async function createTovits(req, res, next) {
             tovit.public,
             tovit.post_content,
             tovit.background
-        ];
+        ];        
 
         const [results] = await pool.query(query, values);
         req.tovitId = results.insertId
+                
         next()
     }
     catch (error) {
@@ -100,13 +101,13 @@ async function getTovByUId(req, res, next) {
     try {
         const userId = req.session?.sId
         const tovDate = req.query;
-        const queryParams = [userId];
-
+        const queryParams = [];
+        
         if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`)
-
-
-        let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p join tovit_backgrounds as tb on p.background = tb.id `
-
+            
+            
+            let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id `
+            
         if (tovDate.startDate?.length && tovDate.endDate?.length) {
             const startDate = new Date(tovDate.startDate)
             const endDate = new Date(tovDate.endDate)
@@ -120,9 +121,9 @@ async function getTovByUId(req, res, next) {
                 throw Error(`First Date must be smaller then the second date`)
             }
         }
+        queryParams.push(userId)
 
-        sql += 'WHERE user_id = ? order by post_date desc'
-        
+        sql += 'WHERE p.user_id = ? order by post_date desc'
         const [results] = await pool.query(sql, queryParams);
 
         if (!results.length) throw Error(`No tovits found.`)
