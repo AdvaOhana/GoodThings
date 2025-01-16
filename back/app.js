@@ -61,8 +61,7 @@ app.get('/',loginUser,getAllBgs,getTovByUId, async (req, res) => {
 
 app.get('/login', async (req, res) => {     
     if(req.session.sId) return res.redirect('/')
-    res.render('loginPage',{
-        user:{},    
+    res.render('loginPage',{  
         querys: req?.query
     })
 })
@@ -74,7 +73,6 @@ app.get('/forgotPassword', async (req, res) => {
 app.get('/signup', async (req, res) => {
     if(req.session.sId) return res.redirect('/')
         res.render('signupPage', {
-    user:{},
         countries: await getCountries(),
         genders: ['נקבה', 'זכר', 'אחר'],
         days: Array.from({ length: 31 }, (el, i) => i + 1),
@@ -83,9 +81,7 @@ app.get('/signup', async (req, res) => {
     })
 })
 app.get("*", (req, res) => {
-    res.render('errorPage', {
-        user: global?.user
-    })
+    res.render('errorPage')
 })
 
 

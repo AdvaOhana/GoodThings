@@ -76,7 +76,7 @@ async function loginUser(req, res, next) {
         if(req.session?.sId){
             query += `where u.id=?`
             const [user] = await pool.query(query,[req.session.sId])
-            req.userData = { ...user[0],auth:true, password: '' };
+            req.userData = { ...user[0], password: '' };
         }else{
             const userNameOrEmail = req.body.userEmail
             const userPassword = req.body.userPassword
@@ -84,7 +84,7 @@ async function loginUser(req, res, next) {
             if(!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
             const [user] = await pool.query(query, [userNameOrEmail.trim(),userNameOrEmail.trim()]) 
             if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
-            req.userData = { ...user[0],auth:true, password: '' };
+            req.userData = { ...user[0], password: '' };
             req.session.sId = user[0]?.id
         }
         next()
