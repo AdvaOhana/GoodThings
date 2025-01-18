@@ -16,6 +16,7 @@ usersApiRouter.post('/sign-up', createUser, (req, res) => {
 usersApiRouter.post('/login',loginUser, (req, res) => {        
     res.status(302).redirect('/')
 })
+
 usersApiRouter.get('/logout',(req, res) => { 
     //Nerya, handle logout and remove sId from user session using MID. then send the response if good make sure to redirect the user to login page, also make sure that the user is logged in before trying to log him out
 })

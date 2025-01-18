@@ -9,6 +9,7 @@ const { usersApiRouter } = require('./routers/usersApi.js');
 const { groupsRouter } = require('./routers/groups.js');
 const { groupsApiRouter } = require('./routers/groupsApi.js');
 const { tovitsApiRouter } = require('./routers/tovitsApi.js');
+const { threeDaysQuery } = require('./middlewares/dataHelperMid.js')
 
 const path = require('path');
 
@@ -45,10 +46,14 @@ app.use('/api/tovits', tovitsApiRouter)
 
 
 
-app.get('/',loginUser,getAllBgs,getTovByUId, async (req, res) => {      
+app.get('/',loginUser,getAllBgs,threeDaysQuery,getTovByUId, async (req, res) => { 
+         let threeDaysPosts= req?.tovData         
+         let todaysPost = null;
     if(!req.session.sId) return res.redirect('/login')
-       const threeDaysPosts =  req?.tovData?.slice(0,3)
-    const todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ?threeDaysPosts[0] : null
+        if(req.tovData?.length > 3){
+            threeDaysPosts =  req?.tovData?.slice(0,3)
+            todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ? threeDaysPosts[0] : null
+        }        
     
     res.render('homePage', {
         user: req.userData,

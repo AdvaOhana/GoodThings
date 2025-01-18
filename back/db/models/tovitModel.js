@@ -1,4 +1,5 @@
 const { pool } = require("../dbConnection.js")
+const dateFns = require('date-fns')
 const { lettersReg } = require('../../helpers/helper.js')
 
 module.exports = {
@@ -103,34 +104,27 @@ async function getTovByUId(req, res, next) {
         const tovDate = req.query;
         const queryParams = [];
         
-        if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`)
+        if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`) 
+            let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
             
-            
-            let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id `
-            
-        if (tovDate.startDate?.length && tovDate.endDate?.length) {
-            const startDate = new Date(tovDate.startDate)
-            const endDate = new Date(tovDate.endDate)
-            if (startDate < endDate) {
-                startDate.setHours(0, 0, 0)
-                endDate.setHours(25, 59, 59)
-                sql += ' AND post_date >= ? AND post_date <= ? ';
-                queryParams.push(startDate, endDate);
+        if (tovDate.startDate && tovDate.endDate) {
+            if (dateFns.isBefore(tovDate.startDate,tovDate.endDate)) { 
+                sql += 'post_date >= DATE(?) AND post_date <= DATE(?) and';
+                queryParams.push(dateFns.setHours(tovDate.startDate,0),dateFns.setHours(tovDate.endDate,26));
             }
             else {                
                 throw Error(`First Date must be smaller then the second date`)
             }
         }
-        queryParams.push(userId)
-
-        sql += 'WHERE p.user_id = ? order by post_date desc'
-        const [results] = await pool.query(sql, queryParams);
-
-        if (!results.length) throw Error(`No tovits found.`)
-        req.tovData = results;
+        queryParams.push(userId)    
+        sql += ' p.user_id = ? order by post_date desc'
+        const [results] = await pool.query(sql, queryParams);        
+        req.tovData = results;        
         next()
 
     } catch (error) {
+        console.log(error);
+        
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }

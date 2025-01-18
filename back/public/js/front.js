@@ -25,9 +25,28 @@ document.querySelector('.forgot-form')?.addEventListener('submit',(e)=>{
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    let userListOpen = false;
     const icon = document.querySelector(".theme-icon");
     const moonIcon = '../../assets/icons/moon-regular.svg';
     const sunIcon = '../../assets/icons/sun-regular.svg';
+    const user = document.querySelector('#user-actions')
+    const list = document.querySelector('.user-btns')
+
+    user.onclick = ()=>{
+        userListOpen = userListOpen ? false : true;
+        list.style.display = userListOpen ? 'flex' : 'none'       
+        list.style.animation = userListOpen ? "showList 0.5s linear forwards" : ""
+    }
+
+    list.addEventListener('click', e => {
+        console.log(e.target,e.currentTarget);
+        
+        // if (e.target === e.currentTarget) {
+        //     e.target.remove()
+        // }
+    })
+
+
 
     const storedTheme = window.helpers.getStorage('theme') || icon.getAttribute('data-theme') || 'light';
     document.body.className = storedTheme;
@@ -45,3 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
         window.helpers.setStorage('theme', newTheme);
     });
 });
+
+async function logout(){   
+    try {
+        const res = await fetch ('/api/users/logout')
+        if(!res.ok) throw new Error('Failed to logout, please try again i a moment')
+            window.helpers.toast("Logged out successfully")
+        
+    } catch (error) {
+        window.helpers.toast(error.message,'fail')
+    }
+}
