@@ -1,5 +1,4 @@
 
-
 //signup page function and elements
 const emailInput = document.getElementById('email-input')
 const flagContainer = document.getElementById('flag')
@@ -68,10 +67,16 @@ document.addEventListener('DOMContentLoaded', () => {
 async function logout(){   
     try {
         const res = await fetch ('/api/users/logout')
-        if(!res.ok) throw new Error('Failed to logout, please try again i a moment')
-            window.helpers.toast("Logged out successfully")
-        
+        if(!res.ok){
+            const {error} = await res.json();
+            throw new Error(error)
+        }
+        const {redirectUrl} = await res.json();
+
+        window.helpers.toaster('התנתקת בהצלחה, להתראות !');     
+       await  window.helpers.delay(1000)
+        window.location.replace(redirectUrl)   
     } catch (error) {
-        window.helpers.toast(error.message,'fail')
+        window.helpers.toaster(error.message,'fail');   
     }
 }
