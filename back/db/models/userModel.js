@@ -88,6 +88,9 @@ async function loginUser(req, res, next) {
             req.userData = { ...user[0], password: '' };
             req.session.sId = user[0]?.id
         }
+        query = `update users SET last_login_date = ? WHERE id = ?`
+        const [user] = await pool.query(query,[new Date(),req.userData.id])
+        console.log(req.userData)
         next()
     } catch (error) {
         console.log(error);
