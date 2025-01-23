@@ -2,7 +2,7 @@ const { pool } = require("../dbConnection.js")
 const { lettersReg } = require('../../helpers/helper.js')
 
 module.exports = {
-    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov
+    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov, addComment
 }
 
 async function allGroups(req, res, next) {
@@ -168,7 +168,7 @@ async function deleteGroupsTov(req, res, next) {
         const group_id = req.params.groupId
         const post_id = req.params.tovitId
 
-        if (lettersReg.test(group_id) || lettersReg.test(group_id)) throw Error(`Id is not valid, please check again`)
+        if (lettersReg.test(group_id) || lettersReg.test(post_id)) throw Error(`Id is not valid, please check again`)
 
 
         const [row] = await pool.query(`delete from groups_to_posts where group_id = ${group_id} and post_id = ${post_id}`)
@@ -187,8 +187,18 @@ async function deleteGroupsTov(req, res, next) {
 }
 async function addComment(req, res, next) {
     try {
+        const comment = req.body.comment
+        const user_id = req.session?.sId
+        console.log(comment);
 
+        if (lettersReg.test(user_id)) throw Error(`Id is not valid, please check again`)
+
+        const [results] = await pool.query(`insert into comments (user_id,text) values (${user_id},'${comment}')`)
+
+        req.createdComment = results.insertId
+
+        next();
     } catch (error) {
-
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
