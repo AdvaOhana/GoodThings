@@ -1,5 +1,6 @@
 const { pool } = require("../dbConnection.js");
-const { lettersReg, generateCode } = require("../../helpers/helper.js");
+const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
+const { EMAIL_USER } = process.env
 
 
 async function allUsers(req, res, next) {
@@ -70,49 +71,58 @@ async function createUser(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-async function loginUser(req, res, next) {    
-    try {       
-        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `  
-        if(req.session?.sId){
+async function loginUser(req, res, next) {
+    try {
+        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
+        if (req.session?.sId) {
             query += `where u.id=?`
-            const [user] = await pool.query(query,[req.session.sId])
+            const [user] = await pool.query(query, [req.session.sId])
             req.userData = { ...user[0], password: '' };
-        }else{
+        } else {
             const userNameOrEmail = req.body.userEmail
             const userPassword = req.body.userPassword
             query += `where email=? or user_name=?`
-            if(!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
-            const [user] = await pool.query(query, [userNameOrEmail.trim(),userNameOrEmail.trim()]) 
+            if (!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
+            const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()])
             if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
             req.userData = { ...user[0], password: '' };
             req.session.sId = user[0]?.id
         }
         next()
-    } catch (error) {   
+    } catch (error) {
         console.log(error);
-        res.redirect(302,'/login?success=false')
+        res.redirect(302, '/login?success=false')
     }
 }
 
 async function forgotPassword(req, res, next) {
     try {
-        let code = generateCode(6)
-        // const userName =
-        // const email =
+        let code = generateCode()
+        // const user_name = req.body.user_name
+        // const email = req.body.email
 
+        // if (!user_name.length || !email.length) throw new Error('Some information is missing!')
 
+        const info = await transporter.sendMail({
+            from: `טוב יומי <${process.env.EMAIL_USER}>`,
+            to: `adva1230@gmail.com`,
+            subject: "Reset Password",
+            text: `Your code: ${code}`,
+            html: `<b>Hello world? Your code: ${code}</b>`,
+        });
+        next()
 
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
 
-async function  getUserByEmail(email) {
+async function getUserByEmail(email) {
 
-        const [user] = await pool.query(`select * from users where email=?`, [email])
-          return user.at(0)
+    const [user] = await pool.query(`select * from users where email=?`, [email])
+    return user.at(0)
 }
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser,getUserByEmail }
-           
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, getUserByEmail }
+
 

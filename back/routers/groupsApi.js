@@ -42,7 +42,9 @@ tovitRouter.post('/', createTovits, tovitToGroup, (req, res) => {
 tovitRouter.delete('/:tovitId', deleteGroupsTov, (req, res) => {
     res.status(200).json({ message: `Deleted tovit successfully`, data: req.deletedTov })
 })
-tovitRouter.patch('/:tovitId/comment', (req, res) => { })
+tovitRouter.post('/:tovitId/comment', (req, res) => {
+
+})
 
 // // http://localhost:8000/api/groups/:groupId/user
 groupsApiRouter.use('/:groupId/user', userRouter)

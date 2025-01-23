@@ -13,14 +13,14 @@ usersApiRouter.get('/all', allUsers, (req, res) => {
 usersApiRouter.post('/sign-up', createUser, (req, res) => {
     res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
 })
-usersApiRouter.post('/login',loginUser, (req, res) => {        
+usersApiRouter.post('/login', loginUser, (req, res) => {
     res.status(302).redirect('/')
 })
-usersApiRouter.get('/logout',(req, res) => { 
+usersApiRouter.get('/logout', (req, res) => {
     //Nerya, handle logout and remove sId from user session using MID. then send the response if good make sure to redirect the user to login page, also make sure that the user is logged in before trying to log him out
 })
-usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
-// Nerya, handle the forgot password with Adva, we want to send the user an email with 6 letters and to allow him to reset the password
+usersApiRouter.get('/forgot', forgotPassword, (req, res) => {
+    // Nerya, handle the forgot password with Adva, we want to send the user an email with 6 letters and to allow him to reset the password
 })
 usersApiRouter.get('/:id', getUserById, (req, res) => {
     res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.userData })

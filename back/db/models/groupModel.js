@@ -185,3 +185,10 @@ async function deleteGroupsTov(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
+async function addComment(req, res, next) {
+    try {
+
+    } catch (error) {
+
+    }
+}
