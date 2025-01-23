@@ -192,10 +192,60 @@ footer{
 #actions-container :last-child{
     filter: var(--filter-svg);
 }
+.user-actions-container{
+    position: relative;
+}
+.user-btns{
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    width: fit-content;
+    padding: 1rem;
+    gap: .5rem;
+    transform: translateY(30%) translateX(40%);
+    font-size: 0.9rem;
+    border-radius: var(--border-radius-md);
+    background-color: rgba(174, 174, 174, 0.324)
+}
+
+.user-btn{
+    padding-bottom: .4rem;
+    border-bottom : 1px solid var(--color-silver-700);
+    width: 6rem;
+    max-width: 6rem;
+}
+.user-btn:last-child{
+    display: flex;
+    gap: .5rem;
+    padding-bottom: 0;
+    border-bottom: none;
+
+
+}
+@keyframes showList{
+    from{
+        max-height: 0;
+    overflow: hidden;
+
+    }
+    to{
+        max-height: 10rem;
+    overflow: hidden;
+
+    }
+}
+
+.user-btn{
+    cursor: pointer;
+}
+
+
 
 #input-container{
     backdrop-filter: blur(2px);
 }
+
 
 #add-btn{
     display: flex;
@@ -628,13 +678,7 @@ input:not(:placeholder-shown) ~ .floating-label {
     width: 80%;
 }
 
-.user-actions{
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
-    font-size: .8rem;
-    color: var(--color-grey-900);
-}
+
 
 .navbar{
     display: flex;

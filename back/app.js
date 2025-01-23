@@ -9,6 +9,7 @@ const { usersApiRouter } = require('./routers/usersApi.js');
 const { groupsRouter } = require('./routers/groups.js');
 const { groupsApiRouter } = require('./routers/groupsApi.js');
 const { tovitsApiRouter } = require('./routers/tovitsApi.js');
+const { threeDaysQuery } = require('./middlewares/dataHelperMid.js')
 
 const path = require('path');
 
@@ -86,5 +87,5 @@ app.get("*", (req, res) => {
 
 
 app.listen(PORT, () => {
-    console.log(`Server running on PORT ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`)
 })
