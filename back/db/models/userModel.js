@@ -1,7 +1,7 @@
 const { pool } = require("../dbConnection.js");
 const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
+const {query} = require("express");
 const { EMAIL_USER } = process.env
-
 
 async function allUsers(req, res, next) {
     try {
@@ -98,21 +98,34 @@ async function loginUser(req, res, next) {
     }
 }
 
-async function forgotPassword(req, res, next) {
+    async function forgotPassword(req, res, next) {
     try {
+        const userNameOrEmail = req.body.NameOrEmail;
+        console.log(userNameOrEmail)
+        if (!userNameOrEmail.length) throw new Error('User name or email is not valid!')
         let code = generateCode()
-        // const user_name = req.body.user_name
-        // const email = req.body.email
 
-        // if (!user_name.length || !email.length) throw new Error('Some information is missing!')
+        let query = `select * from users where email = ? or user_name = ?`
+        const [user] = await pool.query(query, [userNameOrEmail, userNameOrEmail])
+        if (!user.length) throw new Error('User name or email is not valid!')
+
+        query = `update users SET forget_password = ? WHERE email = ?`
+        const [updated] = await pool.query(query, [code, user[0].email])
 
         const info = await transporter.sendMail({
             from: `טוב יומי <${process.env.EMAIL_USER}>`,
-            to: `adva1230@gmail.com`,
+            to: `${user[0].email}`,
             subject: "Reset Password",
             text: `Your code: ${code}`,
             html: `<b>Hello world? Your code: ${code}</b>`,
         });
+        //תספור לאחור 180 שניות ואז תיגש חזרה לDB ותמחק את המספר
+  setTimeout(async () => {
+            console.log('This password deleted after 3 minutes');
+            query = ` update users SET forget_password = NULL WHERE email = ?`
+            const [deleted] = await pool.query(query, [user[0].email])
+
+            },180000)
         next()
 
     } catch (error) {

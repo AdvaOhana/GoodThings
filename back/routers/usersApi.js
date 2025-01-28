@@ -24,8 +24,8 @@ usersApiRouter.get('/logout', (req, res) => {
         res.status(200).json({ redirectUrl: '/' })
     });
 })
-usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
-    // Nerya, handle the forgot password with Adva, we want to send the user an email with 6 letters and to allow him to reset the password
+usersApiRouter.post('/forget', forgotPassword, (req, res) => {
+    res.status(200).json({ message: `check youre email`})
 })
 usersApiRouter.get('/:id', getUserById, (req, res) => {
     res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.userData })
