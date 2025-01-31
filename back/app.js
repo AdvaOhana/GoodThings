@@ -46,15 +46,11 @@ app.use('/api/tovits', tovitsApiRouter)
 
 
 
-app.get('/',loginUser,getAllBgs,threeDaysQuery,getTovByUId, async (req, res) => { 
-         let threeDaysPosts= req?.tovData         
-         let todaysPost = null;
-    if(!req.session.sId) return res.redirect('/login')
-        if(req.tovData?.length > 3){
-            threeDaysPosts =  req?.tovData?.slice(0,3)
-            todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ? threeDaysPosts[0] : null
-        }        
-    
+app.get('/', loginUser, getAllBgs, getTovByUId, async (req, res) => {
+    if (!req.session.sId) return res.redirect('/login')
+    const threeDaysPosts = req?.tovData?.slice(0, 3)
+    const todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date, new Date()) ? threeDaysPosts[0] : null
+
     res.render('homePage', {
         user: req.userData,
         threeDaysPosts,
@@ -64,21 +60,21 @@ app.get('/',loginUser,getAllBgs,threeDaysQuery,getTovByUId, async (req, res) => 
     })
 })
 
-app.get('/login', async (req, res) => {     
-    if(req.session.sId) return res.redirect('/')
-    res.render('loginPage',{  
+app.get('/login', async (req, res) => {
+    if (req.session.sId) return res.redirect('/')
+    res.render('loginPage', {
         querys: req?.query
     })
 })
 
 app.get('/forgotPassword', async (req, res) => {
-    if(req.session.sId) return res.redirect('/')
-        res.render('forgotPage')
+    if (req.session.sId) return res.redirect('/')
+    res.render('forgotPage')
 })
 
 app.get('/signup', async (req, res) => {
-    if(req.session.sId) return res.redirect('/')
-        res.render('signupPage', {
+    if (req.session.sId) return res.redirect('/')
+    res.render('signupPage', {
         countries: await getCountries(),
         genders: ['נקבה', 'זכר', 'אחר'],
         days: Array.from({ length: 31 }, (el, i) => i + 1),

@@ -13,20 +13,19 @@ usersApiRouter.get('/all', allUsers, (req, res) => {
 usersApiRouter.post('/sign-up', createUser, (req, res) => {
     res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
 })
-usersApiRouter.post('/login',loginUser, (req, res) => {        
+usersApiRouter.post('/login', loginUser, (req, res) => {
     res.status(302).redirect('/')
 })
-
-usersApiRouter.get('/logout',(req, res) => {
-    req.session.destroy((err)=>{
-        if(err){
-            return res.status(500).json({error:'Failed to logout, please try again.'})
+usersApiRouter.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to logout, please try again.' })
         }
-        res.status(200).json({redirectUrl:'/'})
+        res.status(200).json({ redirectUrl: '/' })
     });
 })
-usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
-// Nerya, handle the forgot password with Adva, we want to send the user an email with 6 letters and to allow him to reset the password
+usersApiRouter.post('/forget', forgotPassword, (req, res) => {
+    res.status(200).json({ message: `check youre email`})
 })
 usersApiRouter.get('/:id', getUserById, (req, res) => {
     res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.userData })
