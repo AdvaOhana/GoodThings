@@ -72,7 +72,7 @@ async function createUser(req, res, next) {
 }
 async function loginUser(req, res, next) {    
     try {       
-        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `  
+        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme, u.bio ,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `  
         if(req.session?.sId){
             query += `where u.id=?`
             const [user] = await pool.query(query,[req.session.sId])

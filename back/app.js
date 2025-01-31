@@ -70,6 +70,7 @@ app.get('/login', async (req, res) => {
         querys: req?.query
     })
 })
+
 app.get('/forgotPassword', async (req, res) => {
     if(req.session.sId) return res.redirect('/')
         res.render('forgotPage')
