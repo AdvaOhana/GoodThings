@@ -44,8 +44,6 @@ app.use('/api/groups', groupsApiRouter)
 app.use('/api/tovits', tovitsApiRouter)
 
 
-
-
 app.get('/', loginUser, getAllBgs, getTovByUId, async (req, res) => {
     if (!req.session.sId) return res.redirect('/login')
     const threeDaysPosts = req?.tovData?.slice(0, 3)

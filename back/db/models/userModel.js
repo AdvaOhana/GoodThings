@@ -1,6 +1,7 @@
 const { pool } = require("../dbConnection.js");
 const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
 const {query} = require("express");
+const {phoneReg, passwordReg} = require("../../helpers/helper");
 const { EMAIL_USER } = process.env
 
 async function allUsers(req, res, next) {
@@ -39,9 +40,19 @@ async function getUserByName(req, res, next) {
 }
 async function createUser(req, res, next) {
     try {
-        const user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email, password: req.body.password, phone: req.body.phone, country: req.body.country, bio: req.body.bio, image: req.body.image, userType: `3`, lastLoginDate: new Date(), loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName };
+        const user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email,
+            password: req.body.password, phone: req.body.phone, country: req.body.country,
+            bio: req.body.bio, image: req.body.image, userType: `3`, lastLoginDate: new Date(),
+            loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName };
 
-        const query = `
+        let query = `SELECT COUNT(*) AS count FROM users WHERE user_name = ? OR phone = ? OR email = ?`;
+        const [createUserCheck] = await pool.query(query, [user.userName, user.phone, user.email]);
+
+        if (createUserCheck[0].count > 0) {
+            return res.status(400).json({ message: 'Username, phone number or email already exists in the system.' });
+        }
+
+        query = `
     INSERT INTO users (
         user_type, email, password, first_name, last_name, phone, 
         country, img_path, bio, last_login_date, login_cnt, 
@@ -73,7 +84,11 @@ async function createUser(req, res, next) {
 }
 async function loginUser(req, res, next) {
     try {
-        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
+        let query = `SELECT locked FROM users WHERE id = ?;`;
+        const [checkLocked] = await pool.query(query, [req.session.sId]);
+        if (checkLocked[0].locked != 0) throw new Error('Account closed')
+
+        query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
         if (req.session?.sId) {
             query += `where u.id=?`
             const [user] = await pool.query(query, [req.session.sId])
@@ -98,47 +113,149 @@ async function loginUser(req, res, next) {
     }
 }
 
-    async function forgotPassword(req, res, next) {
+async function forgotPassword(req, res, next) {
     try {
+        let query = `SELECT locked FROM users WHERE id = ?;`;
+        const [checkLocked] = await pool.query(query, [req.session.sId]);
+        if (checkLocked[0].locked != 0) throw new Error('Account closed')
+
         const userNameOrEmail = req.body.NameOrEmail;
-        console.log(userNameOrEmail)
         if (!userNameOrEmail.length) throw new Error('User name or email is not valid!')
         let code = generateCode()
 
-        let query = `select * from users where email = ? or user_name = ?`
+        query = `select * from users where email = ? or user_name = ?;`
         const [user] = await pool.query(query, [userNameOrEmail, userNameOrEmail])
         if (!user.length) throw new Error('User name or email is not valid!')
 
         query = `update users SET forget_password = ? WHERE email = ?`
         const [updated] = await pool.query(query, [code, user[0].email])
-
         const info = await transporter.sendMail({
             from: `טוב יומי <${process.env.EMAIL_USER}>`,
             to: `${user[0].email}`,
-            subject: "Reset Password",
+            subject: "Reset Your Password",
             text: `Your code: ${code}`,
-            html: `<b>Hello world? Your code: ${code}</b>`,
-        });
-        //תספור לאחור 180 שניות ואז תיגש חזרה לDB ותמחק את המספר
-  setTimeout(async () => {
-            console.log('This password deleted after 3 minutes');
-            query = ` update users SET forget_password = NULL WHERE email = ?`
+            html: `<html dir="rtl">
+    <body style="direction: rtl; text-align: right;">
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; ">
+        <h2>שחזור סיסמה</h2>
+        <p>שלום ${user[0].first_name},</p>
+        
+        <p>קיבלנו בקשה לשחזור הסיסמה שלך. הקוד הזמני שלך מופיע למטה והוא יהיה בתוקף למשך 3 דקות:</p>
+        <p style="font-size: 18px; font-weight: bold;">קוד: <strong>[${code}]</strong></p>
+        
+        <p>אם לא ביקשת לשחזר את הסיסמה, נא להתעלם מהודעה זו. למען אבטחת המידע שלך, אין לשתף את הקוד עם אף אחד.</p>
+        
+        <p>אם דרושה לך עזרה, ניתן לפנות לצוות התמיכה שלנו.</p>
+        <p>תודה,<br>[טוב יומי]</p>
+    </div>   
+    </body>
+    </html>`,});
+        setTimeout(async () => {
+            query = ` update users SET forget_password = NULL WHERE email = ?;`
             const [deleted] = await pool.query(query, [user[0].email])
-
-            },180000)
+        },180000)
         next()
 
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
+async function verifyCode(req, res, next) {
+    try {
+        const userForgotCode = req.body.userForgotCode;
+        const userNameOrEmail = req.body.NameOrEmail;
+        let query = `select forget_password from users where email = ? or user_name = ?;`
+        const [code] = await pool.query(query, [userNameOrEmail, userNameOrEmail])
+        if (code[0].forget_password != userForgotCode) throw new Error('password incorrect')
 
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+async function updateProfile(req, res, next) {
+    try {
+        let query = `SELECT locked FROM users WHERE id = ?;`;
+        const [checkLocked] = await pool.query(query, [req.session.sId]);
+        if (checkLocked[0].locked != 0) throw new Error('Account closed')
+
+        const userName = req.body.userName;
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const phone = req.body.phone;
+        const bio = req.body.bio;
+        const userId = req.body.userId;
+        const bioMaxLength = 800;
+
+        if (
+            userName.length < 2 ||
+            firstName.length < 2 ||
+            !lettersReg.test(firstName) ||
+            lastName.length < 2 ||
+            !lettersReg.test(lastName) ||
+            !phoneReg.test(phone) ||
+            bio.length > bioMaxLength ||
+            userId !== req.session.sId
+        ) {
+            throw new Error('Invalid input data');
+        }
+
+        query = `SELECT COUNT(*) AS count FROM users WHERE (user_name = ? OR phone = ?) AND id != ?;`;
+        const [checkDetails] = await pool.query(query, [userName, phone, userId]);
+        if (checkDetails[0].count > 0) {
+            throw new Error('Username or phone number already exists');
+        }
+
+        query = `UPDATE users SET user_name = ?, first_name = ?, last_name = ?, phone = ?, bio = ? WHERE id = ?`;
+        const [update] = await pool.query(query, [userName, firstName, lastName, phone, bio, userId]);
+
+        next();
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` });
+    }
+}
+async function updatePassword(req, res, next) {
+    try {
+        const password = req.body.password;
+        if (!passwordReg.test(password)) throw new Error('Weak Password');
+
+        let query = `update users SET password = ${password} WHERE email = ? or user_name = ? or id = ?`
+        const [changePassword] = await pool.query(query, [userNameOrEmail, userNameOrEmail, req.session.sId]);
+
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+async function deleteAccount(req, res, next) {
+    try {
+        let query = `UPDATE users SET locked = 1 WHERE id = ?;`
+        const [recovery] = await pool.query(query, [req.session.sId]);
+
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+async function recoveryAccount(req, res, next) {
+    try {
+        let query = `UPDATE users SET locked = 0 WHERE id = ?;`
+        const [recovery] = await pool.query(query, [req.session.sId]);
+
+        next()
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+
+//פונקציה לעדכון תמונת פרופיל
 async function getUserByEmail(email) {
 
     const [user] = await pool.query(`select * from users where email=?`, [email])
     return user.at(0)
 }
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, getUserByEmail }
+    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, verifyCode,updateProfile,
+        updatePassword,deleteAccount,recoveryAccount, getUserByEmail }
 
 
