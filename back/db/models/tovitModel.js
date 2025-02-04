@@ -99,7 +99,7 @@ async function deleteTovit(req, res, next) {
     }
 }
 async function getTovByUId(req, res, next) {
-    try {
+    try {        
         const userId = req.session?.sId
         const tovDate = req.query;
         const queryParams = [];
@@ -108,7 +108,7 @@ async function getTovByUId(req, res, next) {
             let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
             
         if (tovDate.startDate && tovDate.endDate) {
-            if (dateFns.isBefore(tovDate.startDate,tovDate.endDate)) { 
+            if (dateFns.isBefore(tovDate.startDate,tovDate.endDate) || dateFns.isEqual(tovDate.startDate,tovDate.endDate)) { 
                 sql += 'post_date >= DATE(?) AND post_date <= DATE(?) and';
                 queryParams.push(dateFns.setHours(tovDate.startDate,0),dateFns.setHours(tovDate.endDate,26));
             }

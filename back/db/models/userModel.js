@@ -105,7 +105,6 @@ async function loginUser(req, res, next) {
         }
         query = `update users SET last_login_date = ? WHERE id = ?`
         const [user] = await pool.query(query,[new Date(),req.userData.id])
-        console.log(req.userData)
         next()
     } catch (error) {
         console.log(error);
@@ -129,6 +128,7 @@ async function forgotPassword(req, res, next) {
 
         query = `update users SET forget_password = ? WHERE email = ?`
         const [updated] = await pool.query(query, [code, user[0].email])
+
         const info = await transporter.sendMail({
             from: `טוב יומי <${process.env.EMAIL_USER}>`,
             to: `${user[0].email}`,

@@ -4,15 +4,24 @@ const root = document.getElementById("root");
 const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
 function loadTovit(todayPost,userData,bgOptArr){    
-    const postedToday =  todayPost ? true : isSameDay(getStorage('post-items-date')?.post_date,new Date()) ? true : false
-
-
+    const postedToday =  todayPost ? true : isSameDay(getStorage('post-items-date'),new Date()) ? true : false
+    
+    //Error to fix: post fail to submit when user first post today
     
     if(postedToday){
-        const postContent =  window.helpers.getStorage('post-items') ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : [todayPost?.post_content]
+        const postContent =  window.helpers.getStorage('post-items').length ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : [todayPost?.post_content]
+        console.log(window.helpers.getStorage('post-items').length ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%"));
+        
         todayPost.post_content = postContent
     }
+    if(!postedToday){
+        localStorage.removeItem('post-items')
+    }
+
     
+    
+
+
     
     const tovitData = postedToday ? todayPost :  {
                 public: userData?.defIsPublic,
@@ -143,9 +152,9 @@ function handleAdd(e){
         handleInputError(error)
     }
     tovitData.post_content.push(inputVal)
-    console.log(tovitData);
     
     localStorage.setItem("post-items",JSON.stringify(tovitData.post_content))
+    localStorage.setItem("post-items-date",JSON.stringify(tovitData.post_date))
 
     updateListUI()
     window.helpers.toaster('נוסף בהצלחה')
@@ -194,8 +203,7 @@ async function handleSubmit(e){
     } )
 
     tovitData.post_content = stringifyedPost;   
-try {
-    
+try {    
     let method = postedToday ? "PATCH" : "POST"
     let url = postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
     if(postedToday && !stringifyedPost.length){
@@ -216,7 +224,7 @@ try {
     localStorage.removeItem('post-items')
     window.helpers.toaster(data.message)
     await window.helpers.delay(500)
-    window.location.reload()
+    window.location.href('/')
     
 } catch (error) {
     window.helpers.toaster(error.message,'fail')
@@ -266,7 +274,8 @@ if(createTovitBtn?.length){
 btn.onclick= ()=>{
     const todaysPost = JSON.parse(btn.getAttribute('data-todays-post'));
     const userData = JSON.parse(btn.getAttribute('data-user'));
-    const bgOptArr = JSON.parse(btn.getAttribute('data-bg-options'));   
+    const bgOptArr = JSON.parse(btn.getAttribute('data-bg-options'));
+    
     loadTovit(todaysPost,userData,bgOptArr)}
     })
 

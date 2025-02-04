@@ -3,6 +3,7 @@
     --border-radius-sm: 5px;
     --border-radius-md: 7px;
     --border-radius-lg: 9px;
+    --border-radius-full: 50%;
   
     --color-brand-50: #eef2ff;
     --color-brand-100: #e0e7ff;
@@ -12,6 +13,9 @@
     --color-brand-700: #4338ca;
     --color-brand-800: #3730a3;
     --color-brand-900: #312e81;
+
+    --color-danger-0:#d9534f;
+    --color-danger-border: #d43f3a;
 
 }
 
@@ -36,7 +40,7 @@
     --color-indigo-700: #4338ca;
 
     --color-transperent: rgba(0, 0, 0, 0.3);
-
+    --color-low-opacity: #00000045;
 
 
     --filter-svg: invert(100%) sepia(100%) saturate(100%) hue-rotate(180deg) brightness(100%) contrast(100%);
@@ -81,8 +85,9 @@
         --image-grayscale: 10%;
         --image-opacity: 90%;
         --filter-svg: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
-
+ 
     --color-transperent: rgba(255, 255, 255, 0.266);
+    --color-low-opacity: #ffffff45;
 
 
     
@@ -161,7 +166,7 @@ select:focus {
 
 a{
     text-decoration: none;
-    color: var(--color-brand-100);
+    color: var(--color-grey-900);
 
 }
 header{
@@ -429,6 +434,7 @@ input:focus{
     margin-bottom: 25px;
     width: 90%;
 }
+
 .floating-label {
     font-size: 1rem;
     color: var(--color-grey-600);
@@ -436,8 +442,12 @@ input:focus{
     pointer-events: none;
     top: 8px;
     right: 12px;
+    width: 90%;
     transition: all 0.1s ease;
+    display: flex;
+    justify-content: space-between;
 }
+
 
 #data-list{
     margin: 1.5rem 0 3rem 0;
@@ -520,6 +530,20 @@ input:focus{
     box-shadow: none;
 }
 
+.danger{
+    background: var(--color-danger-0);
+font-size: .9rem;
+    color: var(--color-brand-50);
+    border: 1px solid var(--color-danger-border);
+}
+
+.danger:hover{
+    box-shadow: none;
+    color: var(--color-brand-50);
+
+
+}
+
 .disabled{
    opacity: 0.5;
 }
@@ -530,6 +554,16 @@ input:focus{
     cursor: not-allowed;
  }
 
+ textarea {
+    max-width: 1100px;
+    max-height : 200px;
+    min-height : 30px;
+}
+
+
+textarea:focus ~ .floating-label,
+textarea:not(:placeholder-shown) ~ .floating-label,
+textarea:not(:empty) ~ .floating-label,
 input:focus ~ .floating-label,
 input:not(:placeholder-shown) ~ .floating-label {
     top: -15px;
