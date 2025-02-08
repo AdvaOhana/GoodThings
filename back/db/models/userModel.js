@@ -102,11 +102,13 @@ async function loginUser(req, res, next) {
             if (!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
             const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()])
             if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
+            if (user[0]?.locked != 0) throw new Error('Account closed')
             req.userData = { ...user[0], password: '' };
             req.session.sId = user[0]?.id
         }
         query = `update users SET last_login_date = ? WHERE id = ?`
         const [user] = await pool.query(query,[new Date(),req.userData.id])
+
         next()
     } catch (error) {
         console.log(error);
