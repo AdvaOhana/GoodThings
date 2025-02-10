@@ -9,14 +9,14 @@ module.exports = {
 async function createTovits(req, res, next) {
     try {
         const tovit = {
-            user_id: +req.query.userId || 7,
+            user_id: +req.session.sId || 7, //number user for tests
             post_date: new Date().toISOString().split("T").at(0),
             public: req.body.public,
             post_content: req.body.post_content,
             background: +req.body.background || null
         }
 
-        const query =
+        let query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
 
 
@@ -28,9 +28,13 @@ async function createTovits(req, res, next) {
             tovit.background
         ];        
 
-        const [results] = await pool.query(query, values);
+        let [results] = await pool.query(query, values);
         req.tovitId = results.insertId
                 
+        query = `UPDATE users SET last_post_time = NOW() WHERE id = ?`;
+        [results] = await pool.query(query, [req.session.sId || 7]); //number user for tests
+
+
         next()
     }
     catch (error) {

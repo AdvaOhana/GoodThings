@@ -47,13 +47,18 @@ app.use('/api/tovits', tovitsApiRouter)
 
 
 app.get('/',loginUser,getAllBgs,threeDaysQuery,getTovByUId, async (req, res) => {
+    if(!req.session.sId) return res.redirect('/login')
     let threeDaysPosts= req?.tovData
-    let todaysPost = null;
-if(!req.session.sId) return res.redirect('/login')
+    let todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ? threeDaysPosts[0] :{
+        public: 0,
+        post_content: [],
+        background: req.userData.tovit_template,
+    };
+
    if(req.tovData?.length > 3){
        threeDaysPosts =  req?.tovData?.slice(0,3)
-       todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ? threeDaysPosts[0] : null
    }
+   
     res.render('homePage', {
         user: req.userData,
         threeDaysPosts,

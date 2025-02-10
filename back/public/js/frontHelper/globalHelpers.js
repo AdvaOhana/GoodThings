@@ -76,4 +76,34 @@ function setStorage(key, data) {
 }
 
 
-window.helpers = {toaster,getStorage,setStorage,delay}
+
+
+function createModal(){
+    const root = document.getElementById("root");
+
+    const modal = `
+    <div class="backdrop-container">
+        <div class="modal-content">
+        </div>
+    </div> `
+
+    root.insertAdjacentHTML('afterend',modal)
+
+    const modalBg = document.querySelector('.backdrop-container')
+    modalBg.addEventListener('click', e => {
+        if (e.target === e.currentTarget) {
+            e.target.remove()
+        }
+    })
+}
+
+
+    function closeModal(){
+        const modal = document.querySelector(".backdrop-container");
+        modal.remove()
+ 
+    }
+
+
+
+window.helpers = {toaster,getStorage,setStorage,delay,createModal,closeModal}

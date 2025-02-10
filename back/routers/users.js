@@ -90,6 +90,22 @@ usersRouter.get('/groups',loginUser,getAllBgs,todayPostQuery, getTovByUId,async 
     )
 })
 
+usersRouter.get('/help',loginUser,getAllBgs,todayPostQuery, getTovByUId,async (req, res) => {
+
+    let todaysPost = dateFns.isSameDay(req?.tovData[0]?.post_date,new Date()) ? req?.tovData[0] : null;
+
+    res.render('userPages/helpPage',
+               {
+            user:req.userData,
+            todaysPost,
+            bgOptArr: req.allBgs,
+            active:req.url,
+            title:"תמיכה טכנית"
+            
+        }
+    )
+})
+
 module.exports = {
     usersRouter
 };

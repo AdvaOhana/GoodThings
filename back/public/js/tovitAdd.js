@@ -1,47 +1,39 @@
-import { isSameDay } from 'https://cdn.skypack.dev/date-fns';
+import { isSameDay,isToday } from 'https://cdn.skypack.dev/date-fns';
 
 const root = document.getElementById("root");
 const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
-function loadTovit(todayPost,userData,bgOptArr){    
-    const postedToday =  todayPost ? true : isSameDay(getStorage('post-items-date'),new Date()) ? true : false
-    
-    //Error to fix: post fail to submit when user first post today
-    
-    if(postedToday){
-        const postContent =  window.helpers.getStorage('post-items').length ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%") ? todayPost?.post_content?.split("%") : [todayPost?.post_content]
-        console.log(window.helpers.getStorage('post-items').length ? window.helpers.getStorage('post-items') : todayPost?.post_content.includes("%"));
-        
-        todayPost.post_content = postContent
+function loadTovit(todayPost,userData,bgOptArr){  
+    const postedToday =  isToday(userData.last_post_time);
+console.log('====================================');
+console.log(todayPost);
+console.log(userData);
+console.log(bgOptArr);
+console.log('====================================');
+    if(window.helpers.getStorage('post-items')?.length){
+        todayPost.post_content = window.helpers.getStorage('post-items')
     }
-    if(!postedToday){
-        localStorage.removeItem('post-items')
-    }
-
-    
-    
-
-
-    
-    const tovitData = postedToday ? todayPost :  {
-                public: userData?.defIsPublic,
-                post_content: window.helpers.getStorage('post-items') ||  [],
-                background: bgOptArr.indexOf(userData?.tovit_template) ||  null,
-                //Shmuel -- need to fix that if bg hasnt changed the fetch blocked because of bg need number and not string !
-                post_date: new Date()
+    if(postedToday && todayPost?.post_content.includes("%")){
+            todayPost.post_content =  todayPost?.post_content?.split('%')
     }
     
+    const tovitData = todayPost
         
     const fName = userData.first_name
     let error = ""
 
     let dropdownMarkup = ''
-    bgOptArr?.forEach((el,i)=> 
-        dropdownMarkup += `<img class="tovit-bg-small tovit-bg-dropdown bg-img-${i+1}" src=${el} alt="image-${i+1}">`
+    bgOptArr?.forEach((el,i)=> {
+        if(i===0) dropdownMarkup+= `<p class="tovit-bg-small tovit-bg-dropdown def-bg bg-img-${i+1}"></p>`
+        else
+            dropdownMarkup += `<img class="tovit-bg-small tovit-bg-dropdown bg-img-${i+1}" src=${el} alt="image-${i+1}">`
+        }
     )
     
+    window.createModal()
+    const modal = document.querySelector('.modal-content')
     
-    const markup = `<div class="form-bg">
+    const markup = `
     <form id="things-form">
         <div class="toggle-div">
             <span>שיתוף לכולם</span>
@@ -73,12 +65,10 @@ function loadTovit(todayPost,userData,bgOptArr){
                                             </svg>
                                         </span>
                                         </p>
-                                    <img class="tovit-bg-small bg-img-0" src=${bgOptArr[0]} alt="">
+                                    <img class="tovit-bg-small bg-img-2" src=${bgOptArr[1]} alt="">
                                     
                                 </div>
                                 <div class="image-dropdown">
-                                    <p class="tovit-bg-small bg-null"></p>
-
                                     ${dropdownMarkup}
                                 </div>
                             </div>
@@ -87,30 +77,33 @@ function loadTovit(todayPost,userData,bgOptArr){
                 <button type="button" class="btn confirm">${tovitData?.public ? "שמור ושתף לכולם" : "שמור ושתף"}</button>
             </div>
         </div>
-    </form>
-</div>`
-root.insertAdjacentHTML('afterend',markup)
+    </form>`
+
+
+modal.insertAdjacentHTML('afterbegin',markup)
+modal.style.backgroundImage = `url(${postedToday ? todayPost.background : userData.tovit_template})`
 const form = document.getElementById('things-form');
-form.style.backgroundImage = `url(${userData.tovit_template})`
 const submitBtn = document.querySelector('.btn.confirm');
 const addBtn = document.getElementById('add-btn');
 const toggle = document.querySelector('.toggle-container')
 const switcher = document.querySelector('.switch')
-const  formBgElement = document.querySelector(".form-bg")
 const allData = document.querySelector("#data-list");
 const imageSelector = document.querySelector('.image-select')
 const imagesDropdown = document.querySelector('.image-dropdown');
 const dropdownImgs = imagesDropdown.querySelectorAll('.tovit-bg-dropdown')
-const defaultBg = imagesDropdown.querySelector('.bg-null')
-
-defaultBg.onclick = ()=>{
-    form.style.backgroundImage = `url()`
-
+let tempBg = 1;
+if(postedToday && todayPost.background == '1'){
+    todayPost.background = tempBg
+}else{
+    tempBg = bgOptArr.indexOf(postedToday ? todayPost.background : userData.tovit_template)
+    todayPost.background = tempBg
 }
+
+
 dropdownImgs.forEach((img,i)=>{
     img.addEventListener('click',()=>{
-        form.style.backgroundImage = `url(${img.src})`
-        tovitData.background = i+1      
+        modal.style.backgroundImage = `url(${img.src})`
+        tovitData.background = i+1
     })
 })
 
@@ -122,11 +115,6 @@ imageSelector.onclick = ()=> {
 }
 
 
-formBgElement.addEventListener('click', e => {
-    if (e.target === e.currentTarget) {
-        e.target.remove()
-    }
-})
 
 toggle.onclick = () => {
     toggle?.classList.toggle('active-switch')
@@ -154,7 +142,6 @@ function handleAdd(e){
     tovitData.post_content.push(inputVal)
     
     localStorage.setItem("post-items",JSON.stringify(tovitData.post_content))
-    localStorage.setItem("post-items-date",JSON.stringify(tovitData.post_date))
 
     updateListUI()
     window.helpers.toaster('נוסף בהצלחה')
@@ -201,7 +188,6 @@ async function handleSubmit(e){
         }
         else {stringifyedPost+= item+"%"}
     } )
-
     tovitData.post_content = stringifyedPost;   
 try {    
     let method = postedToday ? "PATCH" : "POST"
@@ -224,10 +210,11 @@ try {
     localStorage.removeItem('post-items')
     window.helpers.toaster(data.message)
     await window.helpers.delay(500)
-    window.location.href('/')
+    window.location.replace('/')
     
 } catch (error) {
     window.helpers.toaster(error.message,'fail')
+    window.closeModal();
 }
 
 }
@@ -235,7 +222,6 @@ try {
 
 function updateListUI(){
     allData.innerHTML = ""
-    
     tovitData?.post_content?.forEach((tov,i)=>{
     let markup = `
     <div class="form-data-list el-${i} ">

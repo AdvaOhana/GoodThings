@@ -1,0 +1,27 @@
+.backdrop-container{
+    top:0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    z-index: 98;
+}
+
+
+.modal-content{
+    justify-content: center;
+    box-shadow:var(--shadow-lg);
+    border-radius: 1rem;
+    width: 600px;
+    padding: 2rem;
+    z-index: 99;
+    color: var(--color-grey-200);
+    background-color: var(--color-grey-0);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
