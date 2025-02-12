@@ -1,6 +1,6 @@
 const { pool } = require("../dbConnection.js");
 const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
-const {query} = require("express");
+const { query } = require("express");
 const { EMAIL_USER } = process.env
 
 async function allUsers(req, res, next) {
@@ -85,11 +85,12 @@ async function loginUser(req, res, next) {
             if (!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
             const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()])
             if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
-            req.userData = { ...user[0], password: '' };
+            req.userData = { ...user[0], password: '' }
+            req.session.userType = user[0]?.user_type
             req.session.sId = user[0]?.id
         }
         query = `update users SET last_login_date = ? WHERE id = ?`
-        const [user] = await pool.query(query,[new Date(),req.userData.id])
+        const [user] = await pool.query(query, [new Date(), req.userData.id])
         console.log(req.userData)
         next()
     } catch (error) {
@@ -98,7 +99,7 @@ async function loginUser(req, res, next) {
     }
 }
 
-    async function forgotPassword(req, res, next) {
+async function forgotPassword(req, res, next) {
     try {
         const userNameOrEmail = req.body.NameOrEmail;
         console.log(userNameOrEmail)
@@ -120,12 +121,12 @@ async function loginUser(req, res, next) {
             html: `<b>Hello world? Your code: ${code}</b>`,
         });
         //תספור לאחור 180 שניות ואז תיגש חזרה לDB ותמחק את המספר
-  setTimeout(async () => {
+        setTimeout(async () => {
             console.log('This password deleted after 3 minutes');
             query = ` update users SET forget_password = NULL WHERE email = ?`
             const [deleted] = await pool.query(query, [user[0].email])
 
-            },180000)
+        }, 180000)
         next()
 
     } catch (error) {
@@ -138,6 +139,8 @@ async function getUserByEmail(email) {
     const [user] = await pool.query(`select * from users where email=?`, [email])
     return user.at(0)
 }
+
+
 module.exports =
     { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, getUserByEmail }
 

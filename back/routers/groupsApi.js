@@ -45,12 +45,9 @@ tovitRouter.delete('/:tovitId', deleteGroupsTov, (req, res) => {
 tovitRouter.post('/:tovitId/comment', addComment, (req, res) => {
     res.status(200).json({ message: `Created comment successfully`, data: req.createdComment })
 })
-
-// // http://localhost:8000/api/groups/:groupId/user
-groupsApiRouter.use('/:groupId/user', userRouter)
-userRouter.post('/:id', (req, res) => { })
-userRouter.delete('/:id', (req, res) => { })
-
+tovitRouter.delete('/:tovitId/:commentId', deleteComment, (req, res) => {
+    res.status(200).json({ message: `Deleted comment successfully`, data: [] })
+})
 
 
 
