@@ -1,5 +1,5 @@
  <header >
-    <img src="./assets/imgs/logo.png" alt="img" id="logo" srcset="">
+    <img src="/assets/imgs/logo.png" alt="img" id="logo" srcset="">
     <nav id="menu-bar" class="navbar">
         <ul class="nav-list">
             <li><a data-link href="/">בית</a></li>
@@ -10,12 +10,12 @@
     </nav>
     <div id="actions-container">
         <div class="user-actions-container">
-            <img  src="./assets/icons/user-regular.svg" alt="user" id="user-actions" class="icons icons-primary">
+            <img  src="/assets/icons/user-regular.svg" alt="user" id="user-actions" class="icons icons-primary">
             <div class="user-btns">
-                <a href="/profile" class="user-btn" >פרופיל אישי</a>
+                <a href="/users/profile" class="user-btn" >פרופיל אישי</a>
                 <p id="logout" class="user-btn" onclick="logout()">
                 <span>התנתקות</span>
-                <img  src="./assets/icons/arrow-right-from-bracket-solid.svg" alt="logout" class="icons icons-primary">
+                <img  src="/assets/icons/arrow-right-from-bracket-solid.svg" alt="logout" class="icons icons-primary">
             </p>    
             </div>
         </div>
@@ -23,9 +23,9 @@
 
 
         <% if(user?.defTheme === "dark"){ %>
-        <img data-theme='dark' src="./assets/icons/sun-regular.svg" alt="theme" class="theme-icon icons icons-primary">
+        <img data-theme='dark' src="/assets/icons/sun-regular.svg" alt="theme" class="theme-icon icons icons-primary">
         <% } else { %>
-        <img data-theme='light' src="./assets/icons/moon-regular.svg" alt="theme" class="theme-icon icons icons-primary">
+        <img data-theme='light' src="/assets/icons/moon-regular.svg" alt="theme" class="theme-icon icons icons-primary">
         <% } %>
     </div>
 </header>

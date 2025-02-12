@@ -1,0 +1,28 @@
+<aside id="side-nav">
+    <div id="user-image">
+        <div id="image-wrapper">
+            <% if (user.img_path?.length < 3) { %>
+                <img src="/assets/icons/user-regular.svg" alt="profile-pic" id="profile-pic">
+            <% } else { %>
+                <img src="<%= user.img_path %>" alt="profile-pic" id="profile-pic">
+            <% } %>
+        </div>
+            <p><%= user.first_name%> <%= user.last_name%></p>
+    </div>
+    <div id="side-elements">
+
+        <ul id="profile-links">
+            <li class="list-item <%= active === '/profile' ? 'active-item' : ''%> "><a href="/users/profile">פרופיל אישי</a></li>
+            <li  class="list-item <%= active === '/image' ? 'active-item' : ''%>"><a href="/users/image">תמונת פרופיל</a></li>
+            <li class="list-item <%= active === '/preferences' ? 'active-item' : ''%>"><a href="/users/preferences">ההעדפות שלי</a></li>
+            <li  class="list-item <%= active === '/groups' ? 'active-item' : ''%> "><a href="/users/groups">הקבוצות שלי</a></li>
+            <li class="list-item <%= active === '/password' ? 'active-item' : ''%>"><a href="/users/password">שינוי סיסמה</a></li>
+            <li class="list-item <%= active === '/help' ? 'active-item' : ''%>"><a href="/users/help">תמיכה טכנית</a></li>
+            
+            
+            
+        </ul>
+        <button id="submit" type="button" class="btn danger">מחק משתמש
+        </button>
+    </div>
+</aside>

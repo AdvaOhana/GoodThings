@@ -1,5 +1,7 @@
 const { Router } = require("express")
-const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser } = require("../db/models/userModel.js")
+const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser ,updateProfile,verifyCode
+    ,updatePassword,deleteAccount,recoveryAccount
+} = require("../db/models/userModel.js")
 
 
 const usersApiRouter = Router()
@@ -24,8 +26,23 @@ usersApiRouter.get('/logout', (req, res) => {
         res.status(200).json({ redirectUrl: '/' })
     });
 })
-usersApiRouter.post('/forget', forgotPassword, (req, res) => {
-    res.status(200).json({ message: `check youre email`})
+usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
+    res.status(200).json({ message: `check your email`,data:[]});
+})
+usersApiRouter.post('/verifyCode', verifyCode, (req, res) => {
+    res.status(200).json({ message: `success`,data:[]});
+})
+usersApiRouter.post('/updateProfile', updateProfile, (req, res) => {
+    res.status(200).json({ message: `success`,data:[]});
+})
+usersApiRouter.post('/updatePassword', updatePassword, (req, res) => {
+    res.status(200).json({ message: `success`,data:[]});
+})
+usersApiRouter.post('/deleteAccount', deleteAccount, (req, res) => {
+    res.status(200).json({ message: `success`,data:[]});
+})
+usersApiRouter.post('/recoveryAccount', recoveryAccount, (req, res) => {
+    res.status(200).json({ message: `success`,data:[]});
 })
 usersApiRouter.get('/:id', getUserById, (req, res) => {
     res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.userData })

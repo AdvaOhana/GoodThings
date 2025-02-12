@@ -35,17 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
         userListOpen = userListOpen ? false : true;
         list.style.display = userListOpen ? 'flex' : 'none'       
         list.style.animation = userListOpen ? "showList 0.5s linear forwards" : ""
+        const handleOutSideClick = (e)=>{            
+                if(e.target !== list && e.target !== user){
+                    userListOpen = userListOpen ? false : true;
+                    list.style.display = userListOpen ? 'flex' : 'none'       
+                    list.style.animation = userListOpen ? "showList 0.5s linear forwards" : ""
+                    document.removeEventListener('click',handleOutSideClick)
+            }
+        }
+        document.addEventListener('click',handleOutSideClick)
     }
-
-    list.addEventListener('click', e => {
-        console.log(e.target,e.currentTarget);
-        
-        // if (e.target === e.currentTarget) {
-        //     e.target.remove()
-        // }
-    })
-
-
+    
+    
+    
 
     const storedTheme = window.helpers.getStorage('theme') || icon.getAttribute('data-theme') || 'light';
     document.body.className = storedTheme;
@@ -72,7 +74,6 @@ async function logout(){
             throw new Error(error)
         }
         const {redirectUrl} = await res.json();
-
         window.helpers.toaster('התנתקת בהצלחה, להתראות !');     
        await  window.helpers.delay(1000)
         window.location.replace(redirectUrl)   
@@ -80,3 +81,6 @@ async function logout(){
         window.helpers.toaster(error.message,'fail');   
     }
 }
+
+
+

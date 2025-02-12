@@ -1,0 +1,25 @@
+<%- include('../generals/pageTop') %>
+<%- include('../components/header',{user,todaysPost,bgOptArr})%>
+
+
+<main id="profile-continer">
+   <div id="user-profile">
+    <%- include('./sidenavCom',{user})%>
+
+    <div id="main-profile">
+        <h2><%= title || 'פרופיל אישי' %></h2>
+        <div id="content-container">
+            <p>תמיכה טכנית </p>
+
+        </div>
+
+        
+        <button id="submit" type="button" class="btn confirm">עדכון
+        </button>
+    </div>
+   </div>
+</main>
+
+<%- include('../components/footer') %>
+
+<%- include('../generals/pageBottom') %>

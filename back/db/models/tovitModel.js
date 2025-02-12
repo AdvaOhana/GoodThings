@@ -9,14 +9,14 @@ module.exports = {
 async function createTovits(req, res, next) {
     try {
         const tovit = {
-            user_id: +req.query.userId || 7,
+            user_id: +req.session.sId || 7, //number user for tests
             post_date: new Date().toISOString().split("T").at(0),
             public: req.body.public,
             post_content: req.body.post_content,
             background: +req.body.background || null
         }
 
-        const query =
+        let query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
 
 
@@ -28,9 +28,13 @@ async function createTovits(req, res, next) {
             tovit.background
         ];        
 
-        const [results] = await pool.query(query, values);
+        let [results] = await pool.query(query, values);
         req.tovitId = results.insertId
                 
+        query = `UPDATE users SET last_post_time = NOW() WHERE id = ?`;
+        [results] = await pool.query(query, [req.session.sId || 7]); //number user for tests
+
+
         next()
     }
     catch (error) {
@@ -99,7 +103,7 @@ async function deleteTovit(req, res, next) {
     }
 }
 async function getTovByUId(req, res, next) {
-    try {
+    try {        
         const userId = req.session?.sId
         const tovDate = req.query;
         const queryParams = [];
@@ -108,7 +112,7 @@ async function getTovByUId(req, res, next) {
             let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
             
         if (tovDate.startDate && tovDate.endDate) {
-            if (dateFns.isBefore(tovDate.startDate,tovDate.endDate)) { 
+            if (dateFns.isBefore(tovDate.startDate,tovDate.endDate) || dateFns.isEqual(tovDate.startDate,tovDate.endDate)) { 
                 sql += 'post_date >= DATE(?) AND post_date <= DATE(?) and';
                 queryParams.push(dateFns.setHours(tovDate.startDate,0),dateFns.setHours(tovDate.endDate,26));
             }

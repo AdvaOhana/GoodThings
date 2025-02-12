@@ -3,13 +3,14 @@ const dotenv = require('dotenv');
 dotenv.config()
 const { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } = process.env
 
-const lettersReg = /[a-zA-Z]/g
+const lettersReg = /[a-zA-Z]/
+const phoneReg = /^05[0-9]\d{7}$/
+const mailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+const passwordReg = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/
+
 
 const generateCode = () => {
-    console.log(EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER);
-
     return Math.floor(Math.random() * (999999 - 100000) + 100000)
-
 }
 
 const transporter = nodemailer.createTransport({
@@ -52,5 +53,5 @@ async function getCountries() {
 
 
 module.exports = {
-    lettersReg, generateCode, getCountries, transporter
+    lettersReg, generateCode, getCountries, transporter,phoneReg,mailReg,passwordReg
 }

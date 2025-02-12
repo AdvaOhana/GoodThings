@@ -5,4 +5,10 @@ async function threeDaysQuery(req, res, next) {
     next()
 }
 
-module.exports = { threeDaysQuery}
+
+async function todayPostQuery(req, res, next) {
+    req.query = { startDate: new Date(), endDate: new Date()};
+    next()
+}
+
+module.exports = { threeDaysQuery,todayPostQuery}

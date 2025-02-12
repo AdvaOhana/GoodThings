@@ -1,0 +1,64 @@
+<%- include('../generals/pageTop') %>
+<%- include('../components/header',{user,todaysPost,bgOptArr})%>
+
+<main id="profile-continer">
+
+   <div id="user-profile">
+    <%- include('./sidenavCom',{user})%>
+    <div id="main-profile">
+        <h2><%= title || 'פרופיל אישי' %></h2>
+        <div id="content-container">
+            <div class="floating-label-group">
+                <input name="user_name" class="form-input" value="<%= user.user_name %>" placeholder="">
+                <label class="floating-label ">שם משתמש</label>
+            </div>
+            <div class="floating-label-group">
+                <input name="first_name" class="form-input" value="<%= user.first_name %>" placeholder="">
+                <label class="floating-label ">שם פרטי</label>
+            </div>
+            <div class="floating-label-group">
+                <input name="last_name" class="form-input" value="<%= user.last_name %>" placeholder="">
+                <label class="floating-label ">שם משפחה</label>
+            </div>
+            <div class="floating-label-group">
+                <input name="phone" class="form-input" value="<%= user.phone %>" placeholder="">
+                <label class="floating-label ">מספר פלאפון</label>
+            </div>
+
+            <div class="floating-label-group">
+                <div class="select-container">
+                    <span id="flag"></span>
+                    <select id="country" name="country" dir="rtl" class="select">
+                        <% countries?.forEach(country=>{ %>
+                            <% if(country.name === user?.country){ %>
+                                <option selected value="<%=country.name%>#<%=country.flag%>" ><%=country.name%></option>
+                                <%  }else {   %>             
+                                <option value="<%=country.name%>#<%=country.flag%>">
+                                    <%=country.name%>
+                                </option>
+                        <% } %>
+                            <%})%>
+                    </select>
+                </div>
+                <label class="floating-select-label" >מדינה</label>
+            </div>
+    <br>
+            <div class="floating-label-group">
+                <textarea maxlength="800" name="bio" class="form-input" placeholder=""><%= user.bio %></textarea>
+                <label class="floating-label ">תיאור פרופיל (bio)<span id="length-cnt"><span id="cnt">0</span>/800</span></label>
+            </div>
+
+     
+
+        </div>
+
+        
+        <button id="submit" type="button" class="btn confirm">עדכון
+        </button>
+    </div>
+   </div>
+</main>
+
+<%- include('../components/footer') %>
+
+<%- include('../generals/pageBottom') %>
