@@ -39,11 +39,10 @@ async function getUserByName(req, res, next) {
     }
 }
 async function createUser(req, res, next) {
-    try {
+    try {  
         const user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email,
-            password: req.body.password, phone: req.body.phone, country: req.body.country,
-            bio: req.body.bio, image: req.body.image, userType: `3`, lastLoginDate: new Date(),
-            loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName };
+            password: req.body.password,rePassword:req.body.rePassword,userType: `4`, lastLoginDate: new Date(),
+            lastPostTime: new Date(), userName: req.body.userName };
 
         let query = `SELECT COUNT(*) AS count FROM users WHERE user_name = ? OR phone = ? OR email = ?`;
         const [createUserCheck] = await pool.query(query, [user.userName, user.phone, user.email]);
@@ -84,12 +83,8 @@ async function createUser(req, res, next) {
 }
 async function loginUser(req, res, next) {
     try {
-        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.locked,tb.url as tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
-        
-        
-       
-
-        
+        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.locked,tb.url as tovit_template_url,u.tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
+                
         if (req.session?.sId) {
             query += `where u.id=?`
             const [user] = await pool.query(query, [req.session.sId])
@@ -117,12 +112,14 @@ async function loginUser(req, res, next) {
 }
 
 async function forgotPassword(req, res, next) {
+    
     try {
-        let query = `SELECT locked FROM users WHERE id = ?;`;
-        const [checkLocked] = await pool.query(query, [req.session.sId]);
-        if (checkLocked[0].locked != 0) throw new Error('Account closed')
+        let query;
+        // let query = `SELECT locked FROM users WHERE id = ?;`;
+        // const [checkLocked] = await pool.query(query, [req.session.sId]);
+        // if (checkLocked[0].isActive != 0) throw new Error('Account closed')
 
-        const userNameOrEmail = req.body.NameOrEmail;
+        const userNameOrEmail = req.body.nameOrEmail;
         if (!userNameOrEmail.length) throw new Error('User name or email is not valid!')
         let code = generateCode()
 

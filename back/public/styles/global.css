@@ -17,7 +17,7 @@
     box-shadow:var(--shadow-lg);
     border-radius: 1rem;
     width: 600px;
-    padding: 2rem;
+    padding: .7rem;
     z-index: 99;
     color: var(--color-grey-200);
     background-color: var(--color-grey-0);

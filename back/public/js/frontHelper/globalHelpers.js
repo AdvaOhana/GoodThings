@@ -75,9 +75,6 @@ function setStorage(key, data) {
     }
 }
 
-
-
-
 function createModal(){
     const root = document.getElementById("root");
 
@@ -96,7 +93,6 @@ function createModal(){
         }
     })
 }
-
 
     function closeModal(){
         const modal = document.querySelector(".backdrop-container");

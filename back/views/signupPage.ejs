@@ -3,96 +3,32 @@
     <main id="signup-container">
         <div class="page-header">
             <h1>הרשמה</h1>
-            <p>הכנס את הדואר האלקטרוני והסיסמה שלך</p>
+            <p>מלא את הפרטים שלך על מנת להתחיל</p>
         </div>
-        <form class="signup-form" method="post" action="/user/signup">
+        <form class="signup-form" method="post" action="api/users/sign-up">
             <div class="floating-label-group">
-                <input type="text" class="form-input" true="" placeholder="" false="" autocomplete="given-name" />
+                <input type="text" class="form-input" name="fName" placeholder=""  autocomplete="given-name" />
                 <label class="floating-label">שם פרטי</label>
             </div>
             <div class="floating-label-group">
-                <input type="text" class="form-input" true="" placeholder="" false="" autocomplete="family-name" />
+                <input type="text" class="form-input" name="lName" placeholder=""  autocomplete="family-name" />
                 <label class="floating-label">שם משפחה</label>
             </div>
             <div class="floating-label-group">
-                <input type="text" class="form-input" true="" placeholder="" false="" autocomplete="off" />
+                <input type="text" class="form-input" name="userName" placeholder=""  autocomplete="off" />
                 <label class="floating-label">שם משתמש (אנגלית)</label>
             </div>
             <div class="floating-label-group">
-                <input type="phone" class="form-input" false="" placeholder="" autocomplete="tel" />
-                <label class="floating-label">פלאפון</label>
-            </div>
-            <div class="floating-label-group">
-                <input type="password" class="form-input" true="" placeholder="" false="" autocomplete="" />
+                <input type="password" class="form-input" name="password"  placeholder=""  autocomplete="" />
                 <label class="floating-label">סיסמה</label>
             </div>
             <div class="floating-label-group">
-                <input type="password" class="form-input" true="" placeholder="" false="" autocomplete="" />
+                <input type="password" class="form-input"  name="rePassword" placeholder=""  autocomplete="" />
                 <label class="floating-label">אימות סיסמה</label>
             </div>
             <div class="floating-label-group">
-                <input type="email" class="form-input" true="" placeholder="" false="" autocomplete="email" />
+                <input type="email" class="form-input" name="email"  placeholder=""  autocomplete="email" />
                 <label class="floating-label">אימייל</label>
-            </div>
-            <div class="floating-label-group">
-                <div class="select-container">
-                    <span></span>
-                    <select name="gender" dir="rtl" class="select" true="" false="">
-                        <option value="" hidden="">בחר/י מגדר</option>
-                        <option value="נקבה" id="">נקבה</option>
-                        <option value="זכר" id="">זכר</option>
-                        <option value="מעדיף שלא לבחור" id="">מעדיף שלא לבחור</option>
-                    </select>
-                </div>
-            </div>
-            <div class="floating-label-group">
-                <div class="select-container">
-                    <span id="flag"></span>
-                    <select id="country" name="country" dir="rtl" class="select">
-                        <option value="" hidden="">בחר/י מדינה</option>
-                        <% countries?.forEach(country=>{ %>
-                            <option value="<%=country.name%>#<%=country.flag%>">
-                                <%=country.name%>
-                            </option>
-                            <%})%>
-                    </select>
-                </div>
-            </div>
-            <div class="dates-container" id="signup-dates">
-                <span class="mini-title">תאריך לידה</span>
-                <div class="floating-label-group">
-                    <div class="select-container">
-                        <span></span>
-                        <select name="day" dir="rtl" class="select" true="" false="">
-                            <option value="" hidden="">יום</option>
-                            <% days?.forEach(day=>{ %>
-                                <option value="<%=day%>"><%=day%></option>
-                                <%})%>
-                        </select>
-                    </div>
-                </div>
-                <div class="floating-label-group">
-                    <div class="select-container">
-                        <span></span>
-                        <select name="month" dir="rtl" class="select" true="" false="">
-                            <option value="" hidden="">חודש</option>
-                            <% months?.forEach(month=>{ %>
-                                <option value="<%=month%>"><%=month%></option>
-                                <%})%>
-                        </select>
-                    </div>
-                </div>
-                <div class="floating-label-group">
-                    <div class="select-container">
-                        <span></span>
-                        <select name="year" dir="rtl" class="select" true="" false="">
-                            <option value="" hidden="">שנה</option>
-                            <% years?.forEach(year=>{ %>
-                                <option value="<%=year%>"><%=year%></option>
-                                <%})%>
-                        </select>
-                    </div>
-                </div>
             </div>
             <button type="submit" class="btn confirm wide">הרשמה</button>
             <div class="user-actions">

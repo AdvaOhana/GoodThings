@@ -13,7 +13,6 @@ const { threeDaysQuery } = require('./middlewares/dataHelperMid.js')
 
 const path = require('path');
 
-
 const { loginUser } = require('./db/models/userModel.js');
 const { getAllBgs } = require('./db/models/bgModel.js');
 const { getTovByUId } = require('./db/models/tovitModel.js');
@@ -49,6 +48,8 @@ app.use('/api/tovits', tovitsApiRouter)
 app.get('/',loginUser,getAllBgs,threeDaysQuery,getTovByUId, async (req, res) => {
     if(!req.session.sId) return res.redirect('/login')
     let threeDaysPosts= req?.tovData
+console.log(threeDaysPosts);
+
     let todaysPost = dateFns.isSameDay(threeDaysPosts[0].post_date,new Date()) ? threeDaysPosts[0] :{
         public: 0,
         post_content: [],
@@ -82,13 +83,14 @@ app.get('/forgotPassword', async (req, res) => {
 
 app.get('/signup', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
-    res.render('signupPage', {
-        countries: await getCountries(),
-        genders: ['נקבה', 'זכר', 'אחר'],
-        days: Array.from({ length: 31 }, (el, i) => i + 1),
-        months: Array.from({ length: 12 }, (el, i) => i + 1),
-        years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
-    })
+    // res.render('signupPage', {
+    //     countries: await getCountries(),
+    //     genders: ['נקבה', 'זכר', 'אחר'],
+    //     days: Array.from({ length: 31 }, (el, i) => i + 1),
+    //     months: Array.from({ length: 12 }, (el, i) => i + 1),
+    //     years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
+    // })
+    res.render('signupPage')
 })
 app.get("*", (req, res) => {
     res.render('errorPage')

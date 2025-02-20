@@ -8,14 +8,17 @@ module.exports = {
 
 async function createTovits(req, res, next) {
     try {
+
+        
         const tovit = {
             user_id: +req.session.sId || 7, //number user for tests
             post_date: new Date().toISOString().split("T").at(0),
             public: req.body.public,
-            post_content: req.body.post_content,
+            post_content: JSON.stringify(req.body.post_content),
             background: +req.body.background || null
         }
-
+        
+        console.log(tovit);
         let query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
 
@@ -44,6 +47,7 @@ async function createTovits(req, res, next) {
 async function getTovits(req, res, next) {
     try {
         const [results] = await pool.query(`select p.id,p.user_id,p.post_date,p.public,p.post_content,t.url as background_url from posts as p join tovit_backgrounds as t on p.background=t.id `)
+
         if (!results.length) throw Error(`No tovits found.`)
             
         req.tovits = results;
@@ -108,8 +112,9 @@ async function getTovByUId(req, res, next) {
         const tovDate = req.query;
         const queryParams = [];
         
+
         if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`) 
-            let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
+            let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background_url,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
             
         if (tovDate.startDate && tovDate.endDate) {
             if (dateFns.isBefore(tovDate.startDate,tovDate.endDate) || dateFns.isEqual(tovDate.startDate,tovDate.endDate)) { 
