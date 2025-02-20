@@ -1,7 +1,7 @@
 const { pool } = require("../dbConnection.js");
 const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
-const {query} = require("express");
-const {phoneReg, passwordReg} = require("../../helpers/helper");
+const { query } = require("express");
+const { phoneReg, passwordReg } = require("../../helpers/helper");
 const { EMAIL_USER } = process.env
 
 async function allUsers(req, res, next) {
@@ -98,12 +98,13 @@ async function loginUser(req, res, next) {
             const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()])
             if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
             if (user[0]?.locked != 0) throw new Error('Account closed')
-            req.userData = { ...user[0], password: '' };
+            req.userData = { ...user[0], password: '' }
+            req.session.userType = user[0]?.user_type
             req.session.sId = user[0]?.id
         }
         query = `update users SET last_login_date = ? WHERE id = ?`
-        const [user] = await pool.query(query,[new Date(),req.userData.id])
-
+        const [user] = await pool.query(query, [new Date(), req.userData.id])
+        console.log(req.userData)
         next()
     } catch (error) {
         console.log(error);
@@ -161,6 +162,7 @@ async function forgotPassword(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
+
 async function verifyCode(req, res, next) {
     try {
         const userForgotCode = req.body.userForgotCode;
@@ -255,8 +257,12 @@ async function getUserByEmail(email) {
     const [user] = await pool.query(`select * from users where email=?`, [email])
     return user.at(0)
 }
+
+
 module.exports =
-    { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, verifyCode,updateProfile,
-        updatePassword,deleteAccount,recoveryAccount, getUserByEmail }
+{
+    allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, verifyCode, updateProfile,
+    updatePassword, deleteAccount, recoveryAccount, getUserByEmail
+}
 
 
