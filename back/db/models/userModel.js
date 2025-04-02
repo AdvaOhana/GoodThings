@@ -1,6 +1,5 @@
 const { pool } = require("../dbConnection.js");
 const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
-const { query } = require("express");
 const { phoneReg, passwordReg } = require("../../helpers/helper");
 const { EMAIL_USER } = process.env
 
@@ -39,10 +38,12 @@ async function getUserByName(req, res, next) {
     }
 }
 async function createUser(req, res, next) {
-    try {  
-        const user = { fName: req.body.fName, lName: req.body.lName, email: req.body.email,
-            password: req.body.password,rePassword:req.body.rePassword,userType: `4`, lastLoginDate: new Date(),
-            lastPostTime: new Date(), userName: req.body.userName };
+    try {
+        const user = {
+            fName: req.body.fName, lName: req.body.lName, email: req.body.email,
+            password: req.body.password, rePassword: req.body.rePassword, userType: `4`, lastLoginDate: new Date(),
+            lastPostTime: new Date(), userName: req.body.userName
+        };
 
         let query = `SELECT COUNT(*) AS count FROM users WHERE user_name = ? OR phone = ? OR email = ?`;
         const [createUserCheck] = await pool.query(query, [user.userName, user.phone, user.email]);
@@ -83,12 +84,12 @@ async function createUser(req, res, next) {
 }
 async function loginUser(req, res, next) {
     try {
-        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.locked,tb.url as tovit_template_url,u.tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
-                
+        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.isActive,tb.url as tovit_template_url,u.tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
+
         if (req.session?.sId) {
             query += `where u.id=?`
             const [user] = await pool.query(query, [req.session.sId])
-            if (user[0]?.locked != 0) throw new Error('Account closed')
+            if (user[0]?.isActive == 0) throw new Error('Account closed')
             req.userData = { ...user[0], password: '' };
         } else {
             const userNameOrEmail = req.body.userEmail
@@ -96,15 +97,16 @@ async function loginUser(req, res, next) {
             query += `where email=? or user_name=?`
             if (!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
             const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()])
+
+
             if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
-            if (user[0]?.locked != 0) throw new Error('Account closed')
+            if (user[0]?.isActive == 0) throw new Error('Account closed')
             req.userData = { ...user[0], password: '' }
             req.session.userType = user[0]?.user_type
             req.session.sId = user[0]?.id
         }
         query = `update users SET last_login_date = ? WHERE id = ?`
         const [user] = await pool.query(query, [new Date(), req.userData.id])
-        console.log(req.userData)
         next()
     } catch (error) {
         console.log(error);
@@ -113,7 +115,6 @@ async function loginUser(req, res, next) {
 }
 
 async function forgotPassword(req, res, next) {
-    
     try {
         let query;
         // let query = `SELECT locked FROM users WHERE id = ?;`;
@@ -128,7 +129,7 @@ async function forgotPassword(req, res, next) {
         const [user] = await pool.query(query, [userNameOrEmail, userNameOrEmail])
         if (!user.length) throw new Error('User name or email is not valid!')
 
-        query = `update users SET forget_password = ? WHERE email = ?`
+        query = `update users SET forgot_password = ? WHERE email = ?`
         const [updated] = await pool.query(query, [code, user[0].email])
 
         const info = await transporter.sendMail({
@@ -151,11 +152,13 @@ async function forgotPassword(req, res, next) {
         <p>תודה,<br>[טוב יומי]</p>
     </div>   
     </body>
-    </html>`,});
+    </html>`,
+        });
         setTimeout(async () => {
-            query = ` update users SET forget_password = NULL WHERE email = ?;`
+            query = ` update users SET forgot_password = NULL WHERE email = ?;`
             const [deleted] = await pool.query(query, [user[0].email])
-        },180000)
+        }, 180000)
+        req.userNameOrEmail = userNameOrEmail
         next()
 
     } catch (error) {
@@ -165,12 +168,12 @@ async function forgotPassword(req, res, next) {
 
 async function verifyCode(req, res, next) {
     try {
-        const userForgotCode = req.body.userForgotCode;
-        const userNameOrEmail = req.body.NameOrEmail;
-        let query = `select forget_password from users where email = ? or user_name = ?;`
+        const userForgotCode = req.query.UFC; //user code
+        const userNameOrEmail = req.query.UNOE; //user's email or username
+        let query = `select forgot_password from users where email = ? or user_name = ?;`
         const [code] = await pool.query(query, [userNameOrEmail, userNameOrEmail])
-        if (code[0].forget_password != userForgotCode) throw new Error('password incorrect')
-
+        if (code[0].forgot_password != userForgotCode) throw new Error('password incorrect')
+        //Shula - need to generate new Password for the user (digits,numbers and symbels) use use the generate password that nerya created and make it usefull for this also and not only to get 6 digits code. then update the user password (using the update middleware) and send the new password to his email. after that login the user (using middleware), dont make him do that himself, just log him in using the login middleware
         next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })

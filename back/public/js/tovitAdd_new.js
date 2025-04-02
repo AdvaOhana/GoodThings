@@ -6,52 +6,52 @@ const delIcon = '../../assets/icons/trash-can-regular.svg'
 
 const createTovitBtn = document.querySelectorAll('.create-tovit');
 
-if(createTovitBtn?.length){
-    createTovitBtn.forEach(btn=>{
-    btn.onclick= ()=>{
-        const todaysPost = JSON.parse(btn.getAttribute('data-todays-post'));
-        const userData = JSON.parse(btn.getAttribute('data-user'));
-        const bgOptArr = JSON.parse(btn.getAttribute('data-bg-options'));
-        
-        loadTovit(todaysPost,userData,bgOptArr)
+if (createTovitBtn?.length) {
+    createTovitBtn.forEach(btn => {
+        btn.onclick = () => {
+            const todaysPost = JSON.parse(btn.getAttribute('data-todays-post'));
+            const userData = JSON.parse(btn.getAttribute('data-user'));
+            const bgOptArr = JSON.parse(btn.getAttribute('data-bg-options'));
+
+            loadTovit(todaysPost, userData, bgOptArr)
         }
     })
 
 }
 
-function loadTovit(todayPost,userData,bgOptArr){ 
+function loadTovit(todayPost, userData, bgOptArr) {
     let localPostContent = window.helpers.getStorage('post-items')
     const tovitData = {
         postedToday: isToday(userData?.last_post_time),
         post: todayPost, //{background_id, background_url, id, post_content, post_date, public, user_id}
-        error:"שימו לב נדרש להזין מינימום 2 תווים",
+        error: "שימו לב נדרש להזין מינימום 2 תווים",
     }
-    if(!tovitData.postedToday){
+    if (!tovitData.postedToday) {
         tovitData.post.post_content = localPostContent || tovitData.post.post_content
     }
 
-    const bgMarkup =  bgOptArr.reduce((prev,curr,i)=>{
-        if(i === 0) return prev+`<p class="tovit-bg-small tovit-bg-dropdown def-bg bg-img-${i+1}"></p>`
-        else{
-            return prev+`<img class="tovit-bg-small tovit-bg-dropdown bg-img-${i+1}" src=${curr} alt="image-${i+1}">`
+    const bgMarkup = bgOptArr.reduce((prev, curr, i) => {
+        if (i === 0) return prev + `<p class="tovit-bg-small tovit-bg-dropdown def-bg bg-img-${i + 1}"></p>`
+        else {
+            return prev + `<img class="tovit-bg-small tovit-bg-dropdown bg-img-${i + 1}" src=${curr} alt="image-${i + 1}">`
         }
-    },"")
+    }, "")
 
     window.createModal()
     const modal = document.querySelector('.modal-content')
-    
+
     const markup = `
         <form id="things-form">
             <div class="toggle-div">
                 <span>שיתוף לכולם</span>
-                <div class="toggle-container ${tovitData.post.public ? "active-switch":""}">
-                    <div class="switch ${tovitData.post.public ? "active-toggle":""}"></div>
+                <div class="toggle-container ${tovitData.post.public ? "active-switch" : ""}">
+                    <div class="switch ${tovitData.post.public ? "active-toggle" : ""}"></div>
                 </div>
             </div>
             <div id="input-container">
                 <div class="b-and-i" id="add-thing-form">
                     <div class="floating-label-group">
-                        <input type="text" class="form-input" true="" placeholder="" false="" autofocus autocomplete="off">
+                        <input type="text" id="post-content" class="form-input" true="" placeholder="" false="" autofocus autocomplete="off">
                         <label class="floating-label ">${userData.first_name || "User"}, כתוב/י משהו טוב שקרה לך היום...</label>
                     </div>
                     <button type="button" id="add-btn">
@@ -87,134 +87,131 @@ function loadTovit(todayPost,userData,bgOptArr){
         </form>
     `
 
-modal.insertAdjacentHTML('afterbegin',markup)
-modal.style.backgroundImage = `url(${tovitData.post.background_url})`
-const form = document.getElementById('things-form');
-const submitBtn = document.querySelector('.btn.confirm');
-const addBtn = document.getElementById('add-btn');
+    modal.insertAdjacentHTML('afterbegin', markup)
+    modal.style.backgroundImage = `url(${tovitData.post.background_url})`
+    const form = document.getElementById('things-form');
+    const submitBtn = document.querySelector('.btn.confirm');
+    const addBtn = document.getElementById('add-btn');
 
-handleImgPress(modal,tovitData);
-handleDropdown();
-handleToggle(submitBtn,tovitData);
+    handleImgPress(modal, tovitData);
+    handleDropdown();
+    handleToggle(submitBtn, tovitData);
 
-form?.addEventListener('submit',(e)=>handleAdd(e,tovitData))
-addBtn?.addEventListener('click',(e)=>handleAdd(e,tovitData))
-submitBtn?.addEventListener('click',(e)=>handleSubmit(e,tovitData,userData,form))
+    form?.addEventListener('submit', (e) => handleAdd(e, tovitData))
+    addBtn?.addEventListener('click', (e) => handleAdd(e, tovitData))
+    submitBtn?.addEventListener('click', (e) => handleSubmit(e, tovitData, userData, form))
 
-
-if(tovitData?.post?.post_content?.length) updateListUI(tovitData)
+    if (tovitData?.post?.post_content?.length) updateListUI(tovitData)
 
 }
 
 
-async function handleSubmit(e,tovitData,userData,formElement){
+async function handleSubmit(e, tovitData, userData, formElement) {
     const btns = formElement.querySelectorAll('button')
     const toggleDiv = formElement.querySelector('.toggle-div')
     const toggle = document.querySelector('.toggle-container')
     const switcher = document.querySelector('.switch')
     const icons = formElement.querySelectorAll('.del-icon')
 
-    
+
     toggle.onclick = null
-    btns.forEach((btn,i)=>{
+    btns.forEach((btn, i) => {
         btn.disabled = true;
         btn.classList.remove('confirm')
         btn.classList.remove('primary')
         btn.classList.add('disabled')
-        
-        if(i === btns.length-1){
+
+        if (i === btns.length - 1) {
             const shareTo = `${tovitData.public ? 'מפרסם לכולם' : 'מפרסם לעצמי'}`
             btn.innerHTML = shareTo
-            
-            const textInterval = setInterval(()=>{
+
+            const textInterval = setInterval(() => {
                 btn.innerHTML += "."
-            },1000)
-            setTimeout(()=>clearInterval(textInterval),3000)
+            }, 1000)
+            setTimeout(() => clearInterval(textInterval), 3000)
         }
     })
-    icons.forEach(icon=>{
+    icons.forEach(icon => {
         icon.classList.add('disabled')
     })
     toggleDiv.classList.add('disabled')
     switcher.classList.add('disabled')
-  
-try {    
-    let method = tovitData.postedToday ? "PATCH" : "POST"
-    let url = tovitData.postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
-    if(tovitData.postedToday && !tovitData.post.post_content.length){
-        url = `/api/tovits/${tovitData.id}`
-        method = 'DELETE'
+
+    try {
+        let method = tovitData.postedToday ? "PATCH" : "POST"
+        let url = tovitData.postedToday ? `/api/tovits/${tovitData.id}` : `/api/tovits?userId=${userData.id}`
+        if (tovitData.postedToday && !tovitData.post.post_content.length) {
+            url = `/api/tovits/${tovitData.id}`
+            method = 'DELETE'
+        }
+        const res = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(tovitData.post)
+        })
+        if (!res.ok) {
+            throw new Error('שיתוף הפוסט נכשל, נא לנסות שוב בעוד מספר רגעים.')
+        }
+        const data = await res.json()
+        localStorage.removeItem('post-items')
+        window.helpers.toaster(data.message)
+        await window.helpers.delay(500)
+        window.location.replace('/')
+
+    } catch (error) {
+        window.helpers.toaster(error.message, 'fail')
+        window.closeModal();
     }
-    const res = await fetch(url,{
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(tovitData.post)
-    })
-    if(!res.ok){
-        throw new Error('שיתוף הפוסט נכשל, נא לנסות שוב בעוד מספר רגעים.')
-    }
-    const data = await res.json()
-    localStorage.removeItem('post-items')
-    window.helpers.toaster(data.message)
-    await window.helpers.delay(500)
-    window.location.replace('/')
-    
-} catch (error) {
-    window.helpers.toaster(error.message,'fail')
-    window.closeModal();
-}
 
 }
 
-function handleAdd(e,tovitData){    
+function handleAdd(e, tovitData) {
     e.preventDefault()
-    const input = document.querySelector('.form-input');
+    const input = document.getElementById('post-content');
     const inputVal = input.value.trim();
 
+
     if (inputVal.length < 2) {
-        tovitData.error  = "שימו לב נדרש להזין מינימום 2 תווים"
+        tovitData.error = "שימו לב נדרש להזין מינימום 2 תווים"
         handleInputError(tovitData.error)
         return
-    }else{  
-        tovitData.error  = ""
+    } else {
+        tovitData.error = ""
         handleInputError(tovitData.error)
     }
 
-
-
     tovitData.post.post_content.push(inputVal)
-    
-    localStorage.setItem("post-items",JSON.stringify(tovitData.post.post_content))
+    localStorage.setItem("post-items", JSON.stringify(tovitData.post.post_content))
 
     updateListUI(tovitData)
     window.helpers.toaster('נוסף בהצלחה')
-    input.value = ""  
+    input.value = ""
 
-    
+
 }
 
-function handleImgPress(modal,tovitData){
+function handleImgPress(modal, tovitData) {
     const dropdownImgs = modal.querySelectorAll('.tovit-bg-dropdown')
 
-    dropdownImgs.forEach((img,i)=>{
-        img.addEventListener('click',()=>{
+    dropdownImgs.forEach((img, i) => {
+        img.addEventListener('click', () => {
             modal.style.backgroundImage = `url(${img.src})`
-            tovitData.post.background = i+1
-            tovitData.post.background_url = img.src            
+            tovitData.post.background = i + 1
+            tovitData.post.background_url = img.src
         })
     })
 }
 
-function handleDropdown(){
+function handleDropdown() {
     const imageSelector = document.querySelector('.image-select')
     const imgsDropdown = document.querySelector('.image-dropdown')
 
 
     let isOpenImgs = false
 
-    imageSelector.onclick = ()=>{
+    imageSelector.onclick = () => {
         imgsDropdown.style.display = isOpenImgs ? 'none' : "flex"
         imgsDropdown.style.animation = "openImages 0.5s linear forwards";
         isOpenImgs = !isOpenImgs
@@ -222,48 +219,48 @@ function handleDropdown(){
 
 }
 
-function handleToggle(submitBtn,tovitData){
+function handleToggle(submitBtn, tovitData) {
     const toggle = document.querySelector('.toggle-container')
     const switcher = document.querySelector('.switch')
 
     toggle.onclick = () => {
-    toggle?.classList.toggle('active-switch')
-    switcher?.classList.toggle('active-toggle')
-    tovitData.post.public = !tovitData.post.public
+        toggle?.classList.toggle('active-switch')
+        switcher?.classList.toggle('active-toggle')
+        tovitData.post.public = !tovitData.post.public
 
-    submitBtn.innerHTML = tovitData.post.public ? "שמור ושתף לכולם" : "שמור ושתף"
-    window.helpers.toaster(tovitData.post.public ? "שימו לב, כולם יוכלו לראות את הטובית 🌎" : "הטובית תהיה פרטית, רק אתם תוכלו לראות אותה 🔒")
+        submitBtn.innerHTML = tovitData.post.public ? "שמור ושתף לכולם" : "שמור ושתף"
+        window.helpers.toaster(tovitData.post.public ? "שימו לב, כולם יוכלו לראות את הטובית 🌎" : "הטובית תהיה פרטית, רק אתם תוכלו לראות אותה 🔒")
     }
 
-    
+
 
 }
 
-function updateListUI(tovitData){
+function updateListUI(tovitData) {
     const allData = document.querySelector("#data-list");
     allData.innerHTML = ""
-    tovitData.post.post_content.forEach((tov,i)=>{
-    let markup = `
+    tovitData.post.post_content.forEach((tov, i) => {
+        let markup = `
     <div class="form-data-list el-${i} ">
         <p class="text">${tov}</p>
         <img src=${delIcon} class="icon-${i} icons icons-small del-icon" alt='delete' />
     </div>
     `
 
-    allData.insertAdjacentHTML('afterbegin',markup)
-    const icon = document.querySelector(`.icon-${i}`)
-    icon?.addEventListener('click',()=>handleDelete(i,tovitData))
-})    
+        allData.insertAdjacentHTML('afterbegin', markup)
+        const icon = document.querySelector(`.icon-${i}`)
+        icon?.addEventListener('click', () => handleDelete(i, tovitData))
+    })
 
 }
 
-function handleDelete(num,tovitData){
-    
-    tovitData.post.post_content.splice(num,1)
+function handleDelete(num, tovitData) {
+
+    tovitData.post.post_content.splice(num, 1)
     updateListUI(tovitData)
-    localStorage.setItem("post-items",JSON.stringify(tovitData.post.post_content))
-    window.helpers.toaster("השורה נמחקה בהצלחה, לא לשכוח לשמור את הפוסט 😉","delete")
-    
+    localStorage.setItem("post-items", JSON.stringify(tovitData.post.post_content))
+    window.helpers.toaster("השורה נמחקה בהצלחה, לא לשכוח לשמור את הפוסט 😉", "delete")
+
 }
 
 function handleInputError(text) {

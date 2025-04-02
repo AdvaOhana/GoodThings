@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov, addComment } = require("../db/models/groupModel.js")
+const { allGroups, createGroup, deleteGroup, getGroupById, getGroupByName, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov,deleteComment, addComment } = require("../db/models/groupModel.js")
 const { createTovits } = require("../db/models/tovitModel.js")
 const groupsApiRouter = Router()
 

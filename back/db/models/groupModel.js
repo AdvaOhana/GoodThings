@@ -2,7 +2,7 @@ const { pool } = require("../dbConnection.js")
 const { lettersReg } = require('../../helpers/helper.js')
 
 module.exports = {
-    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov, addComment
+    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov, addComment,deleteComment
 }
 
 async function allGroups(req, res, next) {
