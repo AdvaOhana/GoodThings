@@ -5,6 +5,8 @@ const addIcon = '../../assets/icons/plus-solid.svg'
 const delIcon = '../../assets/icons/trash-can-regular.svg'
 function loadTovit(todayPost,userData,bgOptArr){  
     const postedToday =  isToday(userData.last_post_time);
+    if(!postedToday) localStorage.removeItem('post-items') // remove all items when day has changed.
+
 console.log('====================================');
 console.log(todayPost);
 console.log(userData);

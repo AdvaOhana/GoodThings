@@ -1,10 +1,17 @@
 <%- include('./generals/pageTop') %>
 
-<main id="login-container"><div class="page-header"><h1>שכחתי סיסמה</h1></div><form class="forgot-form" method="post"><div class="floating-label-group">
-    <input type="email" class="form-input" id="email-input" placeholder="" autocomplete="email">
-    <label class="floating-label ">אימייל / שם משתמש</label>
+<main id="login-container">
+    <div class="page-header">
+        <h1>שכחתי סיסמה</h1>
     </div>
-    <button type="submit" class="btn confirm wide">איפוס סיסמה</button>
-</form></main>
+        <form class="forgot-form" method="post" action="api/users/forgot">
+
+            <div class="floating-label-group">
+                <input type="email" class="form-input" name="nameOrEmail" id="email-input" value="nopro10@gmail.com" placeholder="" autocomplete="email">
+                <label class="floating-label ">אימייל / שם משתמש</label>
+            </div>
+            <button type="submit" class="btn confirm wide">איפוס סיסמה</button>
+        </form>
+    </main>
 
 <%-include('./generals/pageBottom') %>

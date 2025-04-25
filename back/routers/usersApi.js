@@ -1,6 +1,6 @@
 const { Router } = require("express")
-const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser ,updateProfile,verifyCode
-    ,updatePassword,deleteAccount,recoveryAccount
+const { allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, updateProfile, verifyCode
+    , updatePassword, deleteAccount, recoveryAccount
 } = require("../db/models/userModel.js")
 
 
@@ -27,22 +27,23 @@ usersApiRouter.get('/logout', (req, res) => {
     });
 })
 usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
-    res.status(200).json({ message: `check your email`,data:[]});
+    res.status(302).redirect(`/codeVerify?UNOE=${req.userNameOrEmail}`);
 })
+
 usersApiRouter.post('/verifyCode', verifyCode, (req, res) => {
-    res.status(200).json({ message: `success`,data:[]});
+    res.status(200).json({ message: `success`, data: [] });
 })
 usersApiRouter.post('/updateProfile', updateProfile, (req, res) => {
-    res.status(200).json({ message: `success`,data:[]});
+    res.status(200).json({ message: `success`, data: [] });
 })
 usersApiRouter.post('/updatePassword', updatePassword, (req, res) => {
-    res.status(200).json({ message: `success`,data:[]});
+    res.status(200).json({ message: `success`, data: [] });
 })
 usersApiRouter.post('/deleteAccount', deleteAccount, (req, res) => {
-    res.status(200).json({ message: `success`,data:[]});
+    res.status(200).json({ message: `success`, data: [] });
 })
 usersApiRouter.post('/recoveryAccount', recoveryAccount, (req, res) => {
-    res.status(200).json({ message: `success`,data:[]});
+    res.status(200).json({ message: `success`, data: [] });
 })
 usersApiRouter.get('/:id', getUserById, (req, res) => {
     res.status(200).json({ message: `Found user by id:${req.params.id}`, data: req.userData })

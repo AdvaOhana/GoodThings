@@ -15,6 +15,7 @@ const bcrypt = require('bcrypt');
 
 const path = require('path');
 
+
 const { loginUser } = require('./db/models/userModel.js');
 const { getAllBgs } = require('./db/models/bgModel.js');
 const { getTovByUId } = require('./db/models/tovitModel.js');
@@ -65,14 +66,18 @@ app.get('/', loginUser, getAllBgs, threeDaysQuery, getTovByUId, async (req, res)
             background: req.userData.tovit_template,
         };
 
+   if(req.tovData?.length > 3){
+       threeDaysPosts =  req?.tovData?.slice(0,3)
+   }
+   
     res.render('homePage', {
         user: req.userData,
         threeDaysPosts,
         todaysPost,
         bgOptArr: req.allBgs,
         isSameDay: dateFns.isSameDay,
-    });
-});
+    })
+})
 
 app.get('/login', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
@@ -86,15 +91,21 @@ app.get('/forgotPassword', async (req, res) => {
     res.render('forgotPage')
 })
 
+app.get('/codeVerify', async (req, res) => {
+    if (req.session.sId) return res.redirect('/')
+    res.render('verifyCodePage')
+})
+
 app.get('/signup', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
-    res.render('signupPage', {
-        countries: await getCountries(),
-        genders: ['נקבה', 'זכר', 'אחר'],
-        days: Array.from({ length: 31 }, (el, i) => i + 1),
-        months: Array.from({ length: 12 }, (el, i) => i + 1),
-        years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
-    })
+    // res.render('signupPage', {
+    //     countries: await getCountries(),
+    //     genders: ['נקבה', 'זכר', 'אחר'],
+    //     days: Array.from({ length: 31 }, (el, i) => i + 1),
+    //     months: Array.from({ length: 12 }, (el, i) => i + 1),
+    //     years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
+    // })
+    res.render('signupPage')
 })
 app.get("*", (req, res) => {
     res.render('errorPage')

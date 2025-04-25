@@ -2,7 +2,7 @@ const { pool } = require("../dbConnection.js")
 const { lettersReg } = require('../../helpers/helper.js')
 
 module.exports = {
-    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov, addComment
+    allGroups, getGroupById, getGroupByName, deleteGroup, createGroup, updateGroup, tovitToGroup, tovitByInfo, deleteGroupsTov, addComment,deleteComment
 }
 
 async function allGroups(req, res, next) {
@@ -189,7 +189,6 @@ async function addComment(req, res, next) {
     try {
         const comment = req.body.comment
         const user_id = req.session?.sId
-        console.log(comment);
 
         if (lettersReg.test(user_id)) throw Error(`Id is not valid, please check again`)
 
@@ -198,6 +197,30 @@ async function addComment(req, res, next) {
         req.createdComment = results.insertId
 
         next();
+    } catch (error) {
+        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+    }
+}
+async function deleteComment(req, res, next) {
+    try {
+        const commentId = req.params.commentId
+        const user_id = req.body.user_id
+        const group_id = req.params.groupId
+
+        const manager_id = `select manager_id from all_groups where id= ${group_id}`
+
+        if (lettersReg.test(commentId)) throw Error(`Id is not valid, please check again`)
+        if (req.session.user_type !== 1 && req.session.user_type !== 2) {
+            if (user_id !== req.session.sId && req.session.sId !== manager_id) throw new Error("no premision");
+        }
+
+        const [results] = await pool.query(`delete from comments where id = ${commentId}`)
+        console.log(results);
+
+        if (!results.affectedRows) throw Error(`comment already deleted`)
+
+
+        next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
