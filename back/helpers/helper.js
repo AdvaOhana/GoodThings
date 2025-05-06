@@ -1,12 +1,39 @@
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
 const dotenv = require('dotenv');
 dotenv.config()
-const { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER } = process.env
+const { EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT, EMAIL_USER, SALT_ROUNDS } = process.env
 
 const lettersReg = /[a-zA-Z]/
 const phoneReg = /^05[0-9]\d{7}$/
 const mailReg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 const passwordReg = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+
+
+async function encryptPassword(password) {
+    try {
+        if (!passwordReg.test(password)) throw new Error('Weak Password');
+
+        const hashPassword = await bcrypt.hash(password, Number(SALT_ROUNDS));
+
+        return { status: true, hashPassword };
+    } catch (err) {
+        console.log(err);
+        return { status: false };
+    }
+}
+
+async function checkEncryptPassword(password, hash) {
+    try {
+        const result = await bcrypt.compare(password, hash);
+        return result;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
 
 
 const generateCode = () => {
@@ -53,5 +80,5 @@ async function getCountries() {
 
 
 module.exports = {
-    lettersReg, generateCode, getCountries, transporter,phoneReg,mailReg,passwordReg
+    lettersReg, generateCode, getCountries, transporter, phoneReg, mailReg, encryptPassword, checkEncryptPassword
 }

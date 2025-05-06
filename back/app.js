@@ -10,8 +10,11 @@ const { groupsRouter } = require('./routers/groups.js');
 const { groupsApiRouter } = require('./routers/groupsApi.js');
 const { tovitsApiRouter } = require('./routers/tovitsApi.js');
 const { threeDaysQuery } = require('./middlewares/dataHelperMid.js')
+const bcrypt = require('bcrypt');
+
 
 const path = require('path');
+
 
 const { loginUser } = require('./db/models/userModel.js');
 const { getAllBgs } = require('./db/models/bgModel.js');
@@ -46,15 +49,22 @@ app.use('/api/tovits', tovitsApiRouter)
 
 
 app.get('/', loginUser, getAllBgs, threeDaysQuery, getTovByUId, async (req, res) => {
-    if (!req.session.sId) return res.redirect('/login')
-    let threeDaysPosts = req?.tovData
+    if (!req.session.sId) return res.redirect('/login');
 
+    let threeDaysPosts = req?.tovData ?? [];
 
-    let todaysPost = dateFns.isSameDay(threeDaysPosts[0]?.post_date, new Date()) ? threeDaysPosts[0] : {
-        public: 0,
-        post_content: [],
-        background: req.userData.tovit_template,
-    };
+    if (threeDaysPosts.length > 3) {
+        threeDaysPosts = threeDaysPosts.slice(0, 3);
+    }
+
+    const firstPost = threeDaysPosts[0];
+    let todaysPost = (firstPost?.post_date && dateFns.isSameDay(firstPost.post_date, new Date()))
+        ? firstPost
+        : {
+            public: 0,
+            post_content: [],
+            background: req.userData.tovit_template,
+        };
 
     if (req.tovData?.length > 3) {
         threeDaysPosts = req?.tovData?.slice(0, 3)
@@ -80,6 +90,7 @@ app.get('/forgotPassword', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
     res.render('forgotPage')
 })
+
 app.get('/codeVerify', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
     res.render('verifyCodePage')

@@ -1,6 +1,5 @@
 const { pool } = require("../dbConnection.js");
-const { lettersReg, generateCode, transporter } = require("../../helpers/helper.js");
-const { phoneReg, passwordReg } = require("../../helpers/helper");
+const { lettersReg, generateCode, transporter, phoneReg, encryptPassword, checkEncryptPassword } = require("../../helpers/helper.js");
 const { EMAIL_USER } = process.env
 
 async function allUsers(req, res, next) {
@@ -39,10 +38,14 @@ async function getUserByName(req, res, next) {
 }
 async function createUser(req, res, next) {
     try {
+        const password = await encryptPassword(req.body.password);
+        if (!password.status) throw Error(`Password is invalid.`)
+
         const user = {
             fName: req.body.fName, lName: req.body.lName, email: req.body.email,
-            password: req.body.password, rePassword: req.body.rePassword, userType: `4`, lastLoginDate: new Date(),
-            lastPostTime: new Date(), userName: req.body.userName
+            password: password.hashPassword, phone: req.body.phone, country: req.body.country,
+            bio: req.body.bio, image: req.body.image, userType: `4`, lastLoginDate: new Date(),
+            loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName, isActive: `0`
         };
 
         let query = `SELECT COUNT(*) AS count FROM users WHERE user_name = ? OR phone = ? OR email = ?`;
@@ -52,12 +55,11 @@ async function createUser(req, res, next) {
             return res.status(400).json({ message: 'Username, phone number or email already exists in the system.' });
         }
 
-        query = `
-    INSERT INTO users (
-        user_type, email, password, first_name, last_name, phone, 
-        country, img_path, bio, last_login_date, login_cnt, 
-        last_post_time, tovit_template, user_name
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        query = `   INSERT INTO users (
+        user_type, email, password, first_name, last_name, phone,
+        country, img_path, bio, last_login_date, login_cnt,
+        last_post_time, tovit_template, user_name, isActive
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
         const values = [
             user.userType,
@@ -73,7 +75,8 @@ async function createUser(req, res, next) {
             user.loginCnt,
             user.lastPostTime,
             user.tovitTemplate,
-            user.userName
+            user.userName,
+            user.isActive
         ];
 
         const [results] = await pool.query(query, values);
@@ -84,29 +87,35 @@ async function createUser(req, res, next) {
 }
 async function loginUser(req, res, next) {
     try {
-        let query = `select u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.isActive,tb.url as tovit_template_url,u.tovit_template from users as u join tovit_backgrounds as tb on u.tovit_template = tb.id `
+        let query = `SELECT u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.isActive,tb.url AS tovit_template FROM users AS u JOIN tovit_backgrounds AS tb ON u.tovit_template = tb.id`;
 
+        
         if (req.session?.sId) {
-            query += `where u.id=?`
-            const [user] = await pool.query(query, [req.session.sId])
-            if (user[0]?.isActive == 0) throw new Error('Account closed')
+            query += ` WHERE u.id=?`;
+            const [user] = await pool.query(query, [req.session.sId]);
+            if (user[0]?.isActive != 0) throw new Error('Account closed')
             req.userData = { ...user[0], password: '' };
         } else {
-            const userNameOrEmail = req.body.userEmail
+            const userNameOrEmail = req.body.userEmail;
             const userPassword = req.body.userPassword
-            query += `where email=? or user_name=?`
+
             if (!userNameOrEmail || !userPassword) throw new Error('Some information is missing!')
-            const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()])
+            query += ` WHERE u.email = ? OR u.user_name = ?`;
+            const [user] = await pool.query(query, [userNameOrEmail.trim(), userNameOrEmail.trim()]);
 
+            if (!user.length) throw new Error('Login failed: User not found');
 
-            if (!user.length || user[0].password !== userPassword.trim()) throw Error(`login faild`)
-            if (user[0]?.isActive == 0) throw new Error('Account closed')
-            req.userData = { ...user[0], password: '' }
-            req.session.userType = user[0]?.user_type
-            req.session.sId = user[0]?.id
+            const isPasswordCorrect = await checkEncryptPassword(userPassword.trim(), user[0].password);
+            if (!isPasswordCorrect) throw new Error('Login failed: Incorrect password');
+
+            if (user[0]?.isActive != 0) throw new Error('Account closed')
+
+            req.userData = { ...user[0], password: '' };
+            req.session.userType = user[0]?.user_type;
+            req.session.sId = user[0]?.id;
         }
-        query = `update users SET last_login_date = ? WHERE id = ?`
-        const [user] = await pool.query(query, [new Date(), req.userData.id])
+        const updateQuery = `UPDATE users SET last_login_date = ? WHERE id = ?`;
+        const [user] = await pool.query(updateQuery, [new Date(), req.userData.id])
         next()
     } catch (error) {
         console.log(error);
@@ -116,10 +125,9 @@ async function loginUser(req, res, next) {
 
 async function forgotPassword(req, res, next) {
     try {
-        let query;
-        // let query = `SELECT locked FROM users WHERE id = ?;`;
-        // const [checkLocked] = await pool.query(query, [req.session.sId]);
-        // if (checkLocked[0].isActive != 0) throw new Error('Account closed')
+        let query = `SELECT isActive FROM users WHERE id = ?;`;
+        const [checkLocked] = await pool.query(query, [req.session.sId]);
+        if (checkLocked[0].isActive != 0) throw new Error('Account closed')
 
         const userNameOrEmail = req.body.nameOrEmail;
         if (!userNameOrEmail.length) throw new Error('User name or email is not valid!')
@@ -165,7 +173,6 @@ async function forgotPassword(req, res, next) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
-
 async function verifyCode(req, res, next) {
     try {
         const userForgotCode = req.query.UFC; //user code
@@ -181,9 +188,9 @@ async function verifyCode(req, res, next) {
 }
 async function updateProfile(req, res, next) {
     try {
-        let query = `SELECT locked FROM users WHERE id = ?;`;
+        let query = `SELECT isActive FROM users WHERE id = ?;`;
         const [checkLocked] = await pool.query(query, [req.session.sId]);
-        if (checkLocked[0].locked != 0) throw new Error('Account closed')
+        if (checkLocked[0].isActive != 0) throw new Error('Account closed')
 
         const userName = req.body.userName;
         const firstName = req.body.firstName;
@@ -222,10 +229,10 @@ async function updateProfile(req, res, next) {
 }
 async function updatePassword(req, res, next) {
     try {
-        const password = req.body.password;
-        if (!passwordReg.test(password)) throw new Error('Weak Password');
+        const password = await encryptPassword(req.body.password);
+        const userNameOrEmail = req.body.NameOrEmail;
 
-        let query = `update users SET password = ${password} WHERE email = ? or user_name = ? or id = ?`
+        let query = `update users SET password = '${password.hashPassword}' WHERE email = ? or user_name = ? or id = ?`
         const [changePassword] = await pool.query(query, [userNameOrEmail, userNameOrEmail, req.session.sId]);
 
         next()
@@ -235,7 +242,7 @@ async function updatePassword(req, res, next) {
 }
 async function deleteAccount(req, res, next) {
     try {
-        let query = `UPDATE users SET locked = 1 WHERE id = ?;`
+        let query = `UPDATE users SET isActive = 1 WHERE id = ?;`
         const [recovery] = await pool.query(query, [req.session.sId]);
 
         next()
@@ -245,7 +252,7 @@ async function deleteAccount(req, res, next) {
 }
 async function recoveryAccount(req, res, next) {
     try {
-        let query = `UPDATE users SET locked = 0 WHERE id = ?;`
+        let query = `UPDATE users SET isActive = 0 WHERE id = ?;`
         const [recovery] = await pool.query(query, [req.session.sId]);
 
         next()
@@ -261,11 +268,8 @@ async function getUserByEmail(email) {
     return user.at(0)
 }
 
-
 module.exports =
-{
+    {
     allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, verifyCode, updateProfile,
     updatePassword, deleteAccount, recoveryAccount, getUserByEmail
-}
-
-
+    }
