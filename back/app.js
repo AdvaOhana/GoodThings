@@ -49,6 +49,7 @@ app.get('/', loginUser, getAllBgs, threeDaysQuery, getTovByUId, async (req, res)
     if (!req.session.sId) return res.redirect('/login')
     let threeDaysPosts = req?.tovData
 
+
     let todaysPost = dateFns.isSameDay(threeDaysPosts[0]?.post_date, new Date()) ? threeDaysPosts[0] : {
         public: 0,
         post_content: [],

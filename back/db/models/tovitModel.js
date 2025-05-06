@@ -9,6 +9,7 @@ module.exports = {
 async function createTovits(req, res, next) {
     try {
 
+        console.log("AS");
 
         const tovit = {
             user_id: +req.session.sId || 7, //number user for tests
@@ -20,6 +21,7 @@ async function createTovits(req, res, next) {
 
         let query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
+        console.log(query);
 
 
         const values = [
@@ -80,7 +82,8 @@ async function editTovit(req, res, next) {
         const newBackground = req.body.background
 
 
-        const [results] = await pool.query(`update posts set post_content = '${newPostContent}', public = ${isPublic}, background = ${newBackground} where id = ${id}`)
+        const data = [JSON.stringify(newPostContent), isPublic, newBackground, id]
+        const [results] = await pool.query(`update posts set post_content = ?, public = ?, background = ? where id = ?`, data)
 
         if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
         req.editedContent = results;
@@ -96,12 +99,14 @@ async function deleteTovit(req, res, next) {
         const id = req.params.id
 
         if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
-
+        const [resUser] = await pool.query(`select user_id from posts where id = ${id}`)
+        const [resDate] = await pool.query(`update users set last_post_time = '1111-01-01' where id = ${resUser.at(0).user_id}`)
         const [results] = await pool.query(`delete from posts where id = ${id}`)
 
         req.hasDeleted = results;
         next()
     } catch (error) {
+        console.log(error);
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
