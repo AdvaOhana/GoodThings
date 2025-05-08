@@ -89,6 +89,7 @@ async function loginUser(req, res, next) {
     try {
         let query = `SELECT u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.isActive,tb.url AS tovit_template FROM users AS u JOIN tovit_backgrounds AS tb ON u.tovit_template = tb.id`;
 
+        
         if (req.session?.sId) {
             query += ` WHERE u.id=?`;
             const [user] = await pool.query(query, [req.session.sId]);
@@ -128,7 +129,7 @@ async function forgotPassword(req, res, next) {
     try {
         let query = `SELECT isActive FROM users WHERE id = ?;`;
         const [checkLocked] = await pool.query(query, [req.session.sId]);
-        if (checkLocked[0].isActive != 0) throw new Error('Account closed')
+        if (checkLocked[0]?.isActive == 0) throw new Error('Account closed')
 
         const userNameOrEmail = req.body.nameOrEmail;
         if (!userNameOrEmail.length) throw new Error('User name or email is not valid!')
@@ -274,7 +275,7 @@ async function getUserByEmail(email) {
 }
 
 module.exports =
-    {
+{
     allUsers, createUser, forgotPassword, getUserById, getUserByName, loginUser, verifyCode, updateProfile,
     updatePassword, deleteAccount, recoveryAccount, getUserByEmail
-    }
+}
