@@ -9,7 +9,6 @@ module.exports = {
 async function createTovits(req, res, next) {
     try {
 
-        console.log("AS");
 
         const tovit = {
             user_id: +req.session.sId || 7, //number user for tests
@@ -21,7 +20,6 @@ async function createTovits(req, res, next) {
 
         let query =
             `INSERT INTO posts (user_id, post_date, public, post_content,background) values (?,?,?,?,?)`
-        console.log(query);
 
 
         const values = [
@@ -73,24 +71,29 @@ async function getTovitsById(req, res, next) {
 }
 async function editTovit(req, res, next) {
     try {
-        //Adva: Need to make sure that only the creator of the post allow to change it.
         const id = req.params.id;
         if (lettersReg.test(id)) throw Error(`Id is not valid, please check again`)
 
+        const user_id = req.session.sId
         const isPublic = req.body.public
         const newPostContent = req.body.post_content
         const newBackground = req.body.background
 
+        console.log(req.session);
 
         const data = [JSON.stringify(newPostContent), isPublic, newBackground, id]
+        const [user] = await pool.query(`select user_id from posts where id = ${id}`)
+        console.log(user_id, user[0].user_id);
+
+        // if (user_id === user[0].user_id) {
         const [results] = await pool.query(`update posts set post_content = ?, public = ?, background = ? where id = ?`, data)
 
         if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
         req.editedContent = results;
         next()
+        // }
     } catch (error) {
         console.log(error);
-
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }
