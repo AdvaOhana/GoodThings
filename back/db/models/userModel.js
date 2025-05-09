@@ -89,7 +89,7 @@ async function loginUser(req, res, next) {
     try {
         let query = `SELECT u.id,u.user_type,u.email,u.password, u.first_name,u.last_name,u.phone,u.country, u.img_path,u.last_login_date,u.login_cnt, u.last_post_time,u.user_name,u.defIsPublic, u.defTheme,u.isActive,tb.url AS tovit_template FROM users AS u JOIN tovit_backgrounds AS tb ON u.tovit_template = tb.id`;
 
-        
+
         if (req.session?.sId) {
             query += ` WHERE u.id=?`;
             const [user] = await pool.query(query, [req.session.sId]);
@@ -181,13 +181,12 @@ async function verifyCode(req, res, next) {
         const userNameOrEmail = req.query.UNOE; //user's email or username
         let query = `select id, forgot_password from users where email = ? or user_name = ?;`
         const [code] = await pool.query(query, [userNameOrEmail, userNameOrEmail])
-        if (code[0].forgot_password === userForgotCode){
+        if (code[0].forgot_password === +userForgotCode) {
             req.session.tempId = code[0].id;
         }
         else {
             throw new Error('password incorrect')
         }
-
         next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })

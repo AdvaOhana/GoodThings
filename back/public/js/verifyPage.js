@@ -7,9 +7,13 @@ async function handleSubmit(event) {
 
     const params = new URLSearchParams(window.location.search);
     params.set('UFC', code)
-    const res = await fetch(`api/users/verifyCode?${params.toString()}`)
-    const data = await res.json();
-    console.log(data);
+    const res = await fetch(`api/users/verifyCode?${params.toString()}`, {
+        method: 'POST', headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    // const data = await res.json();
+    // console.log(data);
 
 }
 

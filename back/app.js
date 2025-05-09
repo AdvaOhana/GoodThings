@@ -96,6 +96,11 @@ app.get('/codeVerify', async (req, res) => {
     res.render('verifyCodePage')
 })
 
+app.get('/resetPassword', async (req, res) => {
+    if (req.session.sId) return res.redirect('/')
+    res.render('resetPassword')
+})
+
 app.get('/signup', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
     // res.render('signupPage', {
