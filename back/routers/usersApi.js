@@ -31,7 +31,7 @@ usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
 })
 
 usersApiRouter.post('/verifyCode', verifyCode, (req, res) => {
-    res.status(200).json({ message: `success`, data: [] });
+    res.status(302).redirect(`/resetPassword`);
 })
 usersApiRouter.post('/updateProfile', updateProfile, (req, res) => {
     res.status(200).json({ message: `success`, data: [] });
