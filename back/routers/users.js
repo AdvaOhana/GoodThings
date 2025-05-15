@@ -10,14 +10,22 @@ const { getCountries } = require("../helpers/helper.js");
 const usersRouter = Router()
 usersRouter.get('/profile', loginUser, getAllBgs, threeDaysQuery, getTovByUId, async (req, res) => {
 
-    let threeDaysPosts = req?.tovData
-    let todaysPost = dateFns.isSameDay(threeDaysPosts[0]?.post_date, new Date()) ? threeDaysPosts[0] : {
-        public: 0,
-        post_content: [],
-        background: req.userData.tovit_template,
-    };
 
-    console.log(todaysPost);
+    let threeDaysPosts = req?.tovData ?? [];
+
+    if (threeDaysPosts.length > 3) {
+        threeDaysPosts = threeDaysPosts.slice(0, 3);
+    }
+
+    const firstPost = threeDaysPosts[0];
+    let todaysPost = (firstPost?.post_date && dateFns.isSameDay(firstPost.post_date, new Date()))
+        ? firstPost
+        : {
+            public: 0,
+            post_content: [],
+            background: req.userData.tovit_template,
+        };
+
 
     res.render('userPages/profilePage',
         {
@@ -27,7 +35,6 @@ usersRouter.get('/profile', loginUser, getAllBgs, threeDaysQuery, getTovByUId, a
             active: req.url,
             countries: await getCountries(),
             title: "פרופיל אישי"
-
         }
     )
 })

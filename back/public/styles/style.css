@@ -155,10 +155,10 @@ select:focus {
 
 #root{
     direction: rtl;
-    height: 100dvh;
+    min-height: 100dvh;
     display: grid;
     grid-template-rows: auto 1fr auto;
-    overflow: hidden;
+    /* overflow: hidden; */
     background-color: var(--color-grey-200);
     color: var(--color-grey-900);
     transition: ease-in-out color 0.3s, background-color 0.5s;
@@ -786,12 +786,18 @@ overflow-x: auto;
     justify-content: space-between;
     gap: 10px;
 }
-#hamburger {
-    display: block;
-    background: transparent;
-    border: none;
-    cursor: pointer;
+
+
+
+.menu-logo{
+    display: none;
 }
+
+
+
+
+
+
 .bar {
     display: block;
     width: 28px;
@@ -847,9 +853,27 @@ overflow-x: auto;
     outline: none;
 }
 
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 4px; }
+
+ .hamburger div { width: 25px; height: 3px; background: #333; transition: all 0.3s; }
+
+        .hamburger-nav{
+        display: none;
+        }
 
 
 @media only screen and (max-width: 786px) {
+    #data-continer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    /* gap: 1rem; */
+    /* padding: 2rem; */
+}
+    .hamburger { display: flex; align-items: center; }
+
     .btn{
         padding:7px 10px;
         font-size: .8rem;
@@ -888,15 +912,40 @@ overflow-x: auto;
     input:not(:placeholder-shown) ~ .floating-label {
         font-size: .6rem;
     }
+
+    .thing-info{
+    margin: 1rem;
+    height: 450px;
+    width: 70%;
     }
-    
-    
-    @media only screen and (max-width: 600px) {
-        #logo{
-            height: 80px;
-            width: 100px;
+            #logo{
+          display: none;
         }
+        #menu-bar{display: none;}
         .nav-list {
             display: none;
+        }
+        .hamburger-logo{
+            width: 70px;
+            height: 70px;
+        }
+
+        .hamburger-nav{
+            background-color: red;
+            z-index: 40;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            display: none ;
+        }
+
+        .active-hamburger{
+        display: flex;
+        }
+        .hamburger-list li{
+            margin: 1rem;
+            cursor: pointer;
         }
     }

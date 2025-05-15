@@ -4,15 +4,30 @@
         <ul class="nav-list">
             <li><a data-link href="/">בית</a></li>
             <li><a class="create-tovit" id="create-tovit" data-todays-post='<%- JSON.stringify(todaysPost) %>' data-user='<%- JSON.stringify(user) %>' data-bg-options='<%- JSON.stringify(bgOptArr) %>'>הוסף טובית</a></li>
-            <li><a data-link href="/login">התחברות</a></li>
-            <li><a data-link href="/error">שגיאה</a></li>
         </ul>
+       
+    </nav>
+
+            <div class="hamburger">
+            <div class="line-hamburger"></div>
+            <div class="line-hamburger"></div>
+            <div class="line-hamburger"></div>
+            </div>
+            
+            <nav class="hamburger-nav">
+             <ul class="hamburger-list">
+                <li>
+    <img src="/assets/imgs/logo.png" alt="img"class="hamburger-logo"  srcset="">                </li>
+            <li><a data-link href="/">בית</a></li>
+            <li><a class="create-tovit" id="create-tovit" data-todays-post='<%- JSON.stringify(todaysPost) %>' data-user='<%- JSON.stringify(user) %>' data-bg-options='<%- JSON.stringify(bgOptArr) %>'>הוסף טובית</a></li>
+        </ul>
+
     </nav>
     <div id="actions-container">
         <div class="user-actions-container">
             <img  src="/assets/icons/user-regular.svg" alt="user" id="user-actions" class="icons icons-primary">
             <div class="user-btns">
-                <a href="/users/profile" class="user-btn" >פרופיל אישי</a>
+                <!-- <a href="/users/profile" class="user-btn" >פרופיל אישי</a> -->
                 <p id="logout" class="user-btn" onclick="logout()">
                 <span>התנתקות</span>
                 <img  src="/assets/icons/arrow-right-from-bracket-solid.svg" alt="logout" class="icons icons-primary">

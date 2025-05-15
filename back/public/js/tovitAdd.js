@@ -12,7 +12,6 @@ if (createTovitBtn?.length) {
             const todaysPost = JSON.parse(btn.getAttribute('data-todays-post'));
             const userData = JSON.parse(btn.getAttribute('data-user'));
             const bgOptArr = JSON.parse(btn.getAttribute('data-bg-options'));
-
             loadTovit(todaysPost, userData, bgOptArr)
         }
     })
@@ -86,7 +85,7 @@ function loadTovit(todayPost, userData, bgOptArr) {
                                 </div>
                                 <div>
                     <button type="reset" class="btn primary">ביטול</button>
-                    <button type="button" class="btn confirm">${tovitData?.public ? "שמור ושתף לכולם" : "שמור ושתף"}</button>
+                    <button type="button" id="btn-create" class="btn confirm">${tovitData?.public ? "שמור ושתף לכולם" : "שמור ושתף"}</button>
                 </div>
             </div>
         </form>
@@ -95,8 +94,9 @@ function loadTovit(todayPost, userData, bgOptArr) {
     modal.insertAdjacentHTML('afterbegin', markup)
     modal.style.backgroundImage = `url(${tovitData.post.background_url})`
     const form = document.getElementById('things-form');
-    const submitBtn = document.querySelector('.btn.confirm');
+    const submitBtn = document.getElementById('btn-create');
     const addBtn = document.getElementById('add-btn');
+
 
     handleImgPress(modal, tovitData);
     handleDropdown();
@@ -117,7 +117,6 @@ async function handleSubmit(e, tovitData, userData, formElement) {
     const toggle = document.querySelector('.toggle-container')
     const switcher = document.querySelector('.switch')
     const icons = formElement.querySelectorAll('.del-icon')
-
 
     toggle.onclick = null
     btns.forEach((btn, i) => {

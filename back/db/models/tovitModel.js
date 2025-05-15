@@ -9,13 +9,14 @@ module.exports = {
 async function createTovits(req, res, next) {
     try {
 
+        console.log(req.body);
 
         const tovit = {
-            user_id: +req.session.sId || 7, //number user for tests
+            user_id: +req.session.sId, //number user for tests
             post_date: new Date().toISOString().split("T").at(0),
             public: req.body.public,
             post_content: JSON.stringify(req.body.post_content),
-            background: +req.body.background || null
+            background: +req.body.background || 1
         }
 
         let query =
@@ -77,21 +78,21 @@ async function editTovit(req, res, next) {
         const user_id = req.session.sId
         const isPublic = req.body.public
         const newPostContent = req.body.post_content
-        const newBackground = req.body.background
-
-        console.log(req.session);
+        const newBackground = +req.body.background
 
         const data = [JSON.stringify(newPostContent), isPublic, newBackground, id]
         const [user] = await pool.query(`select user_id from posts where id = ${id}`)
-        console.log(user_id, user[0].user_id);
 
-        // if (user_id === user[0].user_id) {
-        const [results] = await pool.query(`update posts set post_content = ?, public = ?, background = ? where id = ?`, data)
+        if (user_id === user[0].user_id) {
+            const [results] = await pool.query(`update posts set post_content = ?, public = ?, background = ? where id = ?`, data)
 
-        if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
-        req.editedContent = results;
-        next()
-        // }
+            if (results.affectedRows === 0) throw Error('Failed to update, please check the id.')
+            req.editedContent = results;
+            next()
+        }
+        else {
+            throw new Error("Not allowed")
+        }
     } catch (error) {
         console.log(error);
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
@@ -121,7 +122,7 @@ async function getTovByUId(req, res, next) {
 
 
         if (lettersReg.test(userId)) throw Error(`Id is not valid, please check again`)
-        let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background_url,tb.url as background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
+        let sql = `Select p.id,p.user_id,p.post_date,p.public,p.post_content,tb.url as background_url, background from posts as p left join tovit_backgrounds as tb on p.background = tb.id WHERE `
 
         if (tovDate.startDate && tovDate.endDate) {
             if (dateFns.isBefore(tovDate.startDate, tovDate.endDate) || dateFns.isEqual(tovDate.startDate, tovDate.endDate)) {
@@ -135,7 +136,10 @@ async function getTovByUId(req, res, next) {
         queryParams.push(userId)
         sql += ' p.user_id = ? order by post_date desc'
         const [results] = await pool.query(sql, queryParams);
+        results.forEach(r => r.post_content = JSON.parse(r.post_content))
         req.tovData = results;
+
+
         next()
 
     } catch (error) {
