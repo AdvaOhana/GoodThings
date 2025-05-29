@@ -12,8 +12,8 @@ const groupsRouter = Router({ mergeParams: true })
 usersApiRouter.get('/all', allUsers, (req, res) => {
     res.status(200).json({ message: 'Found users', data: req.allUsers })
 })
-usersApiRouter.post('/sign-up', createUser, (req, res) => {
-    res.status(200).json({ message: `${req.body.fName} your account created successfully`, data: [] })
+usersApiRouter.post('/sign-up', createUser,loginUser, (req, res) => {
+    res.status(302).redirect('/')
 })
 usersApiRouter.post('/login', loginUser, (req, res) => {
     res.status(302).redirect('/')

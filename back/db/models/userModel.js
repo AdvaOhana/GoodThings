@@ -45,7 +45,7 @@ async function createUser(req, res, next) {
             fName: req.body.fName, lName: req.body.lName, email: req.body.email,
             password: password.hashPassword, phone: req.body.phone, country: req.body.country,
             bio: req.body.bio, image: req.body.image, userType: `4`, lastLoginDate: new Date(),
-            loginCnt: `0`, lastPostTime: new Date(), tovitTemplate: `1`, userName: req.body.userName, isActive: `0`
+            loginCnt: `0`, lastPostTime: new Date(0), tovitTemplate: `1`, userName: req.body.userName, isActive: `0`
         };
 
         let query = `SELECT COUNT(*) AS count FROM users WHERE user_name = ? OR phone = ? OR email = ?`;
@@ -80,6 +80,10 @@ async function createUser(req, res, next) {
         ];
 
         const [results] = await pool.query(query, values);
+
+        req.body.userEmail = req.body.email;
+        req.body.userPassword = req.body.password;
+
         next()
     } catch (error) {
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
