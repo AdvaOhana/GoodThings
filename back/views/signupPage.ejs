@@ -30,8 +30,14 @@
                 <input type="email" class="form-input" name="email"  placeholder=""  autocomplete="email" />
                 <label class="floating-label">אימייל</label>
             </div>
-                <% if(querys?.success) {%>
-                <p class="error">שגיאה בהתחברות, בדוק/י את שם המשתמש או הסיסמה</p>
+                <% if(querys.success === 'password') {%>
+                <p class="error">הסיסמה שהזנת אינה תקינה, על הסיסמה להכיל <br> 8 תווים <br> מתוכם אות גדולה ואות קטנה באנגלית</p>
+                <% }%>
+                 <% if(querys.success === 'exist') {%>
+                <p class="error">המשתמש שניסתם ליצור כבר קיים, שכחתם את הסיסמה? <br>
+                <a href="/forgotPassword">לחצו כאן</a>
+                
+                </p>
                 <% }%>
             <button type="submit" class="btn confirm wide">הרשמה</button>
             <div class="user-actions">

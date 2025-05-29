@@ -103,17 +103,8 @@ app.get('/resetPassword', async (req, res) => {
 
 app.get('/signup', async (req, res) => {
     if (req.session.sId) return res.redirect('/')
-    // res.render('signupPage', {
-    //     countries: await getCountries(),
-    //     genders: ['נקבה', 'זכר', 'אחר'],
-    //     days: Array.from({ length: 31 }, (el, i) => i + 1),
-    //     months: Array.from({ length: 12 }, (el, i) => i + 1),
-    //     years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
-    // })
-    console.log(req.query);
-
     res.render('signupPage', {
-        querys: req?.query
+        querys: req.query
     })
 })
 app.get("*", (req, res) => {

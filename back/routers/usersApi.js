@@ -12,7 +12,7 @@ const groupsRouter = Router({ mergeParams: true })
 usersApiRouter.get('/all', allUsers, (req, res) => {
     res.status(200).json({ message: 'Found users', data: req.allUsers })
 })
-usersApiRouter.post('/sign-up', createUser,loginUser, (req, res) => {
+usersApiRouter.post('/sign-up', createUser, loginUser, (req, res) => {
     res.status(302).redirect('/')
 })
 usersApiRouter.post('/login', loginUser, (req, res) => {
@@ -31,13 +31,13 @@ usersApiRouter.post('/forgot', forgotPassword, (req, res) => {
 })
 
 usersApiRouter.post('/verifyCode', verifyCode, (req, res) => {
-    res.status(302).redirect(`/resetPassword`);
+    res.status(200).json({ redirectUrl: '/resetPassword' })
 })
 usersApiRouter.post('/updateProfile', updateProfile, (req, res) => {
     res.status(200).json({ message: `success`, data: [] });
 })
 usersApiRouter.post('/updatePassword', updatePassword, (req, res) => {
-    res.status(200).json({ message: `success`, data: [] });
+    res.status(200).json({ redirectUrl: '/' })
 })
 usersApiRouter.post('/deleteAccount', deleteAccount, (req, res) => {
     res.status(200).json({ message: `success`, data: [] });

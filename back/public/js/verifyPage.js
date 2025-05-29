@@ -12,8 +12,10 @@ async function handleSubmit(event) {
             'Content-Type': 'application/json',
         },
     })
-    // const data = await res.json();
-    // console.log(data);
+    const data = await res.json();
+    console.log(data.redirectUrl);
+
+    document.location.replace(data.redirectUrl ?? '/')
 
 }
 
@@ -56,3 +58,31 @@ if (window.location.pathname.toLocaleLowerCase() === '/codeverify') {
 }
 
 
+
+if (window.location.pathname.toLocaleLowerCase() === '/resetpassword') {
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector('.update-form');
+        const inputs = document.querySelectorAll('input')
+        console.log(form);
+        form.addEventListener('submit', handleResetPassword)
+
+
+
+        async function handleResetPassword(event) {
+            event.preventDefault();
+            if (inputs[0].value !== inputs[1].value) {
+                return
+            }
+            console.log(inputs[0].value);
+
+            const res = await fetch('/api/users/updatePassword', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: inputs[0].value })
+            })
+            const data = await res.json()
+            console.log(data.redirectUrl);
+            document.location.replace(data.redirectUrl ?? '/')
+        }
+    })
+}
