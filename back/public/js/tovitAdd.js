@@ -23,7 +23,6 @@ function loadTovit(todayPost, userData, bgOptArr) {
     const postBg = todayPost.background === ' ' ? userData.tovit_template : todayPost.background
     todayPost.background = postBg
 
-
     const tovitData = {
         postedToday: isToday(userData?.last_post_time),
         post: todayPost, //{background, background_url, id, post_content, post_date, public, user_id}

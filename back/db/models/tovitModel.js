@@ -136,10 +136,12 @@ async function getTovByUId(req, res, next) {
         queryParams.push(userId)
         sql += ' p.user_id = ? order by post_date desc'
         const [results] = await pool.query(sql, queryParams);
-        results.forEach(r => r.post_content = JSON.parse(r.post_content))
+
+        results.forEach(r => {
+            if (Array.isArray(r.post_content)) return
+            r.post_content = JSON.parse(r.post_content)
+        })
         req.tovData = results;
-
-
         next()
 
     } catch (error) {

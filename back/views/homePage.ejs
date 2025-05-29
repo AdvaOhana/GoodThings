@@ -9,7 +9,7 @@
     </div>
     <% } else { threeDaysPosts.forEach(post=>{ %>
         <% if(!post.post_content.length) return %>
-        <div class="thing-info" style="background-image: url('<%= post.background %>');">
+        <div class="thing-info" style="background-image: url('<%= post.background_url %>');">
         <ul>
             <% post.post_content.forEach(item=> { %>
                 <li><%= item %></li>

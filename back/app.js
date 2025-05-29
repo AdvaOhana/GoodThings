@@ -49,7 +49,7 @@ app.use('/api/tovits', tovitsApiRouter)
 
 
 app.get('/', loginUser, getAllBgs, threeDaysQuery, getTovByUId, async (req, res) => {
-    if (!req.session.sId) return res.redirect('/login');
+    // if (!req.session.sId) return res.redirect('/login');
 
     let threeDaysPosts = req?.tovData ?? [];
 

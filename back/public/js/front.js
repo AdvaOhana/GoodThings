@@ -90,6 +90,7 @@ async function logout() {
             throw new Error(error)
         }
         const { redirectUrl } = await res.json();
+        localStorage.clear("post-items")
         window.helpers.toaster('התנתקת בהצלחה, להתראות !');
         await window.helpers.delay(1000)
         window.location.replace(redirectUrl)
