@@ -39,7 +39,7 @@ async function getUserByName(req, res, next) {
 async function createUser(req, res, next) {
     try {
         const password = await encryptPassword(req.body.password);
-        if (!password.status) throw Error(`Password is invalid.`)
+        if (!password.status) throw Error({password: `Password is invalid.`})
 
         const user = {
             fName: req.body.fName, lName: req.body.lName, email: req.body.email,
@@ -52,7 +52,7 @@ async function createUser(req, res, next) {
         const [createUserCheck] = await pool.query(query, [user.userName, user.phone, user.email]);
 
         if (createUserCheck[0].count > 0) {
-            return res.status(400).json({ message: 'Username, phone number or email already exists in the system.' });
+            throw Error ({exist: 'Username or email already exists in the system.'});
         }
 
         query = `   INSERT INTO users (
@@ -86,7 +86,12 @@ async function createUser(req, res, next) {
 
         next()
     } catch (error) {
-        res.status(404).json({ message: `${error.sqlMessage || error.message}` })
+        console.log(`${error.sqlMessage || error.message}`)
+        if(error.message.exist){
+            res.redirect(302, '/signUp?success=exist')
+        }else{
+            res.redirect(302, '/signUp?success=password')
+        }
     }
 }
 async function loginUser(req, res, next) {
