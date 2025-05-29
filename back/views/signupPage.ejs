@@ -30,6 +30,9 @@
                 <input type="email" class="form-input" name="email"  placeholder=""  autocomplete="email" />
                 <label class="floating-label">אימייל</label>
             </div>
+                <% if(querys?.success) {%>
+                <p class="error">שגיאה בהתחברות, בדוק/י את שם המשתמש או הסיסמה</p>
+                <% }%>
             <button type="submit" class="btn confirm wide">הרשמה</button>
             <div class="user-actions">
                 <span>משתמש קיים? <a data-link="" href="/login">התחבר</a></span>

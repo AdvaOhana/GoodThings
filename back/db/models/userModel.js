@@ -86,6 +86,7 @@ async function createUser(req, res, next) {
 
         next()
     } catch (error) {
+
         res.status(404).json({ message: `${error.sqlMessage || error.message}` })
     }
 }

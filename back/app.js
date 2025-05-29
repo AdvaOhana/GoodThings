@@ -110,7 +110,11 @@ app.get('/signup', async (req, res) => {
     //     months: Array.from({ length: 12 }, (el, i) => i + 1),
     //     years: Array.from({ length: 120 }, (el, i) => new Date().getFullYear() - i),
     // })
-    res.render('signupPage')
+    console.log(req.query);
+
+    res.render('signupPage', {
+        querys: req?.query
+    })
 })
 app.get("*", (req, res) => {
     res.render('errorPage')
